@@ -41,8 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="AdministraadorRepository.cs" />
+    <Compile Include="BaseRepository.cs" />
+    <Compile Include="CandidatoHabilidadRepository.cs" />
+    <Compile Include="CandidatoRepository.cs" />
+    <Compile Include="ConvocatoriaRepository.cs" />
+    <Compile Include="EmpresaRepository.cs" />
+    <Compile Include="HabilidadRepository.cs" />
+    <Compile Include="HistorialEstadoRepository.cs" />
+    <Compile Include="IRepository.cs" />
+    <Compile Include="PosulacionRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReclutadorRepository.cs" />
+    <Compile Include="Response.cs" />
+    <Compile Include="ReunionRepository.cs" />
+    <Compile Include="UsuarioRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ENTITY\ENTITY.csproj">

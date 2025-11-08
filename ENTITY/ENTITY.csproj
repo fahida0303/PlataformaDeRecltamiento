@@ -43,8 +43,11 @@
   <ItemGroup>
     <Compile Include="Administrador.cs" />
     <Compile Include="Candidato.cs" />
+    <Compile Include="CandidatoHabilidad.cs" />
     <Compile Include="Convocatoria.cs" />
     <Compile Include="Empresa.cs" />
+    <Compile Include="Habilidad.cs" />
+    <Compile Include="HistorialEstado.cs" />
     <Compile Include="Postulacion.cs" />
     <Compile Include="Reclutador.cs" />
     <Compile Include="Reunion.cs" />
