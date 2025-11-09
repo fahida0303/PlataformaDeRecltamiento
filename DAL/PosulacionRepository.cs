@@ -19,30 +19,26 @@ namespace DAL
                     return new Response<Postulacion>(false, "Los datos de la postulación son inválidos", null, null);
                 }
 
-                string sentencia = "INSERT INTO [Postulaciones] ([IdCandidato], [IdConvocatoria], [FechaPostulacion], [Estado]) VALUES (@idCandidato, @idConvocatoria, @fechaPostulacion, @estado); SELECT SCOPE_IDENTITY();";
+                string sentencia = @"INSERT INTO [Postulacion] ([fecha_postulacion], [estado], [idCandidato], [idConvocatoria]) 
+                                 VALUES (@fechaPostulacion, @estado, @idCandidato, @idConvocatoria)";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
+                    comando.Parameters.AddWithValue("@fechaPostulacion", entidad.FechaPostulacion);
+                    comando.Parameters.AddWithValue("@estado", entidad.Estado ?? "En revisión");
                     comando.Parameters.AddWithValue("@idCandidato", entidad.IdCandidato);
                     comando.Parameters.AddWithValue("@idConvocatoria", entidad.IdConvocatoria);
-                    comando.Parameters.AddWithValue("@fechaPostulacion", entidad.FechaPostulacion);
-                    comando.Parameters.AddWithValue("@estado", entidad.Estado ?? "Pendiente");
 
                     conexion.Open();
-                    int nuevoId = Convert.ToInt32(comando.ExecuteScalar());
-                    entidad.IdPostulacion = nuevoId;
+                    comando.ExecuteNonQuery();
 
                     return new Response<Postulacion>(true, "Postulación insertada correctamente", entidad, null);
                 }
             }
-            catch (SqlException ex)
-            {
-                return new Response<Postulacion>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
-            }
             catch (Exception ex)
             {
-                return new Response<Postulacion>(false, $"Error al insertar la postulación \n {ex.Message}", null, null);
+                return new Response<Postulacion>(false, $"Error: {ex.Message}", null, null);
             }
         }
 
@@ -55,37 +51,30 @@ namespace DAL
                     return new Response<Postulacion>(false, "Datos inválidos para actualizar", null, null);
                 }
 
-                string sentencia = "UPDATE [Postulaciones] SET [IdCandidato] = @idCandidato, [IdConvocatoria] = @idConvocatoria, [FechaPostulacion] = @fechaPostulacion, [Estado] = @estado WHERE [IdPostulacion] = @id";
+                string sentencia = @"UPDATE [Postulacion] SET [fecha_postulacion] = @fechaPostulacion, [estado] = @estado, 
+                                 [idCandidato] = @idCandidato, [idConvocatoria] = @idConvocatoria 
+                                 WHERE [idPostulacion] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
+                    comando.Parameters.AddWithValue("@fechaPostulacion", entidad.FechaPostulacion);
+                    comando.Parameters.AddWithValue("@estado", entidad.Estado ?? "En revisión");
                     comando.Parameters.AddWithValue("@idCandidato", entidad.IdCandidato);
                     comando.Parameters.AddWithValue("@idConvocatoria", entidad.IdConvocatoria);
-                    comando.Parameters.AddWithValue("@fechaPostulacion", entidad.FechaPostulacion);
-                    comando.Parameters.AddWithValue("@estado", entidad.Estado ?? "Pendiente");
                     comando.Parameters.AddWithValue("@id", entidad.IdPostulacion);
 
                     conexion.Open();
                     int filasAfectadas = comando.ExecuteNonQuery();
 
                     if (filasAfectadas > 0)
-                    {
                         return new Response<Postulacion>(true, "Postulación actualizada correctamente", entidad, null);
-                    }
-                    else
-                    {
-                        return new Response<Postulacion>(false, "No se encontró la postulación para actualizar", null, null);
-                    }
+                    return new Response<Postulacion>(false, "No se encontró la postulación para actualizar", null, null);
                 }
-            }
-            catch (SqlException ex)
-            {
-                return new Response<Postulacion>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
             }
             catch (Exception ex)
             {
-                return new Response<Postulacion>(false, $"Error al actualizar la postulación \n {ex.Message}", null, null);
+                return new Response<Postulacion>(false, $"Error: {ex.Message}", null, null);
             }
         }
 
@@ -94,41 +83,25 @@ namespace DAL
             try
             {
                 if (id <= 0)
-                {
                     return new Response<Postulacion>(false, "El ID debe ser mayor a cero", null, null);
-                }
 
-                string sentencia = "DELETE FROM [Postulaciones] WHERE [IdPostulacion] = @id";
+                string sentencia = "DELETE FROM [Postulacion] WHERE [idPostulacion] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@id", id);
-
                     conexion.Open();
                     int filasAfectadas = comando.ExecuteNonQuery();
 
                     if (filasAfectadas > 0)
-                    {
                         return new Response<Postulacion>(true, "Postulación eliminada correctamente", null, null);
-                    }
-                    else
-                    {
-                        return new Response<Postulacion>(false, "No se encontró la postulación con el ID especificado", null, null);
-                    }
+                    return new Response<Postulacion>(false, "No se encontró la postulación con el ID especificado", null, null);
                 }
-            }
-            catch (SqlException ex)
-            {
-                if (ex.Number == 547)
-                {
-                    return new Response<Postulacion>(false, "No se puede eliminar: la postulación está siendo utilizada", null, null);
-                }
-                return new Response<Postulacion>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
             }
             catch (Exception ex)
             {
-                return new Response<Postulacion>(false, $"Error al eliminar la postulación \n {ex.Message}", null, null);
+                return new Response<Postulacion>(false, $"Error: {ex.Message}", null, null);
             }
         }
 
@@ -137,40 +110,38 @@ namespace DAL
             try
             {
                 if (id <= 0)
-                {
                     return new Response<Postulacion>(false, "El ID debe ser mayor a cero", null, null);
-                }
 
-                string sentencia = "SELECT [IdPostulacion], [IdCandidato], [IdConvocatoria], [FechaPostulacion], [Estado] FROM [Postulaciones] WHERE [IdPostulacion] = @id";
+                string sentencia = @"SELECT [idPostulacion], [fecha_postulacion], [estado], [idCandidato], [idConvocatoria] 
+                                 FROM [Postulacion] WHERE [idPostulacion] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@id", id);
-
                     conexion.Open();
 
                     using (SqlDataReader reader = comando.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            Postulacion postulacion = MapearPostulacion(reader);
+                            Postulacion postulacion = new Postulacion
+                            {
+                                IdPostulacion = reader.GetInt32(0),
+                                FechaPostulacion = reader.GetDateTime(1),
+                                Estado = reader.GetString(2),
+                                IdCandidato = reader.GetInt32(3),
+                                IdConvocatoria = reader.GetInt32(4)
+                            };
                             return new Response<Postulacion>(true, "Postulación encontrada", postulacion, null);
                         }
-                        else
-                        {
-                            return new Response<Postulacion>(false, "No se encontró la postulación con el ID especificado", null, null);
-                        }
+                        return new Response<Postulacion>(false, "No se encontró la postulación con el ID especificado", null, null);
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                return new Response<Postulacion>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
-            }
             catch (Exception ex)
             {
-                return new Response<Postulacion>(false, $"Error al obtener la postulación \n {ex.Message}", null, null);
+                return new Response<Postulacion>(false, $"Error: {ex.Message}", null, null);
             }
         }
 
@@ -178,8 +149,9 @@ namespace DAL
         {
             try
             {
-                IList<Postulacion> listaPostulaciones = new List<Postulacion>();
-                string sentencia = "SELECT [IdPostulacion], [IdCandidato], [IdConvocatoria], [FechaPostulacion], [Estado] FROM [Postulaciones] ORDER BY [FechaPostulacion] DESC";
+                IList<Postulacion> lista = new List<Postulacion>();
+                string sentencia = @"SELECT [idPostulacion], [fecha_postulacion], [estado], [idCandidato], [idConvocatoria] 
+                                 FROM [Postulacion] ORDER BY [fecha_postulacion] DESC";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -190,40 +162,26 @@ namespace DAL
                     {
                         while (reader.Read())
                         {
-                            listaPostulaciones.Add(MapearPostulacion(reader));
+                            lista.Add(new Postulacion
+                            {
+                                IdPostulacion = reader.GetInt32(0),
+                                FechaPostulacion = reader.GetDateTime(1),
+                                Estado = reader.GetString(2),
+                                IdCandidato = reader.GetInt32(3),
+                                IdConvocatoria = reader.GetInt32(4)
+                            });
                         }
                     }
                 }
 
-                if (listaPostulaciones.Count > 0)
-                {
-                    return new Response<Postulacion>(true, $"Se encontraron {listaPostulaciones.Count} postulaciones", null, listaPostulaciones);
-                }
-                else
-                {
-                    return new Response<Postulacion>(true, "No hay postulaciones registradas", null, listaPostulaciones);
-                }
-            }
-            catch (SqlException ex)
-            {
-                return new Response<Postulacion>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
+                if (lista.Count > 0)
+                    return new Response<Postulacion>(true, $"Se encontraron {lista.Count}", null, lista);
+                return new Response<Postulacion>(true, "No hay postulaciones registradas", null, lista);
             }
             catch (Exception ex)
             {
-                return new Response<Postulacion>(false, $"Error al obtener las postulaciones \n {ex.Message}", null, null);
+                return new Response<Postulacion>(false, $"Error: {ex.Message}", null, null);
             }
-        }
-
-        private Postulacion MapearPostulacion(SqlDataReader reader)
-        {
-            return new Postulacion
-            {
-                IdPostulacion = reader.GetInt32(0),
-                IdCandidato = reader.GetInt32(1),
-                IdConvocatoria = reader.GetInt32(2),
-                FechaPostulacion = reader.GetDateTime(3),
-                Estado = reader.GetString(4)
-            };
         }
     }
 }

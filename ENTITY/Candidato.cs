@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ENTITY
 {
-    // Hereda de Usuario
     public class Candidato : Usuario
     {
+        public string Tipox { get; set; }  // ← AGREGAR ESTA LÍNEA
         public string NivelFormacion { get; set; }
         public string Experiencia { get; set; }
         public string HojaDeVida { get; set; }
@@ -16,10 +16,11 @@ namespace ENTITY
         public Candidato() { }
 
         public Candidato(int idUsuario, string nombre, string correo, string contrasena,
-                         string estado, int idCandidato, string nivelFormacion,
+                         string estado, string tipox, string nivelFormacion,
                          string experiencia, string hojaDeVida)
             : base(idUsuario, nombre, correo, contrasena, estado)
         {
+            Tipox = tipox;
             NivelFormacion = nivelFormacion;
             Experiencia = experiencia;
             HojaDeVida = hojaDeVida;

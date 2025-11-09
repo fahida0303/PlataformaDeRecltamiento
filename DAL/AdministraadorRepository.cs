@@ -14,18 +14,18 @@ namespace DAL
         {
             try
             {
-                if (entidad == null || string.IsNullOrWhiteSpace(entidad.Nombre))
+                if (entidad == null || string.IsNullOrWhiteSpace(entidad.Permisos))
                 {
-                    return new Response<Administrador>(false, "El nombre es requerido", null, null);
+                    return new Response<Administrador>(false, "Los permisos son requeridos", null, null);
                 }
 
-                string sentencia = @"INSERT INTO [dbo.Administrador] ([permiso, [idUsuario]) 
-                                     VALUES (@permiso, @idUsuario)";
+                string sentencia = @"INSERT INTO [Administrador] ([permisos], [idUsuario]) 
+                                 VALUES (@permisos, @idUsuario)";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@permiso", entidad.Permisos ?? "");
+                    comando.Parameters.AddWithValue("@permisos", entidad.Permisos ?? "");
                     comando.Parameters.AddWithValue("@idUsuario", entidad.IdUsuario);
 
                     conexion.Open();
@@ -48,19 +48,19 @@ namespace DAL
         {
             try
             {
-                if (entidad == null || entidad.IdUsuario <= 0)
+                if (entidad == null || entidad.IdAdmin <= 0)
                 {
                     return new Response<Administrador>(false, "Datos inválidos", null, null);
                 }
 
-                string sentencia = @"UPDATE [dbo.Administrador] SET [permiso] = @permiso 
-                                     WHERE [idUsuario] = @idUsuario";
+                string sentencia = @"UPDATE [Administrador] SET [permisos] = @permisos 
+                                 WHERE [idAdmin] = @idAdmin";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@permiso", entidad.Permisos ?? "");
-                    comando.Parameters.AddWithValue("@idUsuario", entidad.IdUsuario);
+                    comando.Parameters.AddWithValue("@permisos", entidad.Permisos ?? "");
+                    comando.Parameters.AddWithValue("@idAdmin", entidad.IdAdmin);
 
                     conexion.Open();
                     int filasAfectadas = comando.ExecuteNonQuery();
@@ -85,7 +85,7 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Administrador>(false, "ID inválido", null, null);
 
-                string sentencia = "DELETE FROM [dbo.Administrador] WHERE [idUsuario] = @id";
+                string sentencia = "DELETE FROM [Administrador] WHERE [idAdmin] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -112,10 +112,10 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Administrador>(false, "ID inválido", null, null);
 
-                string sentencia = @"SELECT u.[idUsuario], u.[nombre], u.[correo], u.[contrasena], u.[estado], a.[permiso]
-                                     FROM [dbo.Usuario] u
-                                     INNER JOIN [dbo.Administrador] a ON u.[idUsuario] = a.[idUsuario]
-                                     WHERE u.[idUsuario] = @id";
+                string sentencia = @"SELECT a.[idAdmin], u.[idUsuario], u.[nombre], u.[correo], u.[contraseña], u.[estado], a.[permisos]
+                                 FROM [Usuario] u
+                                 INNER JOIN [Administrador] a ON u.[idUsuario] = a.[idUsuario]
+                                 WHERE a.[idAdmin] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -129,12 +129,12 @@ namespace DAL
                         {
                             Administrador admin = new Administrador
                             {
-                                IdUsuario = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                Correo = reader.GetString(2),
-                                Contrasena = reader.GetString(3),
-                                Estado = reader.GetString(4),
-                                Permisos = reader.GetString(5)
+                                IdUsuario = reader.GetInt32(1),
+                                Nombre = reader.GetString(2),
+                                Correo = reader.GetString(3),
+                                Contrasena = reader.GetString(4),
+                                Estado = reader.GetString(5),
+                                Permisos = reader.GetString(6)
                             };
                             return new Response<Administrador>(true, "Encontrado", admin, null);
                         }
@@ -153,10 +153,10 @@ namespace DAL
             try
             {
                 IList<Administrador> lista = new List<Administrador>();
-                string sentencia = @"SELECT u.[idUsuario], u.[nombre], u.[correo], u.[contrasena], u.[estado], a.[permiso]
-                                     FROM [dbo.Usuario] u
-                                     INNER JOIN [dbo.Administrador] a ON u.[idUsuario] = a.[idUsuario]
-                                     ORDER BY u.[idUsuario]";
+                string sentencia = @"SELECT a.[idAdmin], u.[idUsuario], u.[nombre], u.[correo], u.[contraseña], u.[estado], a.[permisos]
+                                 FROM [Usuario] u
+                                 INNER JOIN [Administrador] a ON u.[idUsuario] = a.[idUsuario]
+                                 ORDER BY a.[idAdmin]";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -168,12 +168,12 @@ namespace DAL
                         {
                             lista.Add(new Administrador
                             {
-                                IdUsuario = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                Correo = reader.GetString(2),
-                                Contrasena = reader.GetString(3),
-                                Estado = reader.GetString(4),
-                                Permisos = reader.GetString(5)
+                                IdUsuario = reader.GetInt32(1),
+                                Nombre = reader.GetString(2),
+                                Correo = reader.GetString(3),
+                                Contrasena = reader.GetString(4),
+                                Estado = reader.GetString(5),
+                                Permisos = reader.GetString(6)
                             });
                         }
                     }

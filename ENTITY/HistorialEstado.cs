@@ -14,10 +14,13 @@ namespace ENTITY
         public string EstadoNuevo { get; set; }
         public DateTime FechaCambio { get; set; }
         public string Comentario { get; set; }
+        public int? UsuarioCambio { get; set; }
 
         public HistorialEstado() { }
 
-        public HistorialEstado(int idHistorial, int idPostulacion, string estadoAnterior, string estadoNuevo, DateTime fechaCambio, string comentario)
+        public HistorialEstado(int idHistorial, int idPostulacion, string estadoAnterior,
+                               string estadoNuevo, DateTime fechaCambio, string comentario,
+                               int? usuarioCambio)
         {
             IdHistorial = idHistorial;
             IdPostulacion = idPostulacion;
@@ -25,6 +28,7 @@ namespace ENTITY
             EstadoNuevo = estadoNuevo;
             FechaCambio = fechaCambio;
             Comentario = comentario;
+            UsuarioCambio = usuarioCambio;
         }
     }
 }

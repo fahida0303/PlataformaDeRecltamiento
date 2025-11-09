@@ -20,7 +20,7 @@ namespace DAL
                     return new Response<Usuario>(false, "Los campos Nombre, Correo y Contraseña son requeridos", null, null);
                 }
 
-                string sentencia = "INSERT INTO [Usuarios] ([Nombre], [Correo], [Contrasena], [Estado]) VALUES (@nombre, @correo, @contrasena, @estado); SELECT SCOPE_IDENTITY();";
+                string sentencia = "INSERT INTO [Usuario] ([nombre], [correo], [contraseña], [estado]) VALUES (@nombre, @correo, @contrasena, @estado); SELECT SCOPE_IDENTITY();";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -56,7 +56,7 @@ namespace DAL
                     return new Response<Usuario>(false, "Datos inválidos para actualizar", null, null);
                 }
 
-                string sentencia = "UPDATE [Usuarios] SET [Nombre] = @nombre, [Correo] = @correo, [Contrasena] = @contrasena, [Estado] = @estado WHERE [IdUsuario] = @id";
+                string sentencia = "UPDATE [Usuario] SET [nombre] = @nombre, [correo] = @correo, [contraseña] = @contrasena, [estado] = @estado WHERE [idUsuario] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -99,7 +99,10 @@ namespace DAL
                     return new Response<Usuario>(false, "El ID debe ser mayor a cero", null, null);
                 }
 
-                string sentencia = "DELETE FROM [Usuarios] WHERE [IdUsuario] = @id";
+                // NOTA: No se debe eliminar Usuario directamente.
+                // Los triggers se encargan de desactivar el usuario cuando se elimina Candidato/Reclutador/Administrador
+                // Si necesitas "eliminar" un usuario, debes eliminarlo desde su tabla especializada o usar borrado lógico
+                string sentencia = "UPDATE [Usuario] SET [estado] = 'Inactivo' WHERE [idUsuario] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -111,7 +114,7 @@ namespace DAL
 
                     if (filasAfectadas > 0)
                     {
-                        return new Response<Usuario>(true, "Usuario eliminado correctamente", null, null);
+                        return new Response<Usuario>(true, "Usuario desactivado correctamente", null, null);
                     }
                     else
                     {
@@ -121,15 +124,11 @@ namespace DAL
             }
             catch (SqlException ex)
             {
-                if (ex.Number == 547)
-                {
-                    return new Response<Usuario>(false, "No se puede eliminar: el usuario está siendo utilizado", null, null);
-                }
                 return new Response<Usuario>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
             }
             catch (Exception ex)
             {
-                return new Response<Usuario>(false, $"Error al eliminar el usuario \n {ex.Message}", null, null);
+                return new Response<Usuario>(false, $"Error al desactivar el usuario \n {ex.Message}", null, null);
             }
         }
 
@@ -142,7 +141,7 @@ namespace DAL
                     return new Response<Usuario>(false, "El ID debe ser mayor a cero", null, null);
                 }
 
-                string sentencia = "SELECT [IdUsuario], [Nombre], [Correo], [Contrasena], [Estado] FROM [Usuarios] WHERE [IdUsuario] = @id";
+                string sentencia = "SELECT [idUsuario], [nombre], [correo], [contraseña], [estado] FROM [Usuario] WHERE [idUsuario] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -180,7 +179,7 @@ namespace DAL
             try
             {
                 IList<Usuario> listaUsuarios = new List<Usuario>();
-                string sentencia = "SELECT [IdUsuario], [Nombre], [Correo], [Contrasena], [Estado] FROM [Usuarios] ORDER BY [Nombre]";
+                string sentencia = "SELECT [idUsuario], [nombre], [correo], [contraseña], [estado] FROM [Usuario] ORDER BY [nombre]";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))

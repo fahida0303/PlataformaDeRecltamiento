@@ -19,16 +19,17 @@ namespace DAL
                     return new Response<Candidato>(false, "El nombre es requerido", null, null);
                 }
 
-                string sentencia = @"INSERT INTO [dbo.Candidato] ([nivelFormacion], [experiencia], [hojaDeVida], [idUsuario]) 
-                                     VALUES (@nivelFormacion, @experiencia, @hojaDeVida, @idUsuario)";
+                string sentencia = @"INSERT INTO [Candidato] ([idCandidato], [tipox], [nivelFormacion], [experiencia], [hojaDeVida]) 
+                                 VALUES (@idCandidato, @tipox, @nivelFormacion, @experiencia, @hojaDeVida)";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@nivelFormacion", entidad.NivelFormacion ?? "");
-                    comando.Parameters.AddWithValue("@experiencia", entidad.Experiencia ?? "");
-                    comando.Parameters.AddWithValue("@hojaDeVida", entidad.HojaDeVida ?? "");
-                    comando.Parameters.AddWithValue("@idUsuario", entidad.IdUsuario);
+                    comando.Parameters.AddWithValue("@idCandidato", entidad.IdUsuario);
+                    comando.Parameters.AddWithValue("@tipox", entidad.Tipox ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@nivelFormacion", entidad.NivelFormacion ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@experiencia", entidad.Experiencia ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@hojaDeVida", entidad.HojaDeVida ?? (object)DBNull.Value);
 
                     conexion.Open();
                     comando.ExecuteNonQuery();
@@ -51,17 +52,18 @@ namespace DAL
                     return new Response<Candidato>(false, "Datos inválidos", null, null);
                 }
 
-                string sentencia = @"UPDATE [dbo.Candidato] SET [nivelFormacion] = @nivelFormacion,
-                                     [experiencia] = @experiencia, [hojaDeVida] = @hojaDeVida
-                                     WHERE [idUsuario] = @idUsuario";
+                string sentencia = @"UPDATE [Candidato] SET [tipox] = @tipox, [nivelFormacion] = @nivelFormacion,
+                                 [experiencia] = @experiencia, [hojaDeVida] = @hojaDeVida
+                                 WHERE [idCandidato] = @idCandidato";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@nivelFormacion", entidad.NivelFormacion ?? "");
-                    comando.Parameters.AddWithValue("@experiencia", entidad.Experiencia ?? "");
-                    comando.Parameters.AddWithValue("@hojaDeVida", entidad.HojaDeVida ?? "");
-                    comando.Parameters.AddWithValue("@idUsuario", entidad.IdUsuario);
+                    comando.Parameters.AddWithValue("@tipox", entidad.Tipox ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@nivelFormacion", entidad.NivelFormacion ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@experiencia", entidad.Experiencia ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@hojaDeVida", entidad.HojaDeVida ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@idCandidato", entidad.IdUsuario);
 
                     conexion.Open();
                     int filasAfectadas = comando.ExecuteNonQuery();
@@ -84,7 +86,7 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Candidato>(false, "ID inválido", null, null);
 
-                string sentencia = "DELETE FROM [dbo.Candidato] WHERE [idUsuario] = @id";
+                string sentencia = "DELETE FROM [Candidato] WHERE [idCandidato] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -111,11 +113,11 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Candidato>(false, "ID inválido", null, null);
 
-                string sentencia = @"SELECT u.[idUsuario], u.[nombre], u.[correo], u.[contrasena], u.[estado], 
-                                     c.[nivelFormacion], c.[experiencia], c.[hojaDeVida]
-                                     FROM [dbo.Usuario] u
-                                     INNER JOIN [dbo.Candidato] c ON u.[idUsuario] = c.[idUsuario]
-                                     WHERE u.[idUsuario] = @id";
+                string sentencia = @"SELECT c.[idCandidato], u.[nombre], u.[correo], u.[contraseña], u.[estado], 
+                                 c.[tipox], c.[nivelFormacion], c.[experiencia], c.[hojaDeVida]
+                                 FROM [Usuario] u
+                                 INNER JOIN [Candidato] c ON u.[idUsuario] = c.[idCandidato]
+                                 WHERE c.[idCandidato] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -134,9 +136,10 @@ namespace DAL
                                 Correo = reader.GetString(2),
                                 Contrasena = reader.GetString(3),
                                 Estado = reader.GetString(4),
-                                NivelFormacion = reader.GetString(5),
-                                Experiencia = reader.GetString(6),
-                                HojaDeVida = reader.GetString(7)
+                                Tipox = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                NivelFormacion = reader.IsDBNull(6) ? null : reader.GetString(6),
+                                Experiencia = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                HojaDeVida = reader.IsDBNull(8) ? null : reader.GetString(8)
                             };
                             return new Response<Candidato>(true, "Encontrado", candidato, null);
                         }
@@ -155,11 +158,11 @@ namespace DAL
             try
             {
                 IList<Candidato> lista = new List<Candidato>();
-                string sentencia = @"SELECT u.[idUsuario], u.[nombre], u.[correo], u.[contrasena], u.[estado],
-                                     c.[nivelFormacion], c.[experiencia], c.[hojaDeVida]
-                                     FROM [dbo.Usuario] u
-                                     INNER JOIN [dbo.Candidato] c ON u.[idUsuario] = c.[idUsuario]
-                                     ORDER BY u.[nombre]";
+                string sentencia = @"SELECT c.[idCandidato], u.[nombre], u.[correo], u.[contraseña], u.[estado],
+                                 c.[tipox], c.[nivelFormacion], c.[experiencia], c.[hojaDeVida]
+                                 FROM [Usuario] u
+                                 INNER JOIN [Candidato] c ON u.[idUsuario] = c.[idCandidato]
+                                 ORDER BY u.[nombre]";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -176,9 +179,10 @@ namespace DAL
                                 Correo = reader.GetString(2),
                                 Contrasena = reader.GetString(3),
                                 Estado = reader.GetString(4),
-                                NivelFormacion = reader.GetString(5),
-                                Experiencia = reader.GetString(6),
-                                HojaDeVida = reader.GetString(7)
+                                Tipox = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                NivelFormacion = reader.IsDBNull(6) ? null : reader.GetString(6),
+                                Experiencia = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                HojaDeVida = reader.IsDBNull(8) ? null : reader.GetString(8)
                             });
                         }
                     }

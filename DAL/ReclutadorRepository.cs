@@ -19,15 +19,15 @@ namespace DAL
                     return new Response<Reclutador>(false, "El nombre es requerido", null, null);
                 }
 
-                string sentencia = @"INSERT INTO [dbo.Reclutador] ([cargo], [idUsuario], [idEmpresa]) 
-                                     VALUES (@cargo, @idUsuario, @idEmpresa)";
+                string sentencia = @"INSERT INTO [Reclutador] ([idReclutador], [cargo], [empresaAsociada]) 
+                                 VALUES (@idReclutador, @cargo, @empresaAsociada)";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
+                    comando.Parameters.AddWithValue("@idReclutador", entidad.IdUsuario);
                     comando.Parameters.AddWithValue("@cargo", entidad.Cargo ?? "");
-                    comando.Parameters.AddWithValue("@idUsuario", entidad.IdUsuario);
-                    comando.Parameters.AddWithValue("@idEmpresa", entidad.IdEmpresa);
+                    comando.Parameters.AddWithValue("@empresaAsociada", entidad.IdEmpresa);
 
                     conexion.Open();
                     comando.ExecuteNonQuery();
@@ -50,15 +50,15 @@ namespace DAL
                     return new Response<Reclutador>(false, "Datos inválidos", null, null);
                 }
 
-                string sentencia = @"UPDATE [dbo.Reclutador] SET [cargo] = @cargo, [idEmpresa] = @idEmpresa
-                                     WHERE [idUsuario] = @idUsuario";
+                string sentencia = @"UPDATE [Reclutador] SET [cargo] = @cargo, [empresaAsociada] = @empresaAsociada
+                                 WHERE [idReclutador] = @idReclutador";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@cargo", entidad.Cargo ?? "");
-                    comando.Parameters.AddWithValue("@idEmpresa", entidad.IdEmpresa);
-                    comando.Parameters.AddWithValue("@idUsuario", entidad.IdUsuario);
+                    comando.Parameters.AddWithValue("@empresaAsociada", entidad.IdEmpresa);
+                    comando.Parameters.AddWithValue("@idReclutador", entidad.IdUsuario);
 
                     conexion.Open();
                     int filasAfectadas = comando.ExecuteNonQuery();
@@ -81,7 +81,8 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Reclutador>(false, "ID inválido", null, null);
 
-                string sentencia = "DELETE FROM [dbo.Reclutador] WHERE [idUsuario] = @id";
+                // El trigger TR_Reclutador_DesactivarUsuario se encargará de poner estado = 'Inactivo' en Usuario
+                string sentencia = "DELETE FROM [Reclutador] WHERE [idReclutador] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -108,11 +109,11 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Reclutador>(false, "ID inválido", null, null);
 
-                string sentencia = @"SELECT u.[idUsuario], u.[nombre], u.[correo], u.[contrasena], u.[estado], 
-                                     r.[cargo], r.[idEmpresa]
-                                     FROM [dbo.Usuario] u
-                                     INNER JOIN [dbo.Reclutador] r ON u.[idUsuario] = r.[idUsuario]
-                                     WHERE u.[idUsuario] = @id";
+                string sentencia = @"SELECT r.[idReclutador], u.[nombre], u.[correo], u.[contraseña], u.[estado], 
+                                 r.[cargo], r.[empresaAsociada]
+                                 FROM [Usuario] u
+                                 INNER JOIN [Reclutador] r ON u.[idUsuario] = r.[idReclutador]
+                                 WHERE r.[idReclutador] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -151,11 +152,11 @@ namespace DAL
             try
             {
                 IList<Reclutador> lista = new List<Reclutador>();
-                string sentencia = @"SELECT u.[idUsuario], u.[nombre], u.[correo], u.[contrasena], u.[estado],
-                                     r.[cargo], r.[idEmpresa]
-                                     FROM [dbo.Usuario] u
-                                     INNER JOIN [dbo.Reclutador] r ON u.[idUsuario] = r.[idUsuario]
-                                     ORDER BY u.[nombre]";
+                string sentencia = @"SELECT r.[idReclutador], u.[nombre], u.[correo], u.[contraseña], u.[estado],
+                                 r.[cargo], r.[empresaAsociada]
+                                 FROM [Usuario] u
+                                 INNER JOIN [Reclutador] r ON u.[idUsuario] = r.[idReclutador]
+                                 ORDER BY u.[nombre]";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))

@@ -17,13 +17,12 @@ namespace DAL
                 if (entidad == null)
                     return new Response<Reunion>(false, "La entidad no puede ser nula", null, null);
 
-                if (entidad.IdPostulacion <= 0)
-                    return new Response<Reunion>(false, "Debe especificar un IdPostulacion válido", null, null);
+                if (entidad.IdCandidato <= 0 || entidad.IdReclutador <= 0)
+                    return new Response<Reunion>(false, "Debe especificar IdCandidato e IdReclutador válidos", null, null);
 
-                string sentencia = @"
-                    INSERT INTO [dbo.Reunion] ([fecha], [enlaceMeet], [estadoConfirmacion], [idPostulacion]) 
-                    VALUES (@fecha, @enlaceMeet, @estadoConfirmacion, @idPostulacion);
-                    SELECT SCOPE_IDENTITY();";
+                string sentencia = @"INSERT INTO [Reunion] ([fecha], [enlaceMeet], [estadoConfirmacion], [idCandidato], [idReclutador]) 
+                                 VALUES (@fecha, @enlaceMeet, @estadoConfirmacion, @idCandidato, @idReclutador);
+                                 SELECT SCOPE_IDENTITY();";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -31,7 +30,8 @@ namespace DAL
                     comando.Parameters.AddWithValue("@fecha", entidad.Fecha);
                     comando.Parameters.AddWithValue("@enlaceMeet", entidad.EnlaceMeet ?? "");
                     comando.Parameters.AddWithValue("@estadoConfirmacion", entidad.EstadoConfirmacion ?? "Pendiente");
-                    comando.Parameters.AddWithValue("@idPostulacion", entidad.IdPostulacion);
+                    comando.Parameters.AddWithValue("@idCandidato", entidad.IdCandidato);
+                    comando.Parameters.AddWithValue("@idReclutador", entidad.IdReclutador);
 
                     conexion.Open();
                     int nuevoId = Convert.ToInt32(comando.ExecuteScalar());
@@ -53,13 +53,13 @@ namespace DAL
                 if (entidad == null || entidad.IdReunion <= 0)
                     return new Response<Reunion>(false, "Debe proporcionar una reunión válida", null, null);
 
-                string sentencia = @"
-                    UPDATE [dbo.Reunion] 
-                    SET [fecha] = @fecha,
-                        [enlaceMeet] = @enlaceMeet,
-                        [estadoConfirmacion] = @estadoConfirmacion,
-                        [idPostulacion] = @idPostulacion
-                    WHERE [idReunion] = @id;";
+                string sentencia = @"UPDATE [Reunion] 
+                                 SET [fecha] = @fecha,
+                                     [enlaceMeet] = @enlaceMeet,
+                                     [estadoConfirmacion] = @estadoConfirmacion,
+                                     [idCandidato] = @idCandidato,
+                                     [idReclutador] = @idReclutador
+                                 WHERE [idReunion] = @id;";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -67,7 +67,8 @@ namespace DAL
                     comando.Parameters.AddWithValue("@fecha", entidad.Fecha);
                     comando.Parameters.AddWithValue("@enlaceMeet", entidad.EnlaceMeet ?? "");
                     comando.Parameters.AddWithValue("@estadoConfirmacion", entidad.EstadoConfirmacion ?? "Pendiente");
-                    comando.Parameters.AddWithValue("@idPostulacion", entidad.IdPostulacion);
+                    comando.Parameters.AddWithValue("@idCandidato", entidad.IdCandidato);
+                    comando.Parameters.AddWithValue("@idReclutador", entidad.IdReclutador);
                     comando.Parameters.AddWithValue("@id", entidad.IdReunion);
 
                     conexion.Open();
@@ -92,7 +93,7 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Reunion>(false, "El ID proporcionado no es válido", null, null);
 
-                string sentencia = "DELETE FROM [dbo.Reunion] WHERE [idReunion] = @id";
+                string sentencia = "DELETE FROM [Reunion] WHERE [idReunion] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -121,15 +122,16 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Reunion>(false, "El ID no es válido", null, null);
 
-                string sentencia = @"
-                    SELECT R.idReunion, R.fecha, R.enlaceMeet, R.estadoConfirmacion, R.idPostulacion,
-                           C.nombre AS NombreCandidato, C.correo AS CorreoCandidato,
-                           Re.nombre AS NombreReclutador, Re.correo AS CorreoReclutador
-                    FROM Reunion R
-                    INNER JOIN Postulacion P ON R.idPostulacion = P.idPostulacion
-                    INNER JOIN Candidato C ON P.idCandidato = C.idCandidato
-                    INNER JOIN Reclutador Re ON P.idReclutador = Re.idReclutador
-                    WHERE R.idReunion = @id;";
+                string sentencia = @"SELECT r.[idReunion], r.[fecha], r.[enlaceMeet], r.[estadoConfirmacion], 
+                                 r.[idCandidato], r.[idReclutador],
+                                 uc.[nombre] AS NombreCandidato, uc.[correo] AS CorreoCandidato,
+                                 ur.[nombre] AS NombreReclutador, ur.[correo] AS CorreoReclutador
+                                 FROM [Reunion] r
+                                 INNER JOIN [Candidato] c ON r.[idCandidato] = c.[idCandidato]
+                                 INNER JOIN [Usuario] uc ON c.[idCandidato] = uc.[idUsuario]
+                                 INNER JOIN [Reclutador] rec ON r.[idReclutador] = rec.[idReclutador]
+                                 INNER JOIN [Usuario] ur ON rec.[idReclutador] = ur.[idUsuario]
+                                 WHERE r.[idReunion] = @id;";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -145,13 +147,14 @@ namespace DAL
                             {
                                 IdReunion = reader.GetInt32(0),
                                 Fecha = reader.GetDateTime(1),
-                                EnlaceMeet = reader.GetString(2),
+                                EnlaceMeet = reader.IsDBNull(2) ? "" : reader.GetString(2),
                                 EstadoConfirmacion = reader.GetString(3),
-                                IdPostulacion = reader.GetInt32(4),
-                                NombreCandidato = reader.GetString(5),
-                                CorreoCandidato = reader.GetString(6),
-                                NombreReclutador = reader.GetString(7),
-                                CorreoReclutador = reader.GetString(8)
+                                IdCandidato = reader.GetInt32(4),
+                                IdReclutador = reader.GetInt32(5),
+                                NombreCandidato = reader.GetString(6),
+                                CorreoCandidato = reader.GetString(7),
+                                NombreReclutador = reader.GetString(8),
+                                CorreoReclutador = reader.GetString(9)
                             };
 
                             return new Response<Reunion>(true, "Reunión encontrada", reunion, null);
@@ -172,15 +175,16 @@ namespace DAL
             {
                 IList<Reunion> lista = new List<Reunion>();
 
-                string sentencia = @"
-                    SELECT R.idReunion, R.fecha, R.enlaceMeet, R.estadoConfirmacion, R.idPostulacion,
-                           C.nombre AS NombreCandidato, C.correo AS CorreoCandidato,
-                           Re.nombre AS NombreReclutador, Re.correo AS CorreoReclutador
-                    FROM Reunion R
-                    INNER JOIN Postulacion P ON R.idPostulacion = P.idPostulacion
-                    INNER JOIN Candidato C ON P.idCandidato = C.idCandidato
-                    INNER JOIN Reclutador Re ON P.idReclutador = Re.idReclutador
-                    ORDER BY R.fecha DESC;";
+                string sentencia = @"SELECT r.[idReunion], r.[fecha], r.[enlaceMeet], r.[estadoConfirmacion], 
+                                 r.[idCandidato], r.[idReclutador],
+                                 uc.[nombre] AS NombreCandidato, uc.[correo] AS CorreoCandidato,
+                                 ur.[nombre] AS NombreReclutador, ur.[correo] AS CorreoReclutador
+                                 FROM [Reunion] r
+                                 INNER JOIN [Candidato] c ON r.[idCandidato] = c.[idCandidato]
+                                 INNER JOIN [Usuario] uc ON c.[idCandidato] = uc.[idUsuario]
+                                 INNER JOIN [Reclutador] rec ON r.[idReclutador] = rec.[idReclutador]
+                                 INNER JOIN [Usuario] ur ON rec.[idReclutador] = ur.[idUsuario]
+                                 ORDER BY r.[fecha] DESC;";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -194,13 +198,14 @@ namespace DAL
                             {
                                 IdReunion = reader.GetInt32(0),
                                 Fecha = reader.GetDateTime(1),
-                                EnlaceMeet = reader.GetString(2),
+                                EnlaceMeet = reader.IsDBNull(2) ? "" : reader.GetString(2),
                                 EstadoConfirmacion = reader.GetString(3),
-                                IdPostulacion = reader.GetInt32(4),
-                                NombreCandidato = reader.GetString(5),
-                                CorreoCandidato = reader.GetString(6),
-                                NombreReclutador = reader.GetString(7),
-                                CorreoReclutador = reader.GetString(8)
+                                IdCandidato = reader.GetInt32(4),
+                                IdReclutador = reader.GetInt32(5),
+                                NombreCandidato = reader.GetString(6),
+                                CorreoCandidato = reader.GetString(7),
+                                NombreReclutador = reader.GetString(8),
+                                CorreoReclutador = reader.GetString(9)
                             });
                         }
                     }

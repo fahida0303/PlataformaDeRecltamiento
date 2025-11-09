@@ -19,23 +19,19 @@ namespace DAL
                     return new Response<Empresa>(false, "El nombre es requerido", null, null);
                 }
 
-                string sentencia = @"INSERT INTO [dbo.Empresa] ([nombre], [sector], [direccion], [correoContacto], [telefono], [sitioWeb], [fechaRegistro]) 
-                                     VALUES (@nombre, @sector, @direccion, @correoContacto, @telefono, @sitioWeb, @fechaRegistro); SELECT SCOPE_IDENTITY();";
+                string sentencia = @"INSERT INTO [Empresa] ([nombre], [sector], [direccion], [correo_contacto]) 
+                                 VALUES (@nombre, @sector, @direccion, @correoContacto)";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@nombre", entidad.Nombre);
-                    comando.Parameters.AddWithValue("@sector", entidad.Sector ?? "");
-                    comando.Parameters.AddWithValue("@direccion", entidad.Direccion ?? "");
-                    comando.Parameters.AddWithValue("@correoContacto", entidad.CorreoContacto ?? "");
-                    comando.Parameters.AddWithValue("@telefono", entidad.Telefono ?? "");
-                    comando.Parameters.AddWithValue("@sitioWeb", entidad.SitioWeb ?? "");
-                    comando.Parameters.AddWithValue("@fechaRegistro", DateTime.Now);
+                    comando.Parameters.AddWithValue("@sector", entidad.Sector);
+                    comando.Parameters.AddWithValue("@direccion", entidad.Direccion ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@correoContacto", entidad.CorreoContacto);
 
                     conexion.Open();
-                    int nuevoId = Convert.ToInt32(comando.ExecuteScalar());
-                    entidad.IdEmpresa = nuevoId;
+                    comando.ExecuteNonQuery();
 
                     return new Response<Empresa>(true, "Empresa insertada correctamente", entidad, null);
                 }
@@ -55,20 +51,17 @@ namespace DAL
                     return new Response<Empresa>(false, "Datos inválidos", null, null);
                 }
 
-                string sentencia = @"UPDATE [dbo.Empresa] SET [nombre] = @nombre, [sector] = @sector, [direccion] = @direccion, 
-                                     [correoContacto] = @correoContacto, [telefono] = @telefono, [sitioWeb] = @sitioWeb, [fechaActualizacion] = @fechaActualizacion
-                                     WHERE [idEmpresa] = @id";
+                string sentencia = @"UPDATE [Empresa] SET [nombre] = @nombre, [sector] = @sector, 
+                                 [direccion] = @direccion, [correo_contacto] = @correoContacto
+                                 WHERE [idEmpresa] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@nombre", entidad.Nombre ?? "");
-                    comando.Parameters.AddWithValue("@sector", entidad.Sector ?? "");
-                    comando.Parameters.AddWithValue("@direccion", entidad.Direccion ?? "");
-                    comando.Parameters.AddWithValue("@correoContacto", entidad.CorreoContacto ?? "");
-                    comando.Parameters.AddWithValue("@telefono", entidad.Telefono ?? "");
-                    comando.Parameters.AddWithValue("@sitioWeb", entidad.SitioWeb ?? "");
-                    comando.Parameters.AddWithValue("@fechaActualizacion", DateTime.Now);
+                    comando.Parameters.AddWithValue("@nombre", entidad.Nombre);
+                    comando.Parameters.AddWithValue("@sector", entidad.Sector);
+                    comando.Parameters.AddWithValue("@direccion", entidad.Direccion ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@correoContacto", entidad.CorreoContacto);
                     comando.Parameters.AddWithValue("@id", entidad.IdEmpresa);
 
                     conexion.Open();
@@ -92,7 +85,7 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Empresa>(false, "ID inválido", null, null);
 
-                string sentencia = "DELETE FROM [dbo.Empresa] WHERE [idEmpresa] = @id";
+                string sentencia = "DELETE FROM [Empresa] WHERE [idEmpresa] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -119,9 +112,9 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Empresa>(false, "ID inválido", null, null);
 
-                string sentencia = @"SELECT [idEmpresa], [nombre], [sector], [direccion], [correoContacto], [telefono], [sitioWeb], [fechaRegistro], [fechaActualizacion]
-                                     FROM [dbo.Empresa]
-                                     WHERE [idEmpresa] = @id";
+                string sentencia = @"SELECT [idEmpresa], [nombre], [sector], [direccion], [correo_contacto]
+                                 FROM [Empresa]
+                                 WHERE [idEmpresa] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -138,12 +131,8 @@ namespace DAL
                                 IdEmpresa = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Sector = reader.GetString(2),
-                                Direccion = reader.GetString(3),
-                                CorreoContacto = reader.GetString(4),
-                                Telefono = reader.GetString(5),
-                                SitioWeb = reader.GetString(6),
-                                FechaRegistro = reader.GetDateTime(7),
-                                FechaActualizacion = reader.IsDBNull(8) ? (DateTime?)null : reader.GetDateTime(8)
+                                Direccion = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                CorreoContacto = reader.GetString(4)
                             };
                             return new Response<Empresa>(true, "Encontrado", empresa, null);
                         }
@@ -162,9 +151,9 @@ namespace DAL
             try
             {
                 IList<Empresa> lista = new List<Empresa>();
-                string sentencia = @"SELECT [idEmpresa], [nombre], [sector], [direccion], [correoContacto], [telefono], [sitioWeb], [fechaRegistro], [fechaActualizacion]
-                                     FROM [dbo.Empresa]
-                                     ORDER BY [nombre]";
+                string sentencia = @"SELECT [idEmpresa], [nombre], [sector], [direccion], [correo_contacto]
+                                 FROM [Empresa]
+                                 ORDER BY [nombre]";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -179,12 +168,8 @@ namespace DAL
                                 IdEmpresa = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Sector = reader.GetString(2),
-                                Direccion = reader.GetString(3),
-                                CorreoContacto = reader.GetString(4),
-                                Telefono = reader.GetString(5),
-                                SitioWeb = reader.GetString(6),
-                                FechaRegistro = reader.GetDateTime(7),
-                                FechaActualizacion = reader.IsDBNull(8) ? (DateTime?)null : reader.GetDateTime(8)
+                                Direccion = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                CorreoContacto = reader.GetString(4)
                             });
                         }
                     }

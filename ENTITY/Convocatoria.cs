@@ -6,29 +6,30 @@ using System.Threading.Tasks;
 
 namespace ENTITY
 {
-   public class Convocatoria
+    public class Convocatoria
     {
         public int IdConvocatoria { get; set; }
         public string Titulo { get; set; }
         public string Descripcion { get; set; }
         public DateTime FechaPublicacion { get; set; }
-        public int IdReclutador { get; set; }
-        public string Estado { get; set; }
         public DateTime FechaLimite { get; set; }
+        public string Estado { get; set; }
+        public int IdEmpresa { get; set; }
+        public int? IdReclutador { get; set; }  
 
         public Convocatoria() { }
 
         public Convocatoria(int idConvocatoria, string titulo, string descripcion,
-                            DateTime fechaPublicacion, int idReclutador, string estado,
-                            DateTime fechaLimite)
+                            DateTime fechaPublicacion, DateTime fechaLimite,
+                            string estado, int idEmpresa)
         {
             IdConvocatoria = idConvocatoria;
             Titulo = titulo;
             Descripcion = descripcion;
             FechaPublicacion = fechaPublicacion;
-            IdReclutador = idReclutador;
-            Estado = estado;
             FechaLimite = fechaLimite;
+            Estado = estado;
+            IdEmpresa = idEmpresa;
         }
     }
 }
