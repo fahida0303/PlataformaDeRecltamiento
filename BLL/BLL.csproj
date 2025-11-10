@@ -41,8 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="AdministradorService.cs" />
+    <Compile Include="CandidatoService.cs" />
+    <Compile Include="ConvocatoriaService.cs" />
+    <Compile Include="EmpresaService.cs" />
+    <Compile Include="HabilidadesService.cs" />
+    <Compile Include="HistorialEstadoService.cs" />
+    <Compile Include="PostulacionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReclutadorService.cs" />
+    <Compile Include="ReunionService.cs" />
+    <Compile Include="UsuarioService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">
