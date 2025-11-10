@@ -13,10 +13,15 @@ namespace ENTITY
         public string Correo { get; set; }
         public string Contrasena { get; set; }
         public string Estado { get; set; }
+        public string TelegramId { get; set; }
+        public string TelegramUsername { get; set; }
+        public string WhatsappNumber { get; set; }
+        public DateTime? FechaUltimaInteraccionBot { get; set; }
 
         public Usuario() { }
 
-        public Usuario(int idUsuario, string nombre, string correo, string contrasena, string estado)
+        public Usuario(int idUsuario, string nombre, string correo,
+                       string contrasena, string estado)
         {
             IdUsuario = idUsuario;
             Nombre = nombre;

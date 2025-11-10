@@ -15,12 +15,21 @@ namespace DAL
             try
             {
                 if (entidad == null || string.IsNullOrWhiteSpace(entidad.Nombre) ||
-                    string.IsNullOrWhiteSpace(entidad.Correo) || string.IsNullOrWhiteSpace(entidad.Contrasena))
+                    string.IsNullOrWhiteSpace(entidad.Correo) ||
+                    string.IsNullOrWhiteSpace(entidad.Contrasena))
                 {
-                    return new Response<Usuario>(false, "Los campos Nombre, Correo y Contraseña son requeridos", null, null);
+                    return new Response<Usuario>(false,
+                        "Los campos Nombre, Correo y Contraseña son requeridos",
+                        null, null);
                 }
 
-                string sentencia = "INSERT INTO [Usuario] ([nombre], [correo], [contraseña], [estado]) VALUES (@nombre, @correo, @contrasena, @estado); SELECT SCOPE_IDENTITY();";
+                // ⬇️ ACTUALIZAR ESTA QUERY
+                string sentencia = @"INSERT INTO [Usuario] 
+            ([nombre], [correo], [contraseña], [estado], 
+             [telegramId], [telegramUsername], [whatsappNumber]) 
+            VALUES (@nombre, @correo, @contrasena, @estado, 
+                    @telegramId, @telegramUsername, @whatsappNumber); 
+            SELECT SCOPE_IDENTITY();";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -29,21 +38,23 @@ namespace DAL
                     comando.Parameters.AddWithValue("@correo", entidad.Correo);
                     comando.Parameters.AddWithValue("@contrasena", entidad.Contrasena);
                     comando.Parameters.AddWithValue("@estado", entidad.Estado ?? "Activo");
+                    comando.Parameters.AddWithValue("@telegramId", entidad.TelegramId ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@telegramUsername",entidad.TelegramUsername ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@whatsappNumber", entidad.WhatsappNumber ?? (object)DBNull.Value);
 
                     conexion.Open();
                     int nuevoId = Convert.ToInt32(comando.ExecuteScalar());
                     entidad.IdUsuario = nuevoId;
 
-                    return new Response<Usuario>(true, "Usuario insertado correctamente", entidad, null);
+                    return new Response<Usuario>(true,
+                        "Usuario insertado correctamente", entidad, null);
                 }
             }
             catch (SqlException ex)
             {
-                return new Response<Usuario>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
-            }
-            catch (Exception ex)
-            {
-                return new Response<Usuario>(false, $"Error al insertar el usuario \n {ex.Message}", null, null);
+                return new Response<Usuario>(false,
+                    $"Error en la base de datos: \n {ex.Message} - SQL_ERROR",
+                    null, null);
             }
         }
 
@@ -138,16 +149,21 @@ namespace DAL
             {
                 if (id <= 0)
                 {
-                    return new Response<Usuario>(false, "El ID debe ser mayor a cero", null, null);
+                    return new Response<Usuario>(false,
+                        "El ID debe ser mayor a cero", null, null);
                 }
 
-                string sentencia = "SELECT [idUsuario], [nombre], [correo], [contraseña], [estado] FROM [Usuario] WHERE [idUsuario] = @id";
+                string sentencia = @"SELECT [idUsuario], [nombre], [correo], 
+                            [contraseña], [estado], [telegramId], 
+                            [telegramUsername], [whatsappNumber], 
+                            [fechaUltimaInteraccionBot] 
+                            FROM [Usuario] 
+                            WHERE [idUsuario] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@id", id);
-
                     conexion.Open();
 
                     using (SqlDataReader reader = comando.ExecuteReader())
@@ -155,22 +171,21 @@ namespace DAL
                         if (reader.Read())
                         {
                             Usuario usuario = MapearUsuario(reader);
-                            return new Response<Usuario>(true, "Usuario encontrado", usuario, null);
+                            return new Response<Usuario>(true,
+                                "Usuario encontrado", usuario, null);
                         }
                         else
                         {
-                            return new Response<Usuario>(false, "No se encontró el usuario con el ID especificado", null, null);
+                            return new Response<Usuario>(false,
+                                "No se encontró el usuario", null, null);
                         }
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                return new Response<Usuario>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
-            }
             catch (Exception ex)
             {
-                return new Response<Usuario>(false, $"Error al obtener el usuario \n {ex.Message}", null, null);
+                return new Response<Usuario>(false,
+                    $"Error al obtener el usuario \n {ex.Message}", null, null);
             }
         }
 
@@ -179,7 +194,14 @@ namespace DAL
             try
             {
                 IList<Usuario> listaUsuarios = new List<Usuario>();
-                string sentencia = "SELECT [idUsuario], [nombre], [correo], [contraseña], [estado] FROM [Usuario] ORDER BY [nombre]";
+
+               
+                string sentencia = @"SELECT [idUsuario], [nombre], [correo], 
+                            [contraseña], [estado], [telegramId], 
+                            [telegramUsername], [whatsappNumber], 
+                            [fechaUltimaInteraccionBot] 
+                            FROM [Usuario] 
+                            ORDER BY [nombre]";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -197,20 +219,64 @@ namespace DAL
 
                 if (listaUsuarios.Count > 0)
                 {
-                    return new Response<Usuario>(true, $"Se encontraron {listaUsuarios.Count} usuarios", null, listaUsuarios);
+                    return new Response<Usuario>(true,
+                        $"Se encontraron {listaUsuarios.Count} usuarios",
+                        null, listaUsuarios);
                 }
                 else
                 {
-                    return new Response<Usuario>(true, "No hay usuarios registrados", null, listaUsuarios);
+                    return new Response<Usuario>(true,
+                        "No hay usuarios registrados", null, listaUsuarios);
                 }
-            }
-            catch (SqlException ex)
-            {
-                return new Response<Usuario>(false, $"Error en la base de datos: \n {ex.Message} - SQL_ERROR", null, null);
             }
             catch (Exception ex)
             {
-                return new Response<Usuario>(false, $"Error al obtener los usuarios \n {ex.Message}", null, null);
+                return new Response<Usuario>(false,
+                    $"Error: {ex.Message}", null, null);
+            }
+        }
+ 
+        public Response<Usuario> ObtenerPorTelegramId(string telegramId)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(telegramId))
+                {
+                    return new Response<Usuario>(false,
+                        "TelegramId no puede estar vacío", null, null);
+                }
+
+                string sentencia = @"SELECT [idUsuario], [nombre], [correo], 
+                            [contraseña], [estado], [telegramId], 
+                            [telegramUsername], [whatsappNumber], 
+                            [fechaUltimaInteraccionBot] 
+                            FROM [Usuario] 
+                            WHERE [telegramId] = @telegramId";
+
+                using (SqlConnection conexion = CrearConexion())
+                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                {
+                    comando.Parameters.AddWithValue("@telegramId", telegramId);
+                    conexion.Open();
+
+                    using (SqlDataReader reader = comando.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Usuario usuario = MapearUsuario(reader);
+                            return new Response<Usuario>(true,
+                                "Usuario encontrado", usuario, null);
+                        }
+                        return new Response<Usuario>(false,
+                            "No se encontró usuario con ese TelegramId",
+                            null, null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<Usuario>(false,
+                    $"Error: {ex.Message}", null, null);
             }
         }
 
@@ -222,8 +288,14 @@ namespace DAL
                 Nombre = reader.GetString(1),
                 Correo = reader.GetString(2),
                 Contrasena = reader.GetString(3),
-                Estado = reader.GetString(4)
+                Estado = reader.GetString(4),
+                TelegramId = reader.IsDBNull(5) ? null : reader.GetString(5),
+                TelegramUsername = reader.IsDBNull(6) ? null : reader.GetString(6),
+                WhatsappNumber = reader.IsDBNull(7) ? null : reader.GetString(7),
+                FechaUltimaInteraccionBot = reader.IsDBNull(8) ?
+                (DateTime?)null : reader.GetDateTime(8)
             };
         }
     }
-}
+    }
+

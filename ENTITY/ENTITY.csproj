@@ -48,6 +48,8 @@
     <Compile Include="Empresa.cs" />
     <Compile Include="Habilidad.cs" />
     <Compile Include="HistorialEstado.cs" />
+    <Compile Include="InteraccionBot.cs" />
+    <Compile Include="NotificacionBot.cs" />
     <Compile Include="Postulacion.cs" />
     <Compile Include="Reclutador.cs" />
     <Compile Include="Reunion.cs" />
