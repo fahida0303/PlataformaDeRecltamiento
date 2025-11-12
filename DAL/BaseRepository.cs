@@ -14,7 +14,7 @@ namespace DAL
 
         public BaseRepository()
         {
-            _connectionString = @"Server=DESKTOP-QOR2BFH\SQLEXPRESS;Database=JobsyDB;Trusted_Connection=True;";
+            _connectionString = @"Server=LAPTOP-UVS73RFU\SQLEXPRESS;Database=JobsyDB;User Id=usr_ass;Password=psr_ass;";
         }
 
         // Método helper para crear conexiones
