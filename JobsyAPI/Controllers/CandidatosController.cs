@@ -22,9 +22,8 @@ namespace JobsyAPI.Controllers
             _logger = logger;
         }
 
-        // ========================================
+
         // POST: api/candidatos/registro
-        // ========================================
         [HttpPost("registro")]
         public IActionResult RegistrarCandidato([FromBody] RegistroCandidatoDTO dto)
         {
@@ -32,7 +31,7 @@ namespace JobsyAPI.Controllers
 
             try
             {
-                // Validaciones básicas
+
                 if (dto == null)
                 {
                     return BadRequest(new { exito = false, mensaje = "Datos inválidos" });
@@ -81,7 +80,7 @@ namespace JobsyAPI.Controllers
                         }
                     }
 
-                    // 2. Insertar nuevo usuario
+
                     string queryUsuario = @"
                         INSERT INTO Usuario 
                         (nombre, correo, contraseña, estado, telegramId, telegramUsername, whatsappNumber, fechaUltimaInteraccionBot)
@@ -92,7 +91,7 @@ namespace JobsyAPI.Controllers
                     int idUsuario;
                     using (SqlCommand cmdUsuario = new SqlCommand(queryUsuario, conn))
                     {
-                        // Generar correo si no viene
+
                         string correo = dto.Correo;
                         if (string.IsNullOrWhiteSpace(correo))
                         {
@@ -158,9 +157,8 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // ========================================
+
         // GET: api/candidatos/convocatorias
-        // ========================================
         [HttpGet("convocatorias")]
         public IActionResult ObtenerConvocatorias([FromQuery] string estado = "Activa")
         {
@@ -229,9 +227,8 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // ========================================
+
         // GET: api/candidatos/estado/{telegramId}
-        // ========================================
         [HttpGet("estado/{telegramId}")]
         public IActionResult ObtenerEstadoCandidato(string telegramId)
         {
@@ -243,7 +240,7 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
-                    // Obtener datos del candidato
+
                     string queryUsuario = @"
                         SELECT u.idUsuario, u.nombre, u.correo, 
                                c.nivelFormacion, c.experiencia
@@ -279,7 +276,6 @@ namespace JobsyAPI.Controllers
 
                             reader.Close();
 
-                            // Obtener postulaciones
                             List<dynamic> postulaciones = new List<dynamic>();
                             string queryPostulaciones = @"
                                 SELECT p.idPostulacion, p.fechaPostulacion, p.estado,
@@ -334,9 +330,8 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // ========================================
+
         // POST: api/candidatos/postular
-        // ========================================
         [HttpPost("postular")]
         public IActionResult PostularAConvocatoria([FromBody] PostulacionDTO dto)
         {
@@ -354,7 +349,7 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
-                    // 1. Obtener ID del usuario
+
                     string queryUsuario = "SELECT idUsuario FROM Usuario WHERE telegramId = @telegramId";
                     int idUsuario;
 
@@ -371,7 +366,6 @@ namespace JobsyAPI.Controllers
                         idUsuario = Convert.ToInt32(result);
                     }
 
-                    // 2. Verificar si ya se postuló
                     string queryVerificar = @"
                         SELECT COUNT(*) 
                         FROM Postulacion 
@@ -394,7 +388,7 @@ namespace JobsyAPI.Controllers
                         }
                     }
 
-                    // 3. Insertar postulación
+             
                     string queryPostular = @"
                         INSERT INTO Postulacion (idCandidato, idConvocatoria, fechaPostulacion, estado)
                         VALUES (@idUsuario, @idConvocatoria, GETDATE(), 'Pendiente');
@@ -430,9 +424,8 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // ========================================
+
         // GET: api/candidatos/health
-        // ========================================
         [HttpGet("health")]
         public IActionResult HealthCheck()
         {
@@ -459,11 +452,81 @@ namespace JobsyAPI.Controllers
                 });
             }
         }
+
+
+        // URL: PUT /api/candidatos/10/score
+        [HttpPut("{id}/score")]
+        public IActionResult ActualizarScore(int id, [FromBody] ScoreDTO datos)
+        {
+            try
+            {
+
+                if (datos == null || datos.Score < 0 || datos.Score > 100)
+                {
+                    return BadRequest(new
+                    {
+                        exito = false,
+                        mensaje = "El score debe estar entre 0 y 100"
+                    });
+                }
+
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                UPDATE Postulacion 
+                SET score = @score, 
+                    estado = 'Evaluado'
+                WHERE idPostulacion = @idPostulacion";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@score", datos.Score);
+                        cmd.Parameters.AddWithValue("@idPostulacion", id);
+
+                        int filasAfectadas = cmd.ExecuteNonQuery();
+
+                        if (filasAfectadas > 0)
+                        {
+                            return Ok(new
+                            {
+                                exito = true,
+                                idPostulacion = id,
+                                score = datos.Score,
+                                mensaje = "Score actualizado correctamente"
+                            });
+                        }
+                        else
+                        {
+                            return NotFound(new
+                            {
+                                exito = false,
+                                mensaje = "Postulación no encontrada"
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    exito = false,
+                    mensaje = "Error al actualizar score",
+                    error = ex.Message
+                });
+            }
+        }
+
+
+        public class ScoreDTO
+        {
+            public int Score { get; set; }
+        }
     }
 
-    // ========================================
-    // DTOs (Data Transfer Objects)
-    // ========================================
+   
 
     public class RegistroCandidatoDTO
     {
