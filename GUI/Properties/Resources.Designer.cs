@@ -63,6 +63,36 @@ namespace GUI.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap barra_1 {
+            get {
+                object obj = ResourceManager.GetObject("barra 1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap barra_2 {
+            get {
+                object obj = ResourceManager.GetObject("barra 2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap boton_1 {
+            get {
+                object obj = ResourceManager.GetObject("boton 1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap boton_x {
             get {
                 object obj = ResourceManager.GetObject("boton-x", resourceCulture);
@@ -143,6 +173,16 @@ namespace GUI.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Copia_de_Montifer__9_ {
+            get {
+                object obj = ResourceManager.GetObject("Copia de Montifer (9)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Copia_de_Montifer_pages_to_jpg_0001 {
             get {
                 object obj = ResourceManager.GetObject("Copia de Montifer_pages-to-jpg-0001", resourceCulture);
@@ -213,6 +253,26 @@ namespace GUI.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap documento_transparente {
+            get {
+                object obj = ResourceManager.GetObject("documento transparente", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap documento_transparente1 {
+            get {
+                object obj = ResourceManager.GetObject("documento transparente1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap eleccion {
             get {
                 object obj = ResourceManager.GetObject("eleccion", resourceCulture);
@@ -236,6 +296,16 @@ namespace GUI.Properties {
         internal static System.Drawing.Bitmap eleccion1 {
             get {
                 object obj = ResourceManager.GetObject("eleccion1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FotoPerfil {
+            get {
+                object obj = ResourceManager.GetObject("FotoPerfil", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -396,6 +466,26 @@ namespace GUI.Properties {
         internal static System.Drawing.Bitmap montifer22 {
             get {
                 object obj = ResourceManager.GetObject("montifer22", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap parte_2 {
+            get {
+                object obj = ResourceManager.GetObject("parte 2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap parte1 {
+            get {
+                object obj = ResourceManager.GetObject("parte1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

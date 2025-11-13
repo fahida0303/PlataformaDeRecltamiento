@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 namespace GUI
 {
-    public partial class UsuariUsuarioTipoCandidatooTipo : Form
+    public partial class UsuarioTipoCandidato : Form
     {
         public UsuarioTipoCandidato()
         {

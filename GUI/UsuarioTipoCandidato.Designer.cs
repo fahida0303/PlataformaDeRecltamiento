@@ -1,6 +1,6 @@
 ﻿namespace GUI
 {
-    partial class UsuariUsuarioTipoCandidatooTipo
+    partial class UsuarioTipoCandidato
     {
         /// <summary>
         /// Required designer variable.
@@ -38,6 +38,7 @@
             this.lb_TipoUsuario = new System.Windows.Forms.Label();
             this.lb_NombreUsuario = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.bttCalendario = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -46,12 +47,13 @@
             this.bttInicio = new System.Windows.Forms.Button();
             this.bttConvocatorias = new System.Windows.Forms.Button();
             this.pBox_JobsyLogo = new System.Windows.Forms.PictureBox();
-            this.bttCalendario = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.BarraTitulo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnMaximizar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimizar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCerrar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnRestaurar)).BeginInit();
+            this.panelContenedor.SuspendLayout();
             this.Menu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -126,6 +128,7 @@
             // 
             this.panelContenedor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(195)))), ((int)(((byte)(242)))));
             this.panelContenedor.BackgroundImage = global::GUI.Properties.Resources.Copia_de_Montifer_pages_to_jpg_0001;
+            this.panelContenedor.Controls.Add(this.panel6);
             this.panelContenedor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContenedor.Location = new System.Drawing.Point(305, 35);
             this.panelContenedor.Name = "panelContenedor";
@@ -185,6 +188,21 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(282, 2);
             this.panel7.TabIndex = 17;
+            // 
+            // bttCalendario
+            // 
+            this.bttCalendario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
+            this.bttCalendario.FlatAppearance.BorderSize = 0;
+            this.bttCalendario.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
+            this.bttCalendario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bttCalendario.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bttCalendario.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.bttCalendario.Location = new System.Drawing.Point(12, 270);
+            this.bttCalendario.Name = "bttCalendario";
+            this.bttCalendario.Size = new System.Drawing.Size(282, 50);
+            this.bttCalendario.TabIndex = 11;
+            this.bttCalendario.Text = "Calendario";
+            this.bttCalendario.UseVisualStyleBackColor = false;
             // 
             // panel4
             // 
@@ -274,22 +292,16 @@
             this.pBox_JobsyLogo.TabIndex = 0;
             this.pBox_JobsyLogo.TabStop = false;
             // 
-            // bttCalendario
+            // panel6
             // 
-            this.bttCalendario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.bttCalendario.FlatAppearance.BorderSize = 0;
-            this.bttCalendario.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.bttCalendario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bttCalendario.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttCalendario.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttCalendario.Location = new System.Drawing.Point(12, 270);
-            this.bttCalendario.Name = "bttCalendario";
-            this.bttCalendario.Size = new System.Drawing.Size(282, 50);
-            this.bttCalendario.TabIndex = 11;
-            this.bttCalendario.Text = "Calendario";
-            this.bttCalendario.UseVisualStyleBackColor = false;
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel6.Location = new System.Drawing.Point(33, 20);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(937, 577);
+            this.panel6.TabIndex = 3;
             // 
-            // UsuariUsuarioTipoCandidatooTipo
+            // UsuarioTipoCandidato
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -298,13 +310,14 @@
             this.Controls.Add(this.Menu);
             this.Controls.Add(this.BarraTitulo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "UsuariUsuarioTipoCandidatooTipo";
+            this.Name = "UsuarioTipoCandidato";
             this.Text = "UsuarioTipo";
             this.BarraTitulo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnMaximizar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimizar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCerrar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnRestaurar)).EndInit();
+            this.panelContenedor.ResumeLayout(false);
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -335,5 +348,6 @@
         private System.Windows.Forms.Label lb_NombreUsuario;
         private System.Windows.Forms.Label lb_TipoUsuario;
         private System.Windows.Forms.Button bttCalendario;
+        private System.Windows.Forms.Panel panel6;
     }
 }

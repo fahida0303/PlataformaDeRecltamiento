@@ -34,6 +34,7 @@
             this.btnCerrar = new System.Windows.Forms.PictureBox();
             this.btnRestaurar = new System.Windows.Forms.PictureBox();
             this.panelContenedor = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.Menu = new System.Windows.Forms.Panel();
             this.lb_TipoUsuario = new System.Windows.Forms.Label();
             this.lb_NombreUsuario = new System.Windows.Forms.Label();
@@ -57,6 +58,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimizar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCerrar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnRestaurar)).BeginInit();
+            this.panelContenedor.SuspendLayout();
             this.Menu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -73,7 +75,7 @@
             this.BarraTitulo.Dock = System.Windows.Forms.DockStyle.Top;
             this.BarraTitulo.Location = new System.Drawing.Point(0, 0);
             this.BarraTitulo.Name = "BarraTitulo";
-            this.BarraTitulo.Size = new System.Drawing.Size(1300, 35);
+            this.BarraTitulo.Size = new System.Drawing.Size(1821, 35);
             this.BarraTitulo.TabIndex = 0;
             this.BarraTitulo.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BarraTitulo_MouseDown);
             // 
@@ -81,7 +83,7 @@
             // 
             this.btnMaximizar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMaximizar.Image = global::GUI.Properties.Resources.cuadricula22;
-            this.btnMaximizar.Location = new System.Drawing.Point(1225, 4);
+            this.btnMaximizar.Location = new System.Drawing.Point(1746, 4);
             this.btnMaximizar.Name = "btnMaximizar";
             this.btnMaximizar.Size = new System.Drawing.Size(25, 25);
             this.btnMaximizar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -94,7 +96,7 @@
             // 
             this.btnMinimizar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMinimizar.Image = global::GUI.Properties.Resources.minimizar_signo;
-            this.btnMinimizar.Location = new System.Drawing.Point(1190, 5);
+            this.btnMinimizar.Location = new System.Drawing.Point(1711, 5);
             this.btnMinimizar.Name = "btnMinimizar";
             this.btnMinimizar.Size = new System.Drawing.Size(25, 25);
             this.btnMinimizar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -107,7 +109,7 @@
             this.btnCerrar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCerrar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCerrar.Image = global::GUI.Properties.Resources.boton_x;
-            this.btnCerrar.Location = new System.Drawing.Point(1263, 5);
+            this.btnCerrar.Location = new System.Drawing.Point(1784, 5);
             this.btnCerrar.Name = "btnCerrar";
             this.btnCerrar.Size = new System.Drawing.Size(25, 25);
             this.btnCerrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -119,7 +121,7 @@
             // 
             this.btnRestaurar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRestaurar.Image = global::GUI.Properties.Resources.cuadricula;
-            this.btnRestaurar.Location = new System.Drawing.Point(1225, 4);
+            this.btnRestaurar.Location = new System.Drawing.Point(1746, 4);
             this.btnRestaurar.Name = "btnRestaurar";
             this.btnRestaurar.Size = new System.Drawing.Size(25, 25);
             this.btnRestaurar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -131,11 +133,21 @@
             // 
             this.panelContenedor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(195)))), ((int)(((byte)(242)))));
             this.panelContenedor.BackgroundImage = global::GUI.Properties.Resources.Copia_de_Montifer_pages_to_jpg_0001;
+            this.panelContenedor.Controls.Add(this.panel6);
             this.panelContenedor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContenedor.Location = new System.Drawing.Point(305, 35);
             this.panelContenedor.Name = "panelContenedor";
-            this.panelContenedor.Size = new System.Drawing.Size(995, 615);
+            this.panelContenedor.Size = new System.Drawing.Size(1516, 838);
             this.panelContenedor.TabIndex = 2;
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel6.Location = new System.Drawing.Point(32, 20);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(937, 577);
+            this.panel6.TabIndex = 0;
             // 
             // Menu
             // 
@@ -161,7 +173,7 @@
             this.Menu.Dock = System.Windows.Forms.DockStyle.Left;
             this.Menu.Location = new System.Drawing.Point(0, 35);
             this.Menu.Name = "Menu";
-            this.Menu.Size = new System.Drawing.Size(305, 615);
+            this.Menu.Size = new System.Drawing.Size(305, 838);
             this.Menu.TabIndex = 1;
             // 
             // lb_TipoUsuario
@@ -255,7 +267,7 @@
             // 
             this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureBox2.Image = global::GUI.Properties.Resources.icono_Usuariotipo_removebg_preview;
-            this.pictureBox2.Location = new System.Drawing.Point(3, 539);
+            this.pictureBox2.Location = new System.Drawing.Point(3, 762);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(216, 76);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -297,7 +309,7 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Image = global::GUI.Properties.Resources.tuerca;
-            this.pictureBox1.Location = new System.Drawing.Point(225, 553);
+            this.pictureBox1.Location = new System.Drawing.Point(225, 776);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(62, 50);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -357,7 +369,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1300, 650);
+            this.ClientSize = new System.Drawing.Size(1821, 873);
             this.Controls.Add(this.panelContenedor);
             this.Controls.Add(this.Menu);
             this.Controls.Add(this.BarraTitulo);
@@ -369,6 +381,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimizar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCerrar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnRestaurar)).EndInit();
+            this.panelContenedor.ResumeLayout(false);
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -404,5 +417,6 @@
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Label lb_NombreUsuario;
         private System.Windows.Forms.Label lb_TipoUsuario;
+        private System.Windows.Forms.Panel panel6;
     }
 }

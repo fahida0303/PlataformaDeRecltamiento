@@ -258,5 +258,32 @@
   <ItemGroup>
     <None Include="Resources\eleccion 1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\barra 1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\barra 2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\boton 1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FotoPerfil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\parte1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\parte 2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\documento transparente.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\documento transparente1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
