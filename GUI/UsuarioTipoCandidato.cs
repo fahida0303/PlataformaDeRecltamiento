@@ -11,9 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace GUI
 {
-    public partial class RegistrarDos : Form
+    public partial class UsuariUsuarioTipoCandidatooTipo : Form
     {
-        public RegistrarDos()
+        public UsuarioTipoCandidato()
         {
             InitializeComponent();
         }

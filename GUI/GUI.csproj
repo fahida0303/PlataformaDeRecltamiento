@@ -54,11 +54,41 @@
     <Compile Include="Eleccion.Designer.cs">
       <DependentUpon>Eleccion.cs</DependentUpon>
     </Compile>
+    <Compile Include="InicioSecion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InicioSecion.Designer.cs">
+      <DependentUpon>InicioSecion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RegistroDosReclutador.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegistroDosReclutador.Designer.cs">
+      <DependentUpon>RegistroDosReclutador.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RegistrarDos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegistrarDos.Designer.cs">
+      <DependentUpon>RegistrarDos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Registrar.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Registrar.Designer.cs">
       <DependentUpon>Registrar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UsuarioTipoCandidato.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsuarioTipoCandidato.Designer.cs">
+      <DependentUpon>UsuarioTipoCandidato.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UsuarioTipoReclutador.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsuarioTipoReclutador.Designer.cs">
+      <DependentUpon>UsuarioTipoReclutador.cs</DependentUpon>
     </Compile>
     <Compile Include="UsuarioTipo.cs">
       <SubType>Form</SubType>
@@ -79,8 +109,23 @@
     <EmbeddedResource Include="Eleccion.resx">
       <DependentUpon>Eleccion.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="InicioSecion.resx">
+      <DependentUpon>InicioSecion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegistroDosReclutador.resx">
+      <DependentUpon>RegistroDosReclutador.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegistrarDos.resx">
+      <DependentUpon>RegistrarDos.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Registrar.resx">
       <DependentUpon>Registrar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UsuarioTipoCandidato.resx">
+      <DependentUpon>UsuarioTipoCandidato.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UsuarioTipoReclutador.resx">
+      <DependentUpon>UsuarioTipoReclutador.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UsuarioTipo.resx">
       <DependentUpon>UsuarioTipo.cs</DependentUpon>
@@ -170,6 +215,48 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\image-removebg-preview %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\image-removebg-preview %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\image-removebg-preview %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\image-removebg-preview %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\image-removebg-preview %284%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\image-removebg-preview %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %286%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eleccion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eleccion1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eleccion 1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
