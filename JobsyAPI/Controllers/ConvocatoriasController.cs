@@ -108,7 +108,7 @@ namespace JobsyAPI.Controllers
                         INNER JOIN Candidato c ON p.idCandidato = c.idCandidato
                         INNER JOIN Usuario u ON c.idCandidato = u.idUsuario
                         WHERE p.idConvocatoria = @idConvocatoria
-                          AND p.estado = 'En revisión'";
+                          AND p.estado = 'Aplicado'";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
