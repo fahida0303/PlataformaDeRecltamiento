@@ -93,6 +93,16 @@ namespace GUI.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap boton_de_encendido_apagado {
+            get {
+                object obj = ResourceManager.GetObject("boton-de-encendido-apagado", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap boton_x {
             get {
                 object obj = ResourceManager.GetObject("boton-x", resourceCulture);
@@ -106,6 +116,26 @@ namespace GUI.Properties {
         internal static System.Drawing.Bitmap Captura_de_pantalla_2025_11_08_040129 {
             get {
                 object obj = ResourceManager.GetObject("Captura de pantalla 2025-11-08 040129", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Captura_de_pantalla_2025_11_16_070411 {
+            get {
+                object obj = ResourceManager.GetObject("Captura de pantalla 2025-11-16 070411", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Captura_de_pantalla_2025_11_16_111817 {
+            get {
+                object obj = ResourceManager.GetObject("Captura de pantalla 2025-11-16 111817", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,6 +173,26 @@ namespace GUI.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Copia_de_Montifer__10_ {
+            get {
+                object obj = ResourceManager.GetObject("Copia de Montifer (10)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Copia_de_Montifer__10_1 {
+            get {
+                object obj = ResourceManager.GetObject("Copia de Montifer (10)1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Copia_de_Montifer__4_ {
             get {
                 object obj = ResourceManager.GetObject("Copia de Montifer (4)", resourceCulture);
@@ -166,6 +216,36 @@ namespace GUI.Properties {
         internal static System.Drawing.Bitmap Copia_de_Montifer__6_1 {
             get {
                 object obj = ResourceManager.GetObject("Copia de Montifer (6)1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Copia_de_Montifer__7_ {
+            get {
+                object obj = ResourceManager.GetObject("Copia de Montifer (7)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Copia_de_Montifer__7_1 {
+            get {
+                object obj = ResourceManager.GetObject("Copia de Montifer (7)1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Copia_de_Montifer__7_2 {
+            get {
+                object obj = ResourceManager.GetObject("Copia de Montifer (7)2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -466,6 +546,16 @@ namespace GUI.Properties {
         internal static System.Drawing.Bitmap montifer22 {
             get {
                 object obj = ResourceManager.GetObject("montifer22", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap paco_boton_de_apagado {
+            get {
+                object obj = ResourceManager.GetObject("paco boton de apagado", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

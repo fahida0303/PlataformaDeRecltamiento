@@ -16,7 +16,9 @@ namespace GUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UsuarioTipoReclutador());
+            Application.Run(new Principal());
+           
+
         }
     }
 }

@@ -142,23 +142,35 @@
   <data name="eleccion" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\eleccion.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Copia de Montifer1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Copia de Montifer1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="paco boton de apagado" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\paco boton de apagado.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="documento transparente" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\documento transparente.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="parte1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\parte1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="cuadricula21" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\cuadricula21.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Captura de pantalla 2025-11-16 070411" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Captura de pantalla 2025-11-16 070411.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="cuadricula22" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cuadricula22.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Copia de Montifer (7)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Copia de Montifer (7).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="image-removebg-preview (4)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\image-removebg-preview (4)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="barra 2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\barra 2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Copia de Montifer (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Copia de Montifer (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton-de-encendido-apagado" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton-de-encendido-apagado.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="JobsyLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\JobsyLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -169,8 +181,8 @@
   <data name="Copia de Montifer_pages-to-jpg-00011" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Copia de Montifer_pages-to-jpg-00011.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="image-removebg-preview (4)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\image-removebg-preview (4)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="cuadricula21" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cuadricula21.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="eleccion 1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\eleccion 1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -181,14 +193,26 @@
   <data name="Copia de Montifer_pages-to-jpg-0001" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Copia de Montifer_pages-to-jpg-0001.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Copia de Montifer (10)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Copia de Montifer (10)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Copia de Montifer (10)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Copia de Montifer (10).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="jobsitransparentet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\jobsitransparentet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Captura de pantalla 2025-11-16 111817" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Captura de pantalla 2025-11-16 111817.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FotoPerfil" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FotoPerfil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="tuerca" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tuerca.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="documento transparente1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\documento transparente1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Copia de Montifer1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Copia de Montifer1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="boton-x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\boton-x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -201,6 +225,9 @@
   </data>
   <data name="Copia de Montifer (4)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Copia de Montifer (4).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tuerca" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tuerca.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="casa" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\casa.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -244,10 +271,10 @@
   <data name="image-removebg-preview (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\image-removebg-preview (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="documento transparente" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\documento transparente.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Copia de Montifer (7)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Copia de Montifer (7)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="documento transparente1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\documento transparente1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Copia de Montifer (7)2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Copia de Montifer (7)2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

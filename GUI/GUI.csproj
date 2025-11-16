@@ -84,6 +84,12 @@
     <Compile Include="UsuarioTipoCandidato.Designer.cs">
       <DependentUpon>UsuarioTipoCandidato.cs</DependentUpon>
     </Compile>
+    <Compile Include="Principal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Principal.Designer.cs">
+      <DependentUpon>Principal.cs</DependentUpon>
+    </Compile>
     <Compile Include="UsuarioTipoReclutador.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UsuarioTipoCandidato.resx">
       <DependentUpon>UsuarioTipoCandidato.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Principal.resx">
+      <DependentUpon>Principal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UsuarioTipoReclutador.resx">
       <DependentUpon>UsuarioTipoReclutador.cs</DependentUpon>
@@ -284,6 +293,33 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\documento transparente1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %2810%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Captura de pantalla 2025-11-16 070411.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Captura de pantalla 2025-11-16 111817.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\boton-de-encendido-apagado.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\paco boton de apagado.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %287%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copia de Montifer %287%292.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -11,20 +11,32 @@ using System.Runtime.InteropServices;
 
 namespace GUI
 {
-    public partial class Eleccion : Form
+    public partial class Principal : Form
     {
-        public Eleccion()
+        public Principal()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Normal;
-            this.StartPosition = FormStartPosition.CenterScreen;
+
+            AbrirFormulario(new UsuarioTipoReclutador());
         }
 
-        //private void btnCerrar_Click(object sender, EventArgs e)
-        //{
-        //    Application.Exit();
-        //}
+        private void AbrirFormulario(Form form)
+        {
+            panelContenedor.Controls.Clear();
+            form.TopLevel = false;
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.Dock = DockStyle.Fill;
+            panelContenedor.Controls.Add(form);
+            form.Show();
+        }
+
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
 
         //private void btnMaximizar_Click(object sender, EventArgs e)
         //{
