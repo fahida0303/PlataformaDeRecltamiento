@@ -14,15 +14,11 @@ namespace JobsyAPI.Controllers
             _connectionString = configuration.GetConnectionString("JobsyDB");
         }
 
-      
-        // URL: POST /api/calendario/agendar-entrevista
-        // Body: { "idCandidato": 5, "idReclutador": 2, "fechaHora": "2025-02-15T10:00:00", "enlaceMeet": "meet.google.com/abc" }
         [HttpPost("agendar-entrevista")]
         public IActionResult AgendarEntrevista([FromBody] EntrevistaDTO datos)
         {
             try
             {
-                
                 if (datos == null || datos.IdCandidato <= 0 || datos.IdReclutador <= 0)
                 {
                     return BadRequest(new { exito = false, mensaje = "Datos inválidos" });
@@ -43,7 +39,6 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
-        
                     string query = @"
                         INSERT INTO Reunion (fecha, enlaceMeet, estadoConfirmacion, idCandidato, idReclutador)
                         VALUES (@fecha, @enlace, 'Pendiente', @idCandidato, @idReclutador);
@@ -56,7 +51,6 @@ namespace JobsyAPI.Controllers
                         cmd.Parameters.AddWithValue("@idCandidato", datos.IdCandidato);
                         cmd.Parameters.AddWithValue("@idReclutador", datos.IdReclutador);
 
-                        
                         idReunion = Convert.ToInt32(cmd.ExecuteScalar());
                     }
                 }
@@ -79,8 +73,6 @@ namespace JobsyAPI.Controllers
             }
         }
 
-       
-        // URL: GET /api/calendario/proximas?dias=7
         [HttpGet("proximas")]
         public IActionResult ObtenerEntrevistasProximas([FromQuery] int dias = 7)
         {
@@ -145,14 +137,85 @@ namespace JobsyAPI.Controllers
                 });
             }
         }
+
+        [HttpPut("actualizar-reunion/{id}")]
+        public async Task<IActionResult> ActualizarReunionConMeet(int id, [FromBody] ActualizarReunionMeetRequest request)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    await conn.OpenAsync();
+
+                    string verificarQuery = "SELECT COUNT(*) FROM Reunion WHERE idReunion = @IdReunion";
+                    using (SqlCommand cmdVerificar = new SqlCommand(verificarQuery, conn))
+                    {
+                        cmdVerificar.Parameters.AddWithValue("@IdReunion", id);
+                        int existe = Convert.ToInt32(await cmdVerificar.ExecuteScalarAsync());
+
+                        if (existe == 0)
+                        {
+                            return NotFound(new
+                            {
+                                exito = false,
+                                mensaje = $"No se encontró una reunión con ID {id}"
+                            });
+                        }
+                    }
+
+                    string updateQuery = @"
+                        UPDATE Reunion
+                        SET 
+                            enlaceMeet = @EnlaceMeet,
+                            idEventoCalendar = @IdEventoCalendar,
+                            estadoConfirmacion = @EstadoConfirmacion,
+                            fechaModificacion = GETDATE()
+                        WHERE idReunion = @IdReunion";
+
+                    using (SqlCommand cmdUpdate = new SqlCommand(updateQuery, conn))
+                    {
+                        cmdUpdate.Parameters.AddWithValue("@IdReunion", id);
+                        cmdUpdate.Parameters.AddWithValue("@EnlaceMeet", request.EnlaceMeet ?? "");
+                        cmdUpdate.Parameters.AddWithValue("@IdEventoCalendar", request.IdEventoCalendar ?? "");
+                        cmdUpdate.Parameters.AddWithValue("@EstadoConfirmacion", request.EstadoConfirmacion ?? "Confirmada");
+
+                        await cmdUpdate.ExecuteNonQueryAsync();
+                    }
+
+                    return Ok(new
+                    {
+                        exito = true,
+                        mensaje = "Reunión actualizada exitosamente con enlace de Meet",
+                        idReunion = id,
+                        enlaceMeet = request.EnlaceMeet,
+                        idEventoCalendar = request.IdEventoCalendar
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    exito = false,
+                    mensaje = "Error al actualizar la reunión",
+                    detalle = ex.Message
+                });
+            }
+        }
     }
 
- 
     public class EntrevistaDTO
     {
         public int IdCandidato { get; set; }
         public int IdReclutador { get; set; }
         public DateTime FechaHora { get; set; }
         public string EnlaceMeet { get; set; }
+    }
+
+    public class ActualizarReunionMeetRequest
+    {
+        public string EnlaceMeet { get; set; }
+        public string IdEventoCalendar { get; set; }
+        public string EstadoConfirmacion { get; set; }
     }
 }
