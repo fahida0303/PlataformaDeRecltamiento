@@ -51,28 +51,5 @@ namespace GUI
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
 
-        private void txt_PResidencia_Enter(object sender, EventArgs e)
-        {
-            txt_PResidencia.Text = "";
-            txt_PResidencia.ForeColor = Color.White; // O el color real de tu texto
-        }
-
-        private void txt_PResidencia_Leave(object sender, EventArgs e)
-        {
-            txt_PResidencia.Text = "Pais de Residencia";
-            txt_PResidencia.ForeColor = Color.Gray;
-        }
-
-        private void txt_CResidencia_Enter(object sender, EventArgs e)
-        {
-            txt_CResidencia.Text = "";
-            txt_CResidencia.ForeColor = Color.White; // O el color real de tu texto
-        }
-
-        private void txt_CResidencia_Leave(object sender, EventArgs e)
-        {
-            txt_CResidencia.Text = "Ciudad de Residencia";
-            txt_CResidencia.ForeColor = Color.Gray;
-        }
     }
 }

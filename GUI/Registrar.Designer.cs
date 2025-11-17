@@ -30,14 +30,25 @@
         {
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label_Apellido = new System.Windows.Forms.Label();
+            this.label_Nombres = new System.Windows.Forms.Label();
+            this.label_ConfirContraseña = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label_Gmail = new System.Windows.Forms.Label();
+            this.label_FechaNacimiento = new System.Windows.Forms.Label();
+            this.label_ID = new System.Windows.Forms.Label();
+            this.txtContraseña = new System.Windows.Forms.TextBox();
+            this.txtConfirContraseña = new System.Windows.Forms.TextBox();
+            this.texNombres = new System.Windows.Forms.TextBox();
+            this.txtFechaNacimiento = new System.Windows.Forms.TextBox();
+            this.txtApellidos = new System.Windows.Forms.TextBox();
+            this.txtGmail = new System.Windows.Forms.TextBox();
+            this.txtID2 = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pBox_Nombres = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.bttSalvarContinuar = new System.Windows.Forms.Button();
-            this.txt_ConfirContraseña = new System.Windows.Forms.TextBox();
-            this.txt_Contraseña = new System.Windows.Forms.TextBox();
-            this.txt_Gmail = new System.Windows.Forms.TextBox();
-            this.txt_FechaNacimiento = new System.Windows.Forms.TextBox();
-            this.txt_Apellidos = new System.Windows.Forms.TextBox();
-            this.txt_Nombres = new System.Windows.Forms.TextBox();
+            this.txt_ID2 = new System.Windows.Forms.TextBox();
             this.label_Datos = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox11 = new System.Windows.Forms.PictureBox();
@@ -48,14 +59,12 @@
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pBox_Nombres = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.txt_ID = new System.Windows.Forms.TextBox();
-            this.txtID2 = new System.Windows.Forms.TextBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panelContenedor.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBox_Nombres)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
@@ -63,10 +72,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pBox_Nombres)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // panelContenedor
@@ -88,18 +95,25 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(130)))), ((int)(((byte)(195)))), ((int)(((byte)(242)))));
             this.panel1.BackgroundImage = global::GUI.Properties.Resources.Copia_de_Montifer__9_;
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.panel1.Controls.Add(this.label_Apellido);
+            this.panel1.Controls.Add(this.label_Nombres);
+            this.panel1.Controls.Add(this.label_ConfirContraseña);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.label_Gmail);
+            this.panel1.Controls.Add(this.label_FechaNacimiento);
+            this.panel1.Controls.Add(this.label_ID);
+            this.panel1.Controls.Add(this.txtContraseña);
+            this.panel1.Controls.Add(this.txtConfirContraseña);
+            this.panel1.Controls.Add(this.texNombres);
+            this.panel1.Controls.Add(this.txtFechaNacimiento);
+            this.panel1.Controls.Add(this.txtApellidos);
+            this.panel1.Controls.Add(this.txtGmail);
             this.panel1.Controls.Add(this.txtID2);
-            this.panel1.Controls.Add(this.txt_Apellidos);
             this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.txt_Nombres);
             this.panel1.Controls.Add(this.pBox_Nombres);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.bttSalvarContinuar);
-            this.panel1.Controls.Add(this.txt_ConfirContraseña);
-            this.panel1.Controls.Add(this.txt_Contraseña);
-            this.panel1.Controls.Add(this.txt_Gmail);
-            this.panel1.Controls.Add(this.txt_ID);
-            this.panel1.Controls.Add(this.txt_FechaNacimiento);
+            this.panel1.Controls.Add(this.txt_ID2);
             this.panel1.Controls.Add(this.label_Datos);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.pictureBox11);
@@ -118,12 +132,187 @@
             this.panel1.Size = new System.Drawing.Size(1920, 905);
             this.panel1.TabIndex = 0;
             // 
+            // label_Apellido
+            // 
+            this.label_Apellido.AutoSize = true;
+            this.label_Apellido.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_Apellido.Location = new System.Drawing.Point(1017, 338);
+            this.label_Apellido.Name = "label_Apellido";
+            this.label_Apellido.Size = new System.Drawing.Size(81, 20);
+            this.label_Apellido.TabIndex = 40;
+            this.label_Apellido.Text = "Apellido";
+            // 
+            // label_Nombres
+            // 
+            this.label_Nombres.AutoSize = true;
+            this.label_Nombres.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_Nombres.Location = new System.Drawing.Point(1017, 249);
+            this.label_Nombres.Name = "label_Nombres";
+            this.label_Nombres.Size = new System.Drawing.Size(72, 20);
+            this.label_Nombres.TabIndex = 39;
+            this.label_Nombres.Text = "Nombres";
+            // 
+            // label_ConfirContraseña
+            // 
+            this.label_ConfirContraseña.AutoSize = true;
+            this.label_ConfirContraseña.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_ConfirContraseña.Location = new System.Drawing.Point(588, 600);
+            this.label_ConfirContraseña.Name = "label_ConfirContraseña";
+            this.label_ConfirContraseña.Size = new System.Drawing.Size(189, 20);
+            this.label_ConfirContraseña.TabIndex = 38;
+            this.label_ConfirContraseña.Text = "Confirmar Contraseña";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(588, 513);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(99, 20);
+            this.label5.TabIndex = 37;
+            this.label5.Text = "Contraseña";
+            // 
+            // label_Gmail
+            // 
+            this.label_Gmail.AutoSize = true;
+            this.label_Gmail.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_Gmail.Location = new System.Drawing.Point(588, 424);
+            this.label_Gmail.Name = "label_Gmail";
+            this.label_Gmail.Size = new System.Drawing.Size(54, 20);
+            this.label_Gmail.TabIndex = 36;
+            this.label_Gmail.Text = "Gmail";
+            // 
+            // label_FechaNacimiento
+            // 
+            this.label_FechaNacimiento.AutoSize = true;
+            this.label_FechaNacimiento.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_FechaNacimiento.Location = new System.Drawing.Point(588, 338);
+            this.label_FechaNacimiento.Name = "label_FechaNacimiento";
+            this.label_FechaNacimiento.Size = new System.Drawing.Size(99, 20);
+            this.label_FechaNacimiento.TabIndex = 35;
+            this.label_FechaNacimiento.Text = "DD/MM/AAAA";
+            // 
+            // label_ID
+            // 
+            this.label_ID.AutoSize = true;
+            this.label_ID.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_ID.Location = new System.Drawing.Point(588, 249);
+            this.label_ID.Name = "label_ID";
+            this.label_ID.Size = new System.Drawing.Size(27, 20);
+            this.label_ID.TabIndex = 34;
+            this.label_ID.Text = "ID";
+            // 
+            // txtContraseña
+            // 
+            this.txtContraseña.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtContraseña.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtContraseña.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContraseña.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtContraseña.Location = new System.Drawing.Point(607, 544);
+            this.txtContraseña.Multiline = true;
+            this.txtContraseña.Name = "txtContraseña";
+            this.txtContraseña.PasswordChar = '*';
+            this.txtContraseña.Size = new System.Drawing.Size(290, 20);
+            this.txtContraseña.TabIndex = 33;
+            // 
+            // txtConfirContraseña
+            // 
+            this.txtConfirContraseña.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtConfirContraseña.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtConfirContraseña.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtConfirContraseña.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtConfirContraseña.Location = new System.Drawing.Point(607, 632);
+            this.txtConfirContraseña.Name = "txtConfirContraseña";
+            this.txtConfirContraseña.PasswordChar = '*';
+            this.txtConfirContraseña.Size = new System.Drawing.Size(290, 18);
+            this.txtConfirContraseña.TabIndex = 32;
+            // 
+            // texNombres
+            // 
+            this.texNombres.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.texNombres.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.texNombres.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.texNombres.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.texNombres.Location = new System.Drawing.Point(1030, 282);
+            this.texNombres.Multiline = true;
+            this.texNombres.Name = "texNombres";
+            this.texNombres.Size = new System.Drawing.Size(290, 22);
+            this.texNombres.TabIndex = 31;
+            // 
+            // txtFechaNacimiento
+            // 
+            this.txtFechaNacimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtFechaNacimiento.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtFechaNacimiento.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFechaNacimiento.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtFechaNacimiento.Location = new System.Drawing.Point(607, 370);
+            this.txtFechaNacimiento.Multiline = true;
+            this.txtFechaNacimiento.Name = "txtFechaNacimiento";
+            this.txtFechaNacimiento.Size = new System.Drawing.Size(290, 20);
+            this.txtFechaNacimiento.TabIndex = 30;
+            // 
+            // txtApellidos
+            // 
+            this.txtApellidos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtApellidos.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtApellidos.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtApellidos.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtApellidos.Location = new System.Drawing.Point(1030, 368);
+            this.txtApellidos.Multiline = true;
+            this.txtApellidos.Name = "txtApellidos";
+            this.txtApellidos.Size = new System.Drawing.Size(290, 22);
+            this.txtApellidos.TabIndex = 29;
+            // 
+            // txtGmail
+            // 
+            this.txtGmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtGmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtGmail.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtGmail.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtGmail.Location = new System.Drawing.Point(607, 455);
+            this.txtGmail.Multiline = true;
+            this.txtGmail.Name = "txtGmail";
+            this.txtGmail.Size = new System.Drawing.Size(290, 20);
+            this.txtGmail.TabIndex = 28;
+            // 
+            // txtID2
+            // 
+            this.txtID2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtID2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtID2.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtID2.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtID2.Location = new System.Drawing.Point(607, 282);
+            this.txtID2.Multiline = true;
+            this.txtID2.Name = "txtID2";
+            this.txtID2.Size = new System.Drawing.Size(290, 20);
+            this.txtID2.TabIndex = 27;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::GUI.Properties.Resources.barra_2;
+            this.pictureBox1.Location = new System.Drawing.Point(1006, 352);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(337, 55);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 26;
+            this.pictureBox1.TabStop = false;
+            // 
+            // pBox_Nombres
+            // 
+            this.pBox_Nombres.Image = global::GUI.Properties.Resources.barra_2;
+            this.pBox_Nombres.Location = new System.Drawing.Point(1006, 265);
+            this.pBox_Nombres.Name = "pBox_Nombres";
+            this.pBox_Nombres.Size = new System.Drawing.Size(337, 55);
+            this.pBox_Nombres.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pBox_Nombres.TabIndex = 25;
+            this.pBox_Nombres.TabStop = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label1.Location = new System.Drawing.Point(1122, 585);
+            this.label1.Location = new System.Drawing.Point(1122, 613);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(120, 22);
             this.label1.TabIndex = 24;
@@ -145,89 +334,18 @@
             this.bttSalvarContinuar.Text = "Salvar y Continuar";
             this.bttSalvarContinuar.UseVisualStyleBackColor = false;
             // 
-            // txt_ConfirContraseña
+            // txt_ID2
             // 
-            this.txt_ConfirContraseña.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_ConfirContraseña.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_ConfirContraseña.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_ConfirContraseña.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_ConfirContraseña.Location = new System.Drawing.Point(607, 604);
-            this.txt_ConfirContraseña.Name = "txt_ConfirContraseña";
-            this.txt_ConfirContraseña.Size = new System.Drawing.Size(230, 18);
-            this.txt_ConfirContraseña.TabIndex = 22;
-            this.txt_ConfirContraseña.Text = "Confirmar Contraseña";
-            this.txt_ConfirContraseña.Enter += new System.EventHandler(this.txt_ConfirContraseña_Enter);
-            this.txt_ConfirContraseña.Leave += new System.EventHandler(this.txt_ConfirContraseña_Leave);
-            // 
-            // txt_Contraseña
-            // 
-            this.txt_Contraseña.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_Contraseña.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_Contraseña.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_Contraseña.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_Contraseña.Location = new System.Drawing.Point(607, 516);
-            this.txt_Contraseña.Name = "txt_Contraseña";
-            this.txt_Contraseña.Size = new System.Drawing.Size(290, 18);
-            this.txt_Contraseña.TabIndex = 21;
-            this.txt_Contraseña.Text = "Contraseña";
-            this.txt_Contraseña.Enter += new System.EventHandler(this.txt_Contraseña_Enter);
-            this.txt_Contraseña.Leave += new System.EventHandler(this.txt_Contraseña_Leave);
-            // 
-            // txt_Gmail
-            // 
-            this.txt_Gmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_Gmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_Gmail.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_Gmail.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_Gmail.Location = new System.Drawing.Point(607, 428);
-            this.txt_Gmail.Name = "txt_Gmail";
-            this.txt_Gmail.Size = new System.Drawing.Size(290, 18);
-            this.txt_Gmail.TabIndex = 20;
-            this.txt_Gmail.Text = "Gmail";
-            this.txt_Gmail.Enter += new System.EventHandler(this.txt_Gmail_Enter);
-            this.txt_Gmail.Leave += new System.EventHandler(this.txt_Gmail_Leave);
-            // 
-            // txt_FechaNacimiento
-            // 
-            this.txt_FechaNacimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_FechaNacimiento.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_FechaNacimiento.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_FechaNacimiento.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_FechaNacimiento.Location = new System.Drawing.Point(607, 342);
-            this.txt_FechaNacimiento.Name = "txt_FechaNacimiento";
-            this.txt_FechaNacimiento.Size = new System.Drawing.Size(290, 18);
-            this.txt_FechaNacimiento.TabIndex = 18;
-            this.txt_FechaNacimiento.Text = "DD/MM/AAAA";
-            this.txt_FechaNacimiento.Enter += new System.EventHandler(this.txt_FechaNacimiento_Enter);
-            this.txt_FechaNacimiento.Leave += new System.EventHandler(this.txt_FechaNacimiento_Leave);
-            // 
-            // txt_Apellidos
-            // 
-            this.txt_Apellidos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_Apellidos.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_Apellidos.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_Apellidos.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_Apellidos.Location = new System.Drawing.Point(1033, 342);
-            this.txt_Apellidos.Name = "txt_Apellidos";
-            this.txt_Apellidos.Size = new System.Drawing.Size(290, 18);
-            this.txt_Apellidos.TabIndex = 17;
-            this.txt_Apellidos.Text = "Apellidos";
-            this.txt_Apellidos.Enter += new System.EventHandler(this.txt_Apellidos_Enter);
-            this.txt_Apellidos.Leave += new System.EventHandler(this.txt_Apellidos_Leave);
-            // 
-            // txt_Nombres
-            // 
-            this.txt_Nombres.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_Nombres.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_Nombres.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_Nombres.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_Nombres.Location = new System.Drawing.Point(1033, 255);
-            this.txt_Nombres.Name = "txt_Nombres";
-            this.txt_Nombres.Size = new System.Drawing.Size(290, 18);
-            this.txt_Nombres.TabIndex = 0;
-            this.txt_Nombres.Text = "Nombres";
-            this.txt_Nombres.Enter += new System.EventHandler(this.txt_Nombres_Enter);
-            this.txt_Nombres.Leave += new System.EventHandler(this.txt_Nombres_Leave);
+            this.txt_ID2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txt_ID2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txt_ID2.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txt_ID2.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txt_ID2.Location = new System.Drawing.Point(607, 283);
+            this.txt_ID2.Name = "txt_ID2";
+            this.txt_ID2.Size = new System.Drawing.Size(290, 18);
+            this.txt_ID2.TabIndex = 19;
+            this.txt_ID2.Text = "ID";
+            this.txt_ID2.UseWaitCursor = true;
             // 
             // label_Datos
             // 
@@ -283,7 +401,7 @@
             // 
             this.pictureBox9.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox9.Image = global::GUI.Properties.Resources.FotoPerfil;
-            this.pictureBox9.Location = new System.Drawing.Point(1088, 419);
+            this.pictureBox9.Location = new System.Drawing.Point(1088, 447);
             this.pictureBox9.Name = "pictureBox9";
             this.pictureBox9.Size = new System.Drawing.Size(185, 157);
             this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -303,7 +421,7 @@
             // pictureBox7
             // 
             this.pictureBox7.Image = global::GUI.Properties.Resources.barra_2;
-            this.pictureBox7.Location = new System.Drawing.Point(581, 585);
+            this.pictureBox7.Location = new System.Drawing.Point(581, 613);
             this.pictureBox7.Name = "pictureBox7";
             this.pictureBox7.Size = new System.Drawing.Size(337, 55);
             this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -313,7 +431,7 @@
             // pictureBox6
             // 
             this.pictureBox6.Image = global::GUI.Properties.Resources.barra_2;
-            this.pictureBox6.Location = new System.Drawing.Point(581, 498);
+            this.pictureBox6.Location = new System.Drawing.Point(581, 526);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(337, 55);
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -323,81 +441,32 @@
             // pictureBox4
             // 
             this.pictureBox4.Image = global::GUI.Properties.Resources.barra_2;
-            this.pictureBox4.Location = new System.Drawing.Point(581, 410);
+            this.pictureBox4.Location = new System.Drawing.Point(581, 438);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(337, 55);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox4.TabIndex = 7;
             this.pictureBox4.TabStop = false;
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::GUI.Properties.Resources.barra_2;
-            this.pictureBox2.Location = new System.Drawing.Point(581, 237);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(337, 55);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 6;
-            this.pictureBox2.TabStop = false;
-            // 
             // pictureBox5
             // 
             this.pictureBox5.Image = global::GUI.Properties.Resources.barra_2;
-            this.pictureBox5.Location = new System.Drawing.Point(581, 324);
+            this.pictureBox5.Location = new System.Drawing.Point(581, 352);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(334, 55);
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox5.TabIndex = 5;
             this.pictureBox5.TabStop = false;
             // 
-            // pBox_Nombres
+            // pictureBox2
             // 
-            this.pBox_Nombres.Image = global::GUI.Properties.Resources.barra_2;
-            this.pBox_Nombres.Location = new System.Drawing.Point(1006, 237);
-            this.pBox_Nombres.Name = "pBox_Nombres";
-            this.pBox_Nombres.Size = new System.Drawing.Size(337, 55);
-            this.pBox_Nombres.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pBox_Nombres.TabIndex = 25;
-            this.pBox_Nombres.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::GUI.Properties.Resources.barra_2;
-            this.pictureBox1.Location = new System.Drawing.Point(1006, 324);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(337, 55);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 26;
-            this.pictureBox1.TabStop = false;
-            // 
-            // txt_ID
-            // 
-            this.txt_ID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_ID.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_ID.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_ID.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_ID.Location = new System.Drawing.Point(607, 255);
-            this.txt_ID.Name = "txt_ID";
-            this.txt_ID.Size = new System.Drawing.Size(290, 18);
-            this.txt_ID.TabIndex = 19;
-            this.txt_ID.Text = "ID";
-            this.txt_ID.UseWaitCursor = true;
-            this.txt_ID.Enter += new System.EventHandler(this.ID);
-            this.txt_ID.Leave += new System.EventHandler(this.txt_ID_Leave);
-            // 
-            // txtID2
-            // 
-            this.txtID2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txtID2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtID2.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtID2.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txtID2.Location = new System.Drawing.Point(607, 255);
-            this.txtID2.Name = "txtID2";
-            this.txtID2.Size = new System.Drawing.Size(290, 18);
-            this.txtID2.TabIndex = 27;
-            this.txtID2.Text = "ID";
-            this.txtID2.Enter += new System.EventHandler(this.txtID2_Enter);
-            this.txtID2.Leave += new System.EventHandler(this.txtID2_Leave);
+            this.pictureBox2.Image = global::GUI.Properties.Resources.barra_2;
+            this.pictureBox2.Location = new System.Drawing.Point(581, 265);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(337, 55);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 6;
+            this.pictureBox2.TabStop = false;
             // 
             // Registrar
             // 
@@ -411,6 +480,8 @@
             this.panelContenedor.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBox_Nombres)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
@@ -418,10 +489,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pBox_Nombres)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -441,17 +510,24 @@
         private System.Windows.Forms.PictureBox pictureBox10;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label_Datos;
-        private System.Windows.Forms.TextBox txt_Nombres;
-        private System.Windows.Forms.TextBox txt_Contraseña;
-        private System.Windows.Forms.TextBox txt_Gmail;
-        private System.Windows.Forms.TextBox txt_FechaNacimiento;
-        private System.Windows.Forms.TextBox txt_Apellidos;
-        private System.Windows.Forms.TextBox txt_ConfirContraseña;
         private System.Windows.Forms.Button bttSalvarContinuar;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pBox_Nombres;
-        private System.Windows.Forms.TextBox txt_ID;
+        private System.Windows.Forms.TextBox txt_ID2;
         private System.Windows.Forms.TextBox txtID2;
+        private System.Windows.Forms.TextBox txtContraseña;
+        private System.Windows.Forms.TextBox txtConfirContraseña;
+        private System.Windows.Forms.TextBox texNombres;
+        private System.Windows.Forms.TextBox txtFechaNacimiento;
+        private System.Windows.Forms.TextBox txtApellidos;
+        private System.Windows.Forms.TextBox txtGmail;
+        private System.Windows.Forms.Label label_ID;
+        private System.Windows.Forms.Label label_ConfirContraseña;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label_Gmail;
+        private System.Windows.Forms.Label label_FechaNacimiento;
+        private System.Windows.Forms.Label label_Apellido;
+        private System.Windows.Forms.Label label_Nombres;
     }
 }

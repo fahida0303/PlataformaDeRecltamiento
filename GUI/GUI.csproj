@@ -321,5 +321,23 @@
   <ItemGroup>
     <None Include="Resources\Copia de Montifer %287%292.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\telegrama.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\telegrama1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\telegrama2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\telegrama3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\telegrama %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\telegrama %282%291.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -31,6 +31,8 @@
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.Menu = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.lb_TipoUsuario = new System.Windows.Forms.Label();
             this.lb_NombreUsuario = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
@@ -43,6 +45,8 @@
             this.bttInicio = new System.Windows.Forms.Button();
             this.bttConvocatorias = new System.Windows.Forms.Button();
             this.pBox_JobsyLogo = new System.Windows.Forms.PictureBox();
+            this.bttPostulaciones = new System.Windows.Forms.Button();
+            this.bttTelegram = new System.Windows.Forms.Button();
             this.panelContenedor.SuspendLayout();
             this.Menu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -75,6 +79,8 @@
             this.Menu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(173)))));
             this.Menu.BackgroundImage = global::GUI.Properties.Resources.Captura_de_pantalla_2025_11_08_040129;
             this.Menu.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Menu.Controls.Add(this.panel5);
+            this.Menu.Controls.Add(this.panel3);
             this.Menu.Controls.Add(this.lb_TipoUsuario);
             this.Menu.Controls.Add(this.lb_NombreUsuario);
             this.Menu.Controls.Add(this.panel7);
@@ -87,11 +93,29 @@
             this.Menu.Controls.Add(this.bttInicio);
             this.Menu.Controls.Add(this.bttConvocatorias);
             this.Menu.Controls.Add(this.pBox_JobsyLogo);
+            this.Menu.Controls.Add(this.bttPostulaciones);
+            this.Menu.Controls.Add(this.bttTelegram);
             this.Menu.Dock = System.Windows.Forms.DockStyle.Left;
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.Size = new System.Drawing.Size(451, 1080);
             this.Menu.TabIndex = 1;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
+            this.panel5.Location = new System.Drawing.Point(30, 588);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(398, 2);
+            this.panel5.TabIndex = 19;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
+            this.panel3.Location = new System.Drawing.Point(26, 523);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(398, 2);
+            this.panel3.TabIndex = 18;
             // 
             // lb_TipoUsuario
             // 
@@ -120,7 +144,7 @@
             // panel7
             // 
             this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel7.Location = new System.Drawing.Point(28, 366);
+            this.panel7.Location = new System.Drawing.Point(27, 457);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(398, 2);
             this.panel7.TabIndex = 17;
@@ -133,9 +157,9 @@
             this.bttCalendario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttCalendario.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttCalendario.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttCalendario.Location = new System.Drawing.Point(28, 320);
+            this.bttCalendario.Location = new System.Drawing.Point(27, 458);
             this.bttCalendario.Name = "bttCalendario";
-            this.bttCalendario.Size = new System.Drawing.Size(398, 50);
+            this.bttCalendario.Size = new System.Drawing.Size(398, 67);
             this.bttCalendario.TabIndex = 11;
             this.bttCalendario.Text = "Calendario";
             this.bttCalendario.UseVisualStyleBackColor = false;
@@ -143,7 +167,7 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel4.Location = new System.Drawing.Point(29, 318);
+            this.panel4.Location = new System.Drawing.Point(28, 389);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(397, 2);
             this.panel4.TabIndex = 15;
@@ -151,7 +175,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel2.Location = new System.Drawing.Point(28, 268);
+            this.panel2.Location = new System.Drawing.Point(27, 321);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(398, 2);
             this.panel2.TabIndex = 3;
@@ -182,7 +206,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel1.Location = new System.Drawing.Point(28, 220);
+            this.panel1.Location = new System.Drawing.Point(27, 256);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(397, 2);
             this.panel1.TabIndex = 2;
@@ -195,9 +219,9 @@
             this.bttInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttInicio.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttInicio.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttInicio.Location = new System.Drawing.Point(28, 220);
+            this.bttInicio.Location = new System.Drawing.Point(27, 256);
             this.bttInicio.Name = "bttInicio";
-            this.bttInicio.Size = new System.Drawing.Size(398, 50);
+            this.bttInicio.Size = new System.Drawing.Size(398, 67);
             this.bttInicio.TabIndex = 1;
             this.bttInicio.Text = "Inicio";
             this.bttInicio.UseVisualStyleBackColor = false;
@@ -210,9 +234,9 @@
             this.bttConvocatorias.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttConvocatorias.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttConvocatorias.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttConvocatorias.Location = new System.Drawing.Point(27, 270);
+            this.bttConvocatorias.Location = new System.Drawing.Point(26, 324);
             this.bttConvocatorias.Name = "bttConvocatorias";
-            this.bttConvocatorias.Size = new System.Drawing.Size(398, 50);
+            this.bttConvocatorias.Size = new System.Drawing.Size(398, 67);
             this.bttConvocatorias.TabIndex = 5;
             this.bttConvocatorias.Text = "Convocatorias";
             this.bttConvocatorias.UseVisualStyleBackColor = false;
@@ -220,13 +244,45 @@
             // pBox_JobsyLogo
             // 
             this.pBox_JobsyLogo.Image = global::GUI.Properties.Resources.Copia_de_Montifer__7_2;
-            this.pBox_JobsyLogo.Location = new System.Drawing.Point(89, 27);
+            this.pBox_JobsyLogo.Location = new System.Drawing.Point(78, 9);
             this.pBox_JobsyLogo.Margin = new System.Windows.Forms.Padding(0);
             this.pBox_JobsyLogo.Name = "pBox_JobsyLogo";
-            this.pBox_JobsyLogo.Size = new System.Drawing.Size(273, 191);
+            this.pBox_JobsyLogo.Size = new System.Drawing.Size(319, 244);
             this.pBox_JobsyLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pBox_JobsyLogo.TabIndex = 0;
             this.pBox_JobsyLogo.TabStop = false;
+            // 
+            // bttPostulaciones
+            // 
+            this.bttPostulaciones.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
+            this.bttPostulaciones.FlatAppearance.BorderSize = 0;
+            this.bttPostulaciones.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
+            this.bttPostulaciones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bttPostulaciones.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bttPostulaciones.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.bttPostulaciones.Location = new System.Drawing.Point(27, 392);
+            this.bttPostulaciones.Name = "bttPostulaciones";
+            this.bttPostulaciones.Size = new System.Drawing.Size(398, 67);
+            this.bttPostulaciones.TabIndex = 21;
+            this.bttPostulaciones.Text = "Postulaciones ";
+            this.bttPostulaciones.UseVisualStyleBackColor = false;
+            // 
+            // bttTelegram
+            // 
+            this.bttTelegram.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
+            this.bttTelegram.FlatAppearance.BorderSize = 0;
+            this.bttTelegram.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
+            this.bttTelegram.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bttTelegram.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bttTelegram.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.bttTelegram.Image = global::GUI.Properties.Resources.telegrama__2_1;
+            this.bttTelegram.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.bttTelegram.Location = new System.Drawing.Point(26, 523);
+            this.bttTelegram.Name = "bttTelegram";
+            this.bttTelegram.Size = new System.Drawing.Size(398, 67);
+            this.bttTelegram.TabIndex = 22;
+            this.bttTelegram.Text = "Chat Bot";
+            this.bttTelegram.UseVisualStyleBackColor = false;
             // 
             // UsuarioTipoCandidato
             // 
@@ -264,5 +320,9 @@
         private System.Windows.Forms.Label lb_TipoUsuario;
         private System.Windows.Forms.Button bttCalendario;
         private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Button bttPostulaciones;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button bttTelegram;
+        private System.Windows.Forms.Panel panel5;
     }
 }

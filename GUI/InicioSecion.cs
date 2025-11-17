@@ -16,7 +16,6 @@ namespace GUI
         public InicioSecion()
         {
             InitializeComponent();
-            InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Normal;
             this.StartPosition = FormStartPosition.CenterScreen;

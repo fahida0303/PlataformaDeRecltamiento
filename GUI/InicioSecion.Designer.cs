@@ -138,9 +138,9 @@
             this.bttContinuar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttContinuar.Font = new System.Drawing.Font("Cascadia Code", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttContinuar.ForeColor = System.Drawing.Color.White;
-            this.bttContinuar.Location = new System.Drawing.Point(1338, 544);
+            this.bttContinuar.Location = new System.Drawing.Point(1338, 548);
             this.bttContinuar.Name = "bttContinuar";
-            this.bttContinuar.Size = new System.Drawing.Size(173, 43);
+            this.bttContinuar.Size = new System.Drawing.Size(173, 35);
             this.bttContinuar.TabIndex = 13;
             this.bttContinuar.Text = "Continuar";
             this.bttContinuar.UseVisualStyleBackColor = false;

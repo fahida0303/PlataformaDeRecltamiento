@@ -38,7 +38,6 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.bttCalendario = new System.Windows.Forms.Button();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.bttReclutadores = new System.Windows.Forms.Button();
@@ -89,7 +88,6 @@
             this.Menu.Controls.Add(this.panel6);
             this.Menu.Controls.Add(this.panel7);
             this.Menu.Controls.Add(this.bttCalendario);
-            this.Menu.Controls.Add(this.panel5);
             this.Menu.Controls.Add(this.panel4);
             this.Menu.Controls.Add(this.panel3);
             this.Menu.Controls.Add(this.bttReclutadores);
@@ -110,10 +108,10 @@
             // pBox_JobsyLogo
             // 
             this.pBox_JobsyLogo.Image = global::GUI.Properties.Resources.Copia_de_Montifer__7_2;
-            this.pBox_JobsyLogo.Location = new System.Drawing.Point(89, 27);
+            this.pBox_JobsyLogo.Location = new System.Drawing.Point(78, 9);
             this.pBox_JobsyLogo.Margin = new System.Windows.Forms.Padding(0);
             this.pBox_JobsyLogo.Name = "pBox_JobsyLogo";
-            this.pBox_JobsyLogo.Size = new System.Drawing.Size(273, 191);
+            this.pBox_JobsyLogo.Size = new System.Drawing.Size(319, 244);
             this.pBox_JobsyLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pBox_JobsyLogo.TabIndex = 0;
             this.pBox_JobsyLogo.TabStop = false;
@@ -145,7 +143,7 @@
             // panel8
             // 
             this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel8.Location = new System.Drawing.Point(26, 463);
+            this.panel8.Location = new System.Drawing.Point(26, 588);
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(402, 2);
             this.panel8.TabIndex = 18;
@@ -153,7 +151,7 @@
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel6.Location = new System.Drawing.Point(26, 513);
+            this.panel6.Location = new System.Drawing.Point(25, 654);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(402, 2);
             this.panel6.TabIndex = 17;
@@ -161,7 +159,7 @@
             // panel7
             // 
             this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel7.Location = new System.Drawing.Point(27, 367);
+            this.panel7.Location = new System.Drawing.Point(27, 457);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(402, 2);
             this.panel7.TabIndex = 17;
@@ -174,25 +172,17 @@
             this.bttCalendario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttCalendario.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttCalendario.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttCalendario.Location = new System.Drawing.Point(27, 465);
+            this.bttCalendario.Location = new System.Drawing.Point(26, 588);
             this.bttCalendario.Name = "bttCalendario";
-            this.bttCalendario.Size = new System.Drawing.Size(402, 50);
+            this.bttCalendario.Size = new System.Drawing.Size(402, 67);
             this.bttCalendario.TabIndex = 11;
             this.bttCalendario.Text = "Calendario";
             this.bttCalendario.UseVisualStyleBackColor = false;
             // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel5.Location = new System.Drawing.Point(27, 463);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(402, 2);
-            this.panel5.TabIndex = 17;
-            // 
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel4.Location = new System.Drawing.Point(28, 319);
+            this.panel4.Location = new System.Drawing.Point(28, 389);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(401, 2);
             this.panel4.TabIndex = 15;
@@ -200,7 +190,7 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel3.Location = new System.Drawing.Point(27, 415);
+            this.panel3.Location = new System.Drawing.Point(26, 523);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(402, 2);
             this.panel3.TabIndex = 16;
@@ -213,9 +203,9 @@
             this.bttReclutadores.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttReclutadores.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttReclutadores.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttReclutadores.Location = new System.Drawing.Point(27, 415);
+            this.bttReclutadores.Location = new System.Drawing.Point(26, 523);
             this.bttReclutadores.Name = "bttReclutadores";
-            this.bttReclutadores.Size = new System.Drawing.Size(402, 50);
+            this.bttReclutadores.Size = new System.Drawing.Size(402, 67);
             this.bttReclutadores.TabIndex = 9;
             this.bttReclutadores.Text = "Reclutadores";
             this.bttReclutadores.UseVisualStyleBackColor = false;
@@ -223,7 +213,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel2.Location = new System.Drawing.Point(27, 269);
+            this.panel2.Location = new System.Drawing.Point(27, 321);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(402, 2);
             this.panel2.TabIndex = 3;
@@ -247,9 +237,9 @@
             this.bttCandidatos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttCandidatos.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttCandidatos.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttCandidatos.Location = new System.Drawing.Point(27, 367);
+            this.bttCandidatos.Location = new System.Drawing.Point(27, 458);
             this.bttCandidatos.Name = "bttCandidatos";
-            this.bttCandidatos.Size = new System.Drawing.Size(402, 50);
+            this.bttCandidatos.Size = new System.Drawing.Size(402, 67);
             this.bttCandidatos.TabIndex = 7;
             this.bttCandidatos.Text = "Candidatos";
             this.bttCandidatos.UseVisualStyleBackColor = false;
@@ -262,9 +252,9 @@
             this.bttEmpresas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttEmpresas.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttEmpresas.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttEmpresas.Location = new System.Drawing.Point(27, 271);
+            this.bttEmpresas.Location = new System.Drawing.Point(26, 324);
             this.bttEmpresas.Name = "bttEmpresas";
-            this.bttEmpresas.Size = new System.Drawing.Size(402, 50);
+            this.bttEmpresas.Size = new System.Drawing.Size(402, 67);
             this.bttEmpresas.TabIndex = 3;
             this.bttEmpresas.Text = "Empresas";
             this.bttEmpresas.UseVisualStyleBackColor = false;
@@ -284,7 +274,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(69)))), ((int)(((byte)(105)))));
-            this.panel1.Location = new System.Drawing.Point(27, 221);
+            this.panel1.Location = new System.Drawing.Point(27, 256);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(401, 2);
             this.panel1.TabIndex = 2;
@@ -297,9 +287,9 @@
             this.bttInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttInicio.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttInicio.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttInicio.Location = new System.Drawing.Point(27, 221);
+            this.bttInicio.Location = new System.Drawing.Point(27, 256);
             this.bttInicio.Name = "bttInicio";
-            this.bttInicio.Size = new System.Drawing.Size(402, 50);
+            this.bttInicio.Size = new System.Drawing.Size(402, 67);
             this.bttInicio.TabIndex = 1;
             this.bttInicio.Text = "Inicio";
             this.bttInicio.UseVisualStyleBackColor = false;
@@ -312,9 +302,9 @@
             this.bttConvocatorias.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bttConvocatorias.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttConvocatorias.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bttConvocatorias.Location = new System.Drawing.Point(27, 319);
+            this.bttConvocatorias.Location = new System.Drawing.Point(27, 392);
             this.bttConvocatorias.Name = "bttConvocatorias";
-            this.bttConvocatorias.Size = new System.Drawing.Size(402, 50);
+            this.bttConvocatorias.Size = new System.Drawing.Size(402, 67);
             this.bttConvocatorias.TabIndex = 5;
             this.bttConvocatorias.Text = "Convocatorias";
             this.bttConvocatorias.UseVisualStyleBackColor = false;
@@ -357,7 +347,6 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Label lb_NombreUsuario;
         private System.Windows.Forms.Label lb_TipoUsuario;

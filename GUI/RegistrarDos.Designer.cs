@@ -35,16 +35,18 @@
             this.pictureBox10 = new System.Windows.Forms.PictureBox();
             this.label_AñadirID = new System.Windows.Forms.Label();
             this.pBox_DocID = new System.Windows.Forms.PictureBox();
-            this.txt_CResidencia = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label_AñadirCV = new System.Windows.Forms.Label();
             this.bttSalvarContinuar = new System.Windows.Forms.Button();
-            this.txt_PResidencia = new System.Windows.Forms.TextBox();
             this.label_Datos = new System.Windows.Forms.Label();
             this.label_IniciarSesion = new System.Windows.Forms.Label();
             this.pBox_DocCV = new System.Windows.Forms.PictureBox();
             this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.label_PaisRecidencia = new System.Windows.Forms.Label();
+            this.label_CiudadRecidencia = new System.Windows.Forms.Label();
+            this.txtPResidencia = new System.Windows.Forms.TextBox();
+            this.txtCRecidencia = new System.Windows.Forms.TextBox();
             this.panelContenedor.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
@@ -75,16 +77,18 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(130)))), ((int)(((byte)(195)))), ((int)(((byte)(242)))));
             this.panel1.BackgroundImage = global::GUI.Properties.Resources.Copia_de_Montifer__9_;
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.panel1.Controls.Add(this.txtCRecidencia);
+            this.panel1.Controls.Add(this.txtPResidencia);
+            this.panel1.Controls.Add(this.label_CiudadRecidencia);
+            this.panel1.Controls.Add(this.label_PaisRecidencia);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.pictureBox11);
             this.panel1.Controls.Add(this.pictureBox10);
             this.panel1.Controls.Add(this.label_AñadirID);
             this.panel1.Controls.Add(this.pBox_DocID);
-            this.panel1.Controls.Add(this.txt_CResidencia);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.label_AñadirCV);
             this.panel1.Controls.Add(this.bttSalvarContinuar);
-            this.panel1.Controls.Add(this.txt_PResidencia);
             this.panel1.Controls.Add(this.label_Datos);
             this.panel1.Controls.Add(this.label_IniciarSesion);
             this.panel1.Controls.Add(this.pBox_DocCV);
@@ -129,11 +133,11 @@
             this.label_AñadirID.AutoSize = true;
             this.label_AñadirID.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_AñadirID.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label_AñadirID.Location = new System.Drawing.Point(667, 601);
+            this.label_AñadirID.Location = new System.Drawing.Point(650, 601);
             this.label_AñadirID.Name = "label_AñadirID";
-            this.label_AñadirID.Size = new System.Drawing.Size(100, 22);
+            this.label_AñadirID.Size = new System.Drawing.Size(140, 22);
             this.label_AñadirID.TabIndex = 28;
-            this.label_AñadirID.Text = "Añadir ID";
+            this.label_AñadirID.Text = "Añadir Cedula";
             // 
             // pBox_DocID
             // 
@@ -145,20 +149,6 @@
             this.pBox_DocID.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pBox_DocID.TabIndex = 27;
             this.pBox_DocID.TabStop = false;
-            // 
-            // txt_CResidencia
-            // 
-            this.txt_CResidencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_CResidencia.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_CResidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_CResidencia.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_CResidencia.Location = new System.Drawing.Point(1068, 293);
-            this.txt_CResidencia.Name = "txt_CResidencia";
-            this.txt_CResidencia.Size = new System.Drawing.Size(290, 18);
-            this.txt_CResidencia.TabIndex = 26;
-            this.txt_CResidencia.Text = "Ciudad de Residencia";
-            this.txt_CResidencia.Enter += new System.EventHandler(this.txt_CResidencia_Enter);
-            this.txt_CResidencia.Leave += new System.EventHandler(this.txt_CResidencia_Leave);
             // 
             // pictureBox1
             // 
@@ -196,20 +186,6 @@
             this.bttSalvarContinuar.TabIndex = 23;
             this.bttSalvarContinuar.Text = "Salvar y Continuar";
             this.bttSalvarContinuar.UseVisualStyleBackColor = false;
-            // 
-            // txt_PResidencia
-            // 
-            this.txt_PResidencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txt_PResidencia.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_PResidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_PResidencia.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txt_PResidencia.Location = new System.Drawing.Point(602, 293);
-            this.txt_PResidencia.Name = "txt_PResidencia";
-            this.txt_PResidencia.Size = new System.Drawing.Size(290, 18);
-            this.txt_PResidencia.TabIndex = 22;
-            this.txt_PResidencia.Text = "Pais de Residencia";
-            this.txt_PResidencia.Enter += new System.EventHandler(this.txt_PResidencia_Enter);
-            this.txt_PResidencia.Leave += new System.EventHandler(this.txt_PResidencia_Leave);
             // 
             // label_Datos
             // 
@@ -264,6 +240,50 @@
             this.pictureBox7.TabIndex = 9;
             this.pictureBox7.TabStop = false;
             // 
+            // label_PaisRecidencia
+            // 
+            this.label_PaisRecidencia.AutoSize = true;
+            this.label_PaisRecidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_PaisRecidencia.Location = new System.Drawing.Point(576, 259);
+            this.label_PaisRecidencia.Name = "label_PaisRecidencia";
+            this.label_PaisRecidencia.Size = new System.Drawing.Size(171, 20);
+            this.label_PaisRecidencia.TabIndex = 35;
+            this.label_PaisRecidencia.Text = "Pais de Recidencia";
+            // 
+            // label_CiudadRecidencia
+            // 
+            this.label_CiudadRecidencia.AutoSize = true;
+            this.label_CiudadRecidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_CiudadRecidencia.Location = new System.Drawing.Point(1036, 259);
+            this.label_CiudadRecidencia.Name = "label_CiudadRecidencia";
+            this.label_CiudadRecidencia.Size = new System.Drawing.Size(171, 20);
+            this.label_CiudadRecidencia.TabIndex = 36;
+            this.label_CiudadRecidencia.Text = "Pais de Recidencia";
+            // 
+            // txtPResidencia
+            // 
+            this.txtPResidencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtPResidencia.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPResidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPResidencia.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtPResidencia.Location = new System.Drawing.Point(593, 292);
+            this.txtPResidencia.Multiline = true;
+            this.txtPResidencia.Name = "txtPResidencia";
+            this.txtPResidencia.Size = new System.Drawing.Size(290, 20);
+            this.txtPResidencia.TabIndex = 37;
+            // 
+            // txtCRecidencia
+            // 
+            this.txtCRecidencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtCRecidencia.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCRecidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCRecidencia.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtCRecidencia.Location = new System.Drawing.Point(1051, 292);
+            this.txtCRecidencia.Multiline = true;
+            this.txtCRecidencia.Name = "txtCRecidencia";
+            this.txtCRecidencia.Size = new System.Drawing.Size(290, 20);
+            this.txtCRecidencia.TabIndex = 38;
+            // 
             // RegistrarDos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -295,15 +315,17 @@
         private System.Windows.Forms.PictureBox pictureBox10;
         private System.Windows.Forms.Label label_AñadirID;
         private System.Windows.Forms.PictureBox pBox_DocID;
-        private System.Windows.Forms.TextBox txt_CResidencia;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label_AñadirCV;
         private System.Windows.Forms.Button bttSalvarContinuar;
-        private System.Windows.Forms.TextBox txt_PResidencia;
         private System.Windows.Forms.Label label_Datos;
         private System.Windows.Forms.Label label_IniciarSesion;
         private System.Windows.Forms.PictureBox pBox_DocCV;
         private System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.PictureBox pictureBox7;
+        private System.Windows.Forms.Label label_PaisRecidencia;
+        private System.Windows.Forms.Label label_CiudadRecidencia;
+        private System.Windows.Forms.TextBox txtCRecidencia;
+        private System.Windows.Forms.TextBox txtPResidencia;
     }
 }
