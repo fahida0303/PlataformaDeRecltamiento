@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -112,9 +109,9 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Administrador>(false, "ID inválido", null, null);
 
-                string sentencia = @"SELECT a.[idAdmin], u.[idUsuario], u.[nombre], u.[correo], u.[contraseña], u.[estado], a.[permisos]
-                                 FROM [Usuario] u
-                                 INNER JOIN [Administrador] a ON u.[idUsuario] = a.[idUsuario]
+                string sentencia = @"SELECT a.[idAdmin], a.[idUsuario], u.[nombre], u.[correo], u.[contraseña], u.[estado], a.[permisos]
+                                 FROM [Administrador] a
+                                 INNER JOIN [Usuario] u ON a.[idUsuario] = u.[idUsuario]
                                  WHERE a.[idAdmin] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
@@ -129,6 +126,7 @@ namespace DAL
                         {
                             Administrador admin = new Administrador
                             {
+                                IdAdmin = reader.GetInt32(0),      // ✅ CORRECCIÓN: Agregado
                                 IdUsuario = reader.GetInt32(1),
                                 Nombre = reader.GetString(2),
                                 Correo = reader.GetString(3),
@@ -153,9 +151,9 @@ namespace DAL
             try
             {
                 IList<Administrador> lista = new List<Administrador>();
-                string sentencia = @"SELECT a.[idAdmin], u.[idUsuario], u.[nombre], u.[correo], u.[contraseña], u.[estado], a.[permisos]
-                                 FROM [Usuario] u
-                                 INNER JOIN [Administrador] a ON u.[idUsuario] = a.[idUsuario]
+                string sentencia = @"SELECT a.[idAdmin], a.[idUsuario], u.[nombre], u.[correo], u.[contraseña], u.[estado], a.[permisos]
+                                 FROM [Administrador] a
+                                 INNER JOIN [Usuario] u ON a.[idUsuario] = u.[idUsuario]
                                  ORDER BY a.[idAdmin]";
 
                 using (SqlConnection conexion = CrearConexion())
@@ -168,6 +166,7 @@ namespace DAL
                         {
                             lista.Add(new Administrador
                             {
+                                IdAdmin = reader.GetInt32(0),    // ✅ CORRECCIÓN: Agregado
                                 IdUsuario = reader.GetInt32(1),
                                 Nombre = reader.GetString(2),
                                 Correo = reader.GetString(3),

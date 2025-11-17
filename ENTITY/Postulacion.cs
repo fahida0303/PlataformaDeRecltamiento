@@ -13,6 +13,8 @@ namespace ENTITY
         public int IdConvocatoria { get; set; }
         public DateTime FechaPostulacion { get; set; }
         public string Estado { get; set; }
+        public int? Score { get; set; }
+        public string Justificacion { get; set; }
 
         public Postulacion() { }
 

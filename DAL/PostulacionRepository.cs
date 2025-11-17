@@ -2,9 +2,6 @@
 using ENTITY;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -19,8 +16,11 @@ namespace DAL
                     return new Response<Postulacion>(false, "Los datos de la postulación son inválidos", null, null);
                 }
 
-                string sentencia = @"INSERT INTO [Postulacion] ([fecha_postulacion], [estado], [idCandidato], [idConvocatoria]) 
-                                 VALUES (@fechaPostulacion, @estado, @idCandidato, @idConvocatoria)";
+                // ✅ CORRECCIÓN: Agregar SCOPE_IDENTITY()
+                string sentencia = @"INSERT INTO [Postulacion] 
+                    ([fecha_postulacion], [estado], [idCandidato], [idConvocatoria], [score], [justificacion]) 
+                    VALUES (@fechaPostulacion, @estado, @idCandidato, @idConvocatoria, @score, @justificacion);
+                    SELECT SCOPE_IDENTITY();";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -29,9 +29,14 @@ namespace DAL
                     comando.Parameters.AddWithValue("@estado", entidad.Estado ?? "En revisión");
                     comando.Parameters.AddWithValue("@idCandidato", entidad.IdCandidato);
                     comando.Parameters.AddWithValue("@idConvocatoria", entidad.IdConvocatoria);
+                    comando.Parameters.AddWithValue("@score", entidad.Score ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@justificacion", entidad.Justificacion ?? (object)DBNull.Value);
 
                     conexion.Open();
-                    comando.ExecuteNonQuery();
+
+                    // ✅ CORRECCIÓN: Obtener ID generado
+                    int nuevoId = Convert.ToInt32(comando.ExecuteScalar());
+                    entidad.IdPostulacion = nuevoId;
 
                     return new Response<Postulacion>(true, "Postulación insertada correctamente", entidad, null);
                 }
@@ -51,9 +56,15 @@ namespace DAL
                     return new Response<Postulacion>(false, "Datos inválidos para actualizar", null, null);
                 }
 
-                string sentencia = @"UPDATE [Postulacion] SET [fecha_postulacion] = @fechaPostulacion, [estado] = @estado, 
-                                 [idCandidato] = @idCandidato, [idConvocatoria] = @idConvocatoria 
-                                 WHERE [idPostulacion] = @id";
+                // ✅ CORRECCIÓN: Incluir score y justificacion
+                string sentencia = @"UPDATE [Postulacion] 
+                    SET [fecha_postulacion] = @fechaPostulacion, 
+                        [estado] = @estado, 
+                        [idCandidato] = @idCandidato, 
+                        [idConvocatoria] = @idConvocatoria,
+                        [score] = @score,
+                        [justificacion] = @justificacion
+                    WHERE [idPostulacion] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -62,6 +73,8 @@ namespace DAL
                     comando.Parameters.AddWithValue("@estado", entidad.Estado ?? "En revisión");
                     comando.Parameters.AddWithValue("@idCandidato", entidad.IdCandidato);
                     comando.Parameters.AddWithValue("@idConvocatoria", entidad.IdConvocatoria);
+                    comando.Parameters.AddWithValue("@score", entidad.Score ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@justificacion", entidad.Justificacion ?? (object)DBNull.Value);
                     comando.Parameters.AddWithValue("@id", entidad.IdPostulacion);
 
                     conexion.Open();
@@ -112,8 +125,10 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Postulacion>(false, "El ID debe ser mayor a cero", null, null);
 
-                string sentencia = @"SELECT [idPostulacion], [fecha_postulacion], [estado], [idCandidato], [idConvocatoria] 
-                                 FROM [Postulacion] WHERE [idPostulacion] = @id";
+                // ✅ CORRECCIÓN: Incluir score y justificacion
+                string sentencia = @"SELECT [idPostulacion], [fecha_postulacion], [estado], 
+                    [idCandidato], [idConvocatoria], [score], [justificacion]
+                    FROM [Postulacion] WHERE [idPostulacion] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -131,7 +146,9 @@ namespace DAL
                                 FechaPostulacion = reader.GetDateTime(1),
                                 Estado = reader.GetString(2),
                                 IdCandidato = reader.GetInt32(3),
-                                IdConvocatoria = reader.GetInt32(4)
+                                IdConvocatoria = reader.GetInt32(4),
+                                Score = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
+                                Justificacion = reader.IsDBNull(6) ? null : reader.GetString(6)
                             };
                             return new Response<Postulacion>(true, "Postulación encontrada", postulacion, null);
                         }
@@ -150,8 +167,11 @@ namespace DAL
             try
             {
                 IList<Postulacion> lista = new List<Postulacion>();
-                string sentencia = @"SELECT [idPostulacion], [fecha_postulacion], [estado], [idCandidato], [idConvocatoria] 
-                                 FROM [Postulacion] ORDER BY [fecha_postulacion] DESC";
+
+                // ✅ CORRECCIÓN: Incluir score y justificacion
+                string sentencia = @"SELECT [idPostulacion], [fecha_postulacion], [estado], 
+                    [idCandidato], [idConvocatoria], [score], [justificacion]
+                    FROM [Postulacion] ORDER BY [fecha_postulacion] DESC";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -168,7 +188,9 @@ namespace DAL
                                 FechaPostulacion = reader.GetDateTime(1),
                                 Estado = reader.GetString(2),
                                 IdCandidato = reader.GetInt32(3),
-                                IdConvocatoria = reader.GetInt32(4)
+                                IdConvocatoria = reader.GetInt32(4),
+                                Score = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
+                                Justificacion = reader.IsDBNull(6) ? null : reader.GetString(6)
                             });
                         }
                     }

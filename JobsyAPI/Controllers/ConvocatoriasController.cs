@@ -154,7 +154,7 @@ namespace JobsyAPI.Controllers
 
   
         // URL: PUT /api/convocatorias/5/cerrar
-        [HttpPut("{id}/cerrar")]
+        [HttpPut("{id}/Cerrada")]
         public IActionResult CerrarConvocatoria(int id)
         {
             try
