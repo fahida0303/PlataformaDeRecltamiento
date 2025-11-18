@@ -31,10 +31,10 @@
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.panel_IniciarSesion = new System.Windows.Forms.Panel();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBoxContrasena = new System.Windows.Forms.TextBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.bttContinuar = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxUsuario = new System.Windows.Forms.TextBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -76,10 +76,10 @@
             this.panel_IniciarSesion.BackgroundImage = global::GUI.Properties.Resources.image_removebg_preview__4_;
             this.panel_IniciarSesion.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.panel_IniciarSesion.Controls.Add(this.pictureBox4);
-            this.panel_IniciarSesion.Controls.Add(this.textBox2);
+            this.panel_IniciarSesion.Controls.Add(this.textBoxContrasena);
             this.panel_IniciarSesion.Controls.Add(this.pictureBox5);
             this.panel_IniciarSesion.Controls.Add(this.bttContinuar);
-            this.panel_IniciarSesion.Controls.Add(this.textBox1);
+            this.panel_IniciarSesion.Controls.Add(this.textBoxUsuario);
             this.panel_IniciarSesion.Controls.Add(this.linkLabel1);
             this.panel_IniciarSesion.Controls.Add(this.label1);
             this.panel_IniciarSesion.Controls.Add(this.pictureBox3);
@@ -94,6 +94,7 @@
             this.panel_IniciarSesion.Name = "panel_IniciarSesion";
             this.panel_IniciarSesion.Size = new System.Drawing.Size(1931, 789);
             this.panel_IniciarSesion.TabIndex = 0;
+            this.panel_IniciarSesion.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_IniciarSesion_Paint);
             // 
             // pictureBox4
             // 
@@ -105,18 +106,19 @@
             this.pictureBox4.TabIndex = 9;
             this.pictureBox4.TabStop = false;
             // 
-            // textBox2
+            // textBoxContrasena
             // 
-            this.textBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(64)))), ((int)(((byte)(108)))));
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.ForeColor = System.Drawing.SystemColors.Menu;
-            this.textBox2.Location = new System.Drawing.Point(1218, 365);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.PasswordChar = '*';
-            this.textBox2.Size = new System.Drawing.Size(399, 25);
-            this.textBox2.TabIndex = 15;
+            this.textBoxContrasena.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(64)))), ((int)(((byte)(108)))));
+            this.textBoxContrasena.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxContrasena.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxContrasena.ForeColor = System.Drawing.SystemColors.Menu;
+            this.textBoxContrasena.Location = new System.Drawing.Point(1218, 365);
+            this.textBoxContrasena.Multiline = true;
+            this.textBoxContrasena.Name = "textBoxContrasena";
+            this.textBoxContrasena.PasswordChar = '*';
+            this.textBoxContrasena.Size = new System.Drawing.Size(399, 25);
+            this.textBoxContrasena.TabIndex = 15;
+            this.textBoxContrasena.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // pictureBox5
             // 
@@ -144,18 +146,20 @@
             this.bttContinuar.TabIndex = 13;
             this.bttContinuar.Text = "Continuar";
             this.bttContinuar.UseVisualStyleBackColor = false;
+            this.bttContinuar.Click += new System.EventHandler(this.bttContinuar_Click);
             // 
-            // textBox1
+            // textBoxUsuario
             // 
-            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(64)))), ((int)(((byte)(108)))));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Font = new System.Drawing.Font("Cascadia Code", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.ForeColor = System.Drawing.SystemColors.Menu;
-            this.textBox1.Location = new System.Drawing.Point(1218, 228);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(399, 25);
-            this.textBox1.TabIndex = 11;
+            this.textBoxUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(64)))), ((int)(((byte)(108)))));
+            this.textBoxUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxUsuario.Font = new System.Drawing.Font("Cascadia Code", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxUsuario.ForeColor = System.Drawing.SystemColors.Menu;
+            this.textBoxUsuario.Location = new System.Drawing.Point(1218, 228);
+            this.textBoxUsuario.Multiline = true;
+            this.textBoxUsuario.Name = "textBoxUsuario";
+            this.textBoxUsuario.Size = new System.Drawing.Size(399, 25);
+            this.textBoxUsuario.TabIndex = 11;
+            this.textBoxUsuario.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // linkLabel1
             // 
@@ -170,6 +174,7 @@
             this.linkLabel1.TabIndex = 8;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Registrarse";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // label1
             // 
@@ -294,9 +299,9 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxUsuario;
         private System.Windows.Forms.Button bttContinuar;
         private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBoxContrasena;
     }
 }

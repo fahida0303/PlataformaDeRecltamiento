@@ -19,10 +19,10 @@ namespace GUI
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.None;
 
-            AbrirFormulario(new UsuarioTipoCandidato());
+            AbrirFormulario(new Eleccion(this));
         }
 
-        private void AbrirFormulario(Form form)
+        public void AbrirFormulario(Form form)
         {
             panelContenedor.Controls.Clear();
             form.TopLevel = false;

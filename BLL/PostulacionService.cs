@@ -60,7 +60,7 @@ namespace BLL
                 }
 
                 var candidato = candidatoResponse.Entidad;
-                if (string.IsNullOrWhiteSpace(candidato.HojaDeVida))
+                if (candidato.HojaDeVida == null || candidato.HojaDeVida.Length == 0)
                 {
                     return new Response<Postulacion>(
                         false,

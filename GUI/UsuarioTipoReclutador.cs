@@ -1,22 +1,36 @@
-﻿using System;
+﻿using ENTITY;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
 namespace GUI
 {
     public partial class UsuarioTipoReclutador : Form
     {
+        private Usuario _usuario;
+
+        public UsuarioTipoReclutador(Usuario usuario)
+        {
+            InitializeComponent();
+            _usuario = usuario;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            // Ejemplo:
+            // labelNombre.Text = _usuario.Nombre;
+        }
+
         public UsuarioTipoReclutador()
         {
             InitializeComponent();
         }
+
 
         //private void btnCerrar_Click(object sender, EventArgs e)
         //{

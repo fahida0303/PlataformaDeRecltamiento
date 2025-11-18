@@ -30,30 +30,32 @@
         {
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnSeleccionarCV = new System.Windows.Forms.Button();
+            this.btnSeleccionarCedula = new System.Windows.Forms.Button();
+            this.txtEmpresa = new System.Windows.Forms.TextBox();
+            this.txtCargo = new System.Windows.Forms.TextBox();
+            this.labelEmpresa = new System.Windows.Forms.Label();
+            this.labelCargo = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox11 = new System.Windows.Forms.PictureBox();
             this.pictureBox10 = new System.Windows.Forms.PictureBox();
             this.label_AñadirID = new System.Windows.Forms.Label();
-            this.pBox_DocID = new System.Windows.Forms.PictureBox();
+            this.pbCedula = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label_AñadirCV = new System.Windows.Forms.Label();
-            this.bttSalvarContinuar = new System.Windows.Forms.Button();
+            this.btnGuardar = new System.Windows.Forms.Button();
             this.label_Datos = new System.Windows.Forms.Label();
             this.label_IniciarSesion = new System.Windows.Forms.Label();
-            this.pBox_DocCV = new System.Windows.Forms.PictureBox();
+            this.pbCV = new System.Windows.Forms.PictureBox();
             this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.label_PaisRecidencia = new System.Windows.Forms.Label();
-            this.label_CiudadRecidencia = new System.Windows.Forms.Label();
-            this.txtPResidencia = new System.Windows.Forms.TextBox();
-            this.txtCRecidencia = new System.Windows.Forms.TextBox();
             this.panelContenedor.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pBox_DocID)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCedula)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pBox_DocCV)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             this.SuspendLayout();
@@ -77,21 +79,23 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(130)))), ((int)(((byte)(195)))), ((int)(((byte)(242)))));
             this.panel1.BackgroundImage = global::GUI.Properties.Resources.Copia_de_Montifer__9_;
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.panel1.Controls.Add(this.txtCRecidencia);
-            this.panel1.Controls.Add(this.txtPResidencia);
-            this.panel1.Controls.Add(this.label_CiudadRecidencia);
-            this.panel1.Controls.Add(this.label_PaisRecidencia);
+            this.panel1.Controls.Add(this.btnSeleccionarCV);
+            this.panel1.Controls.Add(this.btnSeleccionarCedula);
+            this.panel1.Controls.Add(this.txtEmpresa);
+            this.panel1.Controls.Add(this.txtCargo);
+            this.panel1.Controls.Add(this.labelEmpresa);
+            this.panel1.Controls.Add(this.labelCargo);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.pictureBox11);
             this.panel1.Controls.Add(this.pictureBox10);
             this.panel1.Controls.Add(this.label_AñadirID);
-            this.panel1.Controls.Add(this.pBox_DocID);
+            this.panel1.Controls.Add(this.pbCedula);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.label_AñadirCV);
-            this.panel1.Controls.Add(this.bttSalvarContinuar);
+            this.panel1.Controls.Add(this.btnGuardar);
             this.panel1.Controls.Add(this.label_Datos);
             this.panel1.Controls.Add(this.label_IniciarSesion);
-            this.panel1.Controls.Add(this.pBox_DocCV);
+            this.panel1.Controls.Add(this.pbCV);
             this.panel1.Controls.Add(this.pictureBox8);
             this.panel1.Controls.Add(this.pictureBox7);
             this.panel1.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -99,6 +103,71 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1920, 905);
             this.panel1.TabIndex = 1;
+            // 
+            // btnSeleccionarCV
+            // 
+            this.btnSeleccionarCV.Location = new System.Drawing.Point(1166, 456);
+            this.btnSeleccionarCV.Name = "btnSeleccionarCV";
+            this.btnSeleccionarCV.Size = new System.Drawing.Size(109, 105);
+            this.btnSeleccionarCV.TabIndex = 39;
+            this.btnSeleccionarCV.Text = "button1";
+            this.btnSeleccionarCV.UseVisualStyleBackColor = true;
+            this.btnSeleccionarCV.Click += new System.EventHandler(this.btnSeleccionarCV_Click);
+            // 
+            // btnSeleccionarCedula
+            // 
+            this.btnSeleccionarCedula.Location = new System.Drawing.Point(666, 456);
+            this.btnSeleccionarCedula.Name = "btnSeleccionarCedula";
+            this.btnSeleccionarCedula.Size = new System.Drawing.Size(109, 105);
+            this.btnSeleccionarCedula.TabIndex = 39;
+            this.btnSeleccionarCedula.Text = "button1";
+            this.btnSeleccionarCedula.UseVisualStyleBackColor = true;
+            this.btnSeleccionarCedula.Click += new System.EventHandler(this.btnSeleccionarCedula_Click);
+            // 
+            // txtEmpresa
+            // 
+            this.txtEmpresa.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtEmpresa.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtEmpresa.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmpresa.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtEmpresa.Location = new System.Drawing.Point(1051, 292);
+            this.txtEmpresa.Multiline = true;
+            this.txtEmpresa.Name = "txtEmpresa";
+            this.txtEmpresa.Size = new System.Drawing.Size(290, 20);
+            this.txtEmpresa.TabIndex = 38;
+            // 
+            // txtCargo
+            // 
+            this.txtCargo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
+            this.txtCargo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCargo.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCargo.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtCargo.Location = new System.Drawing.Point(593, 292);
+            this.txtCargo.Multiline = true;
+            this.txtCargo.Name = "txtCargo";
+            this.txtCargo.Size = new System.Drawing.Size(290, 20);
+            this.txtCargo.TabIndex = 37;
+            // 
+            // labelEmpresa
+            // 
+            this.labelEmpresa.AutoSize = true;
+            this.labelEmpresa.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEmpresa.Location = new System.Drawing.Point(1036, 259);
+            this.labelEmpresa.Name = "labelEmpresa";
+            this.labelEmpresa.Size = new System.Drawing.Size(72, 20);
+            this.labelEmpresa.TabIndex = 36;
+            this.labelEmpresa.Text = "Empresa";
+            // 
+            // labelCargo
+            // 
+            this.labelCargo.AutoSize = true;
+            this.labelCargo.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCargo.Location = new System.Drawing.Point(576, 259);
+            this.labelCargo.Name = "labelCargo";
+            this.labelCargo.Size = new System.Drawing.Size(54, 20);
+            this.labelCargo.TabIndex = 35;
+            this.labelCargo.Text = "Cargo";
+            this.labelCargo.Click += new System.EventHandler(this.label_PaisRecidencia_Click);
             // 
             // panel2
             // 
@@ -139,16 +208,16 @@
             this.label_AñadirID.TabIndex = 28;
             this.label_AñadirID.Text = "Añadir Cedula";
             // 
-            // pBox_DocID
+            // pbCedula
             // 
-            this.pBox_DocID.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pBox_DocID.Image = global::GUI.Properties.Resources.documento_transparente1;
-            this.pBox_DocID.Location = new System.Drawing.Point(635, 418);
-            this.pBox_DocID.Name = "pBox_DocID";
-            this.pBox_DocID.Size = new System.Drawing.Size(172, 180);
-            this.pBox_DocID.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pBox_DocID.TabIndex = 27;
-            this.pBox_DocID.TabStop = false;
+            this.pbCedula.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbCedula.Image = global::GUI.Properties.Resources.documento_transparente1;
+            this.pbCedula.Location = new System.Drawing.Point(635, 418);
+            this.pbCedula.Name = "pbCedula";
+            this.pbCedula.Size = new System.Drawing.Size(172, 180);
+            this.pbCedula.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbCedula.TabIndex = 27;
+            this.pbCedula.TabStop = false;
             // 
             // pictureBox1
             // 
@@ -171,21 +240,22 @@
             this.label_AñadirCV.TabIndex = 24;
             this.label_AñadirCV.Text = "Añadir CV";
             // 
-            // bttSalvarContinuar
+            // btnGuardar
             // 
-            this.bttSalvarContinuar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(207)))), ((int)(((byte)(188)))));
-            this.bttSalvarContinuar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.bttSalvarContinuar.FlatAppearance.BorderSize = 0;
-            this.bttSalvarContinuar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(207)))), ((int)(((byte)(188)))));
-            this.bttSalvarContinuar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(207)))), ((int)(((byte)(188)))));
-            this.bttSalvarContinuar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bttSalvarContinuar.Font = new System.Drawing.Font("Cascadia Code", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttSalvarContinuar.Location = new System.Drawing.Point(842, 738);
-            this.bttSalvarContinuar.Name = "bttSalvarContinuar";
-            this.bttSalvarContinuar.Size = new System.Drawing.Size(255, 41);
-            this.bttSalvarContinuar.TabIndex = 23;
-            this.bttSalvarContinuar.Text = "Salvar y Continuar";
-            this.bttSalvarContinuar.UseVisualStyleBackColor = false;
+            this.btnGuardar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(207)))), ((int)(((byte)(188)))));
+            this.btnGuardar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnGuardar.FlatAppearance.BorderSize = 0;
+            this.btnGuardar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(207)))), ((int)(((byte)(188)))));
+            this.btnGuardar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(158)))), ((int)(((byte)(207)))), ((int)(((byte)(188)))));
+            this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGuardar.Font = new System.Drawing.Font("Cascadia Code", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGuardar.Location = new System.Drawing.Point(842, 738);
+            this.btnGuardar.Name = "btnGuardar";
+            this.btnGuardar.Size = new System.Drawing.Size(255, 41);
+            this.btnGuardar.TabIndex = 23;
+            this.btnGuardar.Text = "Salvar y Continuar";
+            this.btnGuardar.UseVisualStyleBackColor = false;
+            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
             // label_Datos
             // 
@@ -209,16 +279,16 @@
             this.label_IniciarSesion.TabIndex = 12;
             this.label_IniciarSesion.Text = "Registrarse";
             // 
-            // pBox_DocCV
+            // pbCV
             // 
-            this.pBox_DocCV.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pBox_DocCV.Image = global::GUI.Properties.Resources.documento_transparente1;
-            this.pBox_DocCV.Location = new System.Drawing.Point(1137, 418);
-            this.pBox_DocCV.Name = "pBox_DocCV";
-            this.pBox_DocCV.Size = new System.Drawing.Size(172, 180);
-            this.pBox_DocCV.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pBox_DocCV.TabIndex = 11;
-            this.pBox_DocCV.TabStop = false;
+            this.pbCV.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbCV.Image = global::GUI.Properties.Resources.documento_transparente1;
+            this.pbCV.Location = new System.Drawing.Point(1137, 418);
+            this.pbCV.Name = "pbCV";
+            this.pbCV.Size = new System.Drawing.Size(172, 180);
+            this.pbCV.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbCV.TabIndex = 11;
+            this.pbCV.TabStop = false;
             // 
             // pictureBox8
             // 
@@ -240,50 +310,6 @@
             this.pictureBox7.TabIndex = 9;
             this.pictureBox7.TabStop = false;
             // 
-            // label_PaisRecidencia
-            // 
-            this.label_PaisRecidencia.AutoSize = true;
-            this.label_PaisRecidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_PaisRecidencia.Location = new System.Drawing.Point(576, 259);
-            this.label_PaisRecidencia.Name = "label_PaisRecidencia";
-            this.label_PaisRecidencia.Size = new System.Drawing.Size(171, 20);
-            this.label_PaisRecidencia.TabIndex = 35;
-            this.label_PaisRecidencia.Text = "Pais de Recidencia";
-            // 
-            // label_CiudadRecidencia
-            // 
-            this.label_CiudadRecidencia.AutoSize = true;
-            this.label_CiudadRecidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_CiudadRecidencia.Location = new System.Drawing.Point(1036, 259);
-            this.label_CiudadRecidencia.Name = "label_CiudadRecidencia";
-            this.label_CiudadRecidencia.Size = new System.Drawing.Size(171, 20);
-            this.label_CiudadRecidencia.TabIndex = 36;
-            this.label_CiudadRecidencia.Text = "Pais de Recidencia";
-            // 
-            // txtPResidencia
-            // 
-            this.txtPResidencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txtPResidencia.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPResidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPResidencia.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txtPResidencia.Location = new System.Drawing.Point(593, 292);
-            this.txtPResidencia.Multiline = true;
-            this.txtPResidencia.Name = "txtPResidencia";
-            this.txtPResidencia.Size = new System.Drawing.Size(290, 20);
-            this.txtPResidencia.TabIndex = 37;
-            // 
-            // txtCRecidencia
-            // 
-            this.txtCRecidencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(65)))), ((int)(((byte)(108)))));
-            this.txtCRecidencia.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtCRecidencia.Font = new System.Drawing.Font("Cascadia Code", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCRecidencia.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.txtCRecidencia.Location = new System.Drawing.Point(1051, 292);
-            this.txtCRecidencia.Multiline = true;
-            this.txtCRecidencia.Name = "txtCRecidencia";
-            this.txtCRecidencia.Size = new System.Drawing.Size(290, 20);
-            this.txtCRecidencia.TabIndex = 38;
-            // 
             // RegistrarDos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -298,9 +324,9 @@
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pBox_DocID)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCedula)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pBox_DocCV)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.ResumeLayout(false);
@@ -314,18 +340,20 @@
         private System.Windows.Forms.PictureBox pictureBox11;
         private System.Windows.Forms.PictureBox pictureBox10;
         private System.Windows.Forms.Label label_AñadirID;
-        private System.Windows.Forms.PictureBox pBox_DocID;
+        private System.Windows.Forms.PictureBox pbCedula;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label_AñadirCV;
-        private System.Windows.Forms.Button bttSalvarContinuar;
+        private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Label label_Datos;
         private System.Windows.Forms.Label label_IniciarSesion;
-        private System.Windows.Forms.PictureBox pBox_DocCV;
+        private System.Windows.Forms.PictureBox pbCV;
         private System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.PictureBox pictureBox7;
-        private System.Windows.Forms.Label label_PaisRecidencia;
-        private System.Windows.Forms.Label label_CiudadRecidencia;
-        private System.Windows.Forms.TextBox txtCRecidencia;
-        private System.Windows.Forms.TextBox txtPResidencia;
+        private System.Windows.Forms.Label labelCargo;
+        private System.Windows.Forms.Label labelEmpresa;
+        private System.Windows.Forms.TextBox txtEmpresa;
+        private System.Windows.Forms.TextBox txtCargo;
+        private System.Windows.Forms.Button btnSeleccionarCV;
+        private System.Windows.Forms.Button btnSeleccionarCedula;
     }
 }

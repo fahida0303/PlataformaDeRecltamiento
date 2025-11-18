@@ -8,16 +8,18 @@ namespace ENTITY
 {
     public class Candidato : Usuario
     {
-        public string Tipox { get; set; }  // ← AGREGAR ESTA LÍNEA
+        public string Tipox { get; set; }          // Puedes usarlo luego si quieres
         public string NivelFormacion { get; set; }
         public string Experiencia { get; set; }
-        public string HojaDeVida { get; set; }
+
+        // 🔹 Ahora el CV se guarda como binario:
+        public byte[] HojaDeVida { get; set; }
 
         public Candidato() { }
 
         public Candidato(int idUsuario, string nombre, string correo, string contrasena,
                          string estado, string tipox, string nivelFormacion,
-                         string experiencia, string hojaDeVida)
+                         string experiencia, byte[] hojaDeVida)
             : base(idUsuario, nombre, correo, contrasena, estado)
         {
             Tipox = tipox;

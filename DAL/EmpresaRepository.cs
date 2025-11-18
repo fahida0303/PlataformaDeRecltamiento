@@ -1,10 +1,7 @@
-﻿using System;
-using ENTITY;
+﻿using ENTITY;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -14,24 +11,34 @@ namespace DAL
         {
             try
             {
-                if (entidad == null || string.IsNullOrWhiteSpace(entidad.Nombre))
+                // Validaciones mínimas según tu BD (sector y correo_contacto son NOT NULL)
+                if (entidad == null ||
+                    string.IsNullOrWhiteSpace(entidad.Nombre) ||
+                    string.IsNullOrWhiteSpace(entidad.Sector) ||
+                    string.IsNullOrWhiteSpace(entidad.CorreoContacto))
                 {
-                    return new Response<Empresa>(false, "El nombre es requerido", null, null);
+                    return new Response<Empresa>(false,
+                        "Nombre, sector y correo de contacto son obligatorios", null, null);
                 }
 
-                string sentencia = @"INSERT INTO [Empresa] ([nombre], [sector], [direccion], [correo_contacto]) 
-                                 VALUES (@nombre, @sector, @direccion, @correoContacto)";
+                string sentencia = @"
+                    INSERT INTO [Empresa] ([nombre], [sector], [direccion], [correo_contacto]) 
+                    VALUES (@nombre, @sector, @direccion, @correoContacto);
+                    SELECT SCOPE_IDENTITY();
+                ";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@nombre", entidad.Nombre);
                     comando.Parameters.AddWithValue("@sector", entidad.Sector);
-                    comando.Parameters.AddWithValue("@direccion", entidad.Direccion ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@direccion",
+                        (object)(entidad.Direccion ?? (object)DBNull.Value));
                     comando.Parameters.AddWithValue("@correoContacto", entidad.CorreoContacto);
 
                     conexion.Open();
-                    comando.ExecuteNonQuery();
+                    int nuevoId = Convert.ToInt32(comando.ExecuteScalar());
+                    entidad.IdEmpresa = nuevoId;
 
                     return new Response<Empresa>(true, "Empresa insertada correctamente", entidad, null);
                 }
@@ -51,16 +58,21 @@ namespace DAL
                     return new Response<Empresa>(false, "Datos inválidos", null, null);
                 }
 
-                string sentencia = @"UPDATE [Empresa] SET [nombre] = @nombre, [sector] = @sector, 
-                                 [direccion] = @direccion, [correo_contacto] = @correoContacto
-                                 WHERE [idEmpresa] = @id";
+                string sentencia = @"
+                    UPDATE [Empresa] 
+                    SET [nombre] = @nombre, 
+                        [sector] = @sector, 
+                        [direccion] = @direccion, 
+                        [correo_contacto] = @correoContacto
+                    WHERE [idEmpresa] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@nombre", entidad.Nombre);
                     comando.Parameters.AddWithValue("@sector", entidad.Sector);
-                    comando.Parameters.AddWithValue("@direccion", entidad.Direccion ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@direccion",
+                        (object)(entidad.Direccion ?? (object)DBNull.Value));
                     comando.Parameters.AddWithValue("@correoContacto", entidad.CorreoContacto);
                     comando.Parameters.AddWithValue("@id", entidad.IdEmpresa);
 
@@ -112,9 +124,10 @@ namespace DAL
                 if (id <= 0)
                     return new Response<Empresa>(false, "ID inválido", null, null);
 
-                string sentencia = @"SELECT [idEmpresa], [nombre], [sector], [direccion], [correo_contacto]
-                                 FROM [Empresa]
-                                 WHERE [idEmpresa] = @id";
+                string sentencia = @"
+                    SELECT [idEmpresa], [nombre], [sector], [direccion], [correo_contacto]
+                    FROM [Empresa]
+                    WHERE [idEmpresa] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -151,9 +164,10 @@ namespace DAL
             try
             {
                 IList<Empresa> lista = new List<Empresa>();
-                string sentencia = @"SELECT [idEmpresa], [nombre], [sector], [direccion], [correo_contacto]
-                                 FROM [Empresa]
-                                 ORDER BY [nombre]";
+                string sentencia = @"
+                    SELECT [idEmpresa], [nombre], [sector], [direccion], [correo_contacto]
+                    FROM [Empresa]
+                    ORDER BY [nombre]";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))

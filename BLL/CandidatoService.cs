@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
 namespace BLL
 {
     internal class CandidatoService
@@ -175,7 +175,6 @@ namespace BLL
                     );
                 }
 
-
                 var candidatoResponse = _candidatoRepository.ObtenerPorId(idCandidato);
                 if (!candidatoResponse.Estado)
                 {
@@ -183,7 +182,24 @@ namespace BLL
                 }
 
                 var candidato = candidatoResponse.Entidad;
-                candidato.HojaDeVida = rutaHojaDeVida;
+
+                // 👉 Leer el archivo físico y convertirlo a byte[]
+                byte[] contenidoHV;
+                try
+                {
+                    contenidoHV = File.ReadAllBytes(rutaHojaDeVida);
+                }
+                catch (Exception ex)
+                {
+                    return new Response<Candidato>(
+                        false,
+                        "No se pudo leer el archivo de hoja de vida: " + ex.Message,
+                        null,
+                        null
+                    );
+                }
+
+                candidato.HojaDeVida = contenidoHV;   // ✅ ahora sí es byte[]
 
                 return _candidatoRepository.Actualizar(candidato);
             }
@@ -192,6 +208,7 @@ namespace BLL
                 return new Response<Candidato>(false, $"Error: {ex.Message}", null, null);
             }
         }
+
 
 
         public Response<Candidato> ObtenerCandidatoPorId(int idCandidato)
@@ -290,7 +307,7 @@ namespace BLL
                     );
                 }
 
-                if (string.IsNullOrWhiteSpace(candidato.HojaDeVida))
+                if (candidato.HojaDeVida == null || candidato.HojaDeVida.Length == 0)
                 {
                     return new Response<Candidato>(
                         false,
