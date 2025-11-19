@@ -82,7 +82,7 @@ namespace JobsyAPI.Controllers
             }
         }
 
-     
+
         // URL: GET /api/convocatorias/5/candidatos
         [HttpGet("{id}/candidatos")]
         public IActionResult ObtenerCandidatos(int id)
@@ -96,35 +96,42 @@ namespace JobsyAPI.Controllers
                     conn.Open();
 
                     string query = @"
-                        SELECT 
-                            p.idPostulacion,
-                            p.idCandidato,
-                            p.estado,
-                            c.hojaDeVida,
-                            c.experiencia,
-                            u.nombre,
-                            u.correo
-                        FROM Postulacion p
-                        INNER JOIN Candidato c ON p.idCandidato = c.idCandidato
-                        INNER JOIN Usuario u ON c.idCandidato = u.idUsuario
-                        WHERE p.idConvocatoria = @idConvocatoria
-                          AND p.estado = 'Aplicado'";
+                SELECT 
+                    p.idPostulacion,
+                    p.idCandidato,
+                    p.estado,
+                    c.hojaDeVida,
+                    c.experiencia,
+                    u.nombre,
+                    u.correo
+                FROM Postulacion p
+                INNER JOIN Candidato c ON p.idCandidato = c.idCandidato
+                INNER JOIN Usuario u ON c.idCandidato = u.idUsuario
+                WHERE p.idConvocatoria = @idConvocatoria
+                  AND p.estado IN ('Aplicado', 'Pendiente')";  // ← Cambiado aquí también
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        
                         cmd.Parameters.AddWithValue("@idConvocatoria", id);
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
+                                // ✅ Leer hojaDeVida como bytes y convertir a string UTF8
+                                string hojaDeVidaTexto = "";
+                                if (!reader.IsDBNull(3))
+                                {
+                                    byte[] hojaDeVidaBytes = (byte[])reader.GetValue(3);
+                                    hojaDeVidaTexto = System.Text.Encoding.UTF8.GetString(hojaDeVidaBytes);
+                                }
+
                                 candidatos.Add(new
                                 {
                                     idPostulacion = reader.GetInt32(0),
                                     idCandidato = reader.GetInt32(1),
                                     estado = reader.GetString(2),
-                                    hojaDeVida = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                    hojaDeVida = hojaDeVidaTexto,  // ← Ahora es string
                                     experiencia = reader.IsDBNull(4) ? "" : reader.GetString(4),
                                     nombreCandidato = reader.GetString(5),
                                     correoCandidato = reader.GetString(6)
@@ -152,9 +159,9 @@ namespace JobsyAPI.Controllers
             }
         }
 
-  
+
         // URL: PUT /api/convocatorias/5/cerrar
-        [HttpPut("{id}/Cerrada")]
+        [HttpPut("{id}/Cerrar")]
         public IActionResult CerrarConvocatoria(int id)
         {
             try
@@ -206,7 +213,6 @@ namespace JobsyAPI.Controllers
         }
 
 
-        // URL: GET /api/convocatorias/5/top-candidatos
         [HttpGet("{id}/top-candidatos")]
         public IActionResult ObtenerTopCandidatos(int id)
         {
@@ -219,17 +225,17 @@ namespace JobsyAPI.Controllers
                     conn.Open();
 
                     string query = @"
-                        SELECT TOP 3
-                            u.nombre,
-                            p.score,
-                            u.correo
-                        FROM Postulacion p
-                        INNER JOIN Candidato c ON p.idCandidato = c.idCandidato
-                        INNER JOIN Usuario u ON c.idCandidato = u.idUsuario
-                        WHERE p.idConvocatoria = @idConvocatoria
-                          AND p.estado = 'Evaluado'
-                          AND p.score IS NOT NULL
-                        ORDER BY p.score DESC";
+                SELECT TOP 3
+                    u.nombre,
+                    p.score,
+                    u.correo
+                FROM Postulacion p
+                INNER JOIN Candidato c ON p.idCandidato = c.idCandidato
+                INNER JOIN Usuario u ON c.idCandidato = u.idUsuario
+                WHERE p.idConvocatoria = @idConvocatoria
+                  AND p.estado = 'Evaluado'
+                  AND p.score IS NOT NULL
+                ORDER BY p.score DESC";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -242,7 +248,7 @@ namespace JobsyAPI.Controllers
                                 topCandidatos.Add(new
                                 {
                                     nombre = reader.GetString(0),
-                                    score = reader.GetInt32(1),
+                                    score = reader.GetDecimal(1),  // ✅ Cambio: GetDecimal en vez de GetInt32
                                     correo = reader.GetString(2)
                                 });
                             }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ENTITY
 {
@@ -13,8 +9,13 @@ namespace ENTITY
         public int IdConvocatoria { get; set; }
         public DateTime FechaPostulacion { get; set; }
         public string Estado { get; set; }
-        public int? Score { get; set; }
+        public decimal? Score { get; set; } // ⚠️ Cambié de int? a decimal? para precisión
         public string Justificacion { get; set; }
+
+        // 🔹 Propiedades adicionales para la API (no se guardan en BD)
+        public string NombreCandidato { get; set; }
+        public string Correo { get; set; }
+        public byte[] HojaDeVida { get; set; }
 
         public Postulacion() { }
 
@@ -28,6 +29,4 @@ namespace ENTITY
             Estado = estado;
         }
     }
-
 }
-
