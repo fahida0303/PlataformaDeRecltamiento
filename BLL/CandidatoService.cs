@@ -1,16 +1,14 @@
-﻿using DAL;
+﻿
+using DAL;
 using ENTITY;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+
 namespace BLL
 {
-    internal class CandidatoService
+    public class CandidatoService
     {
-
         private readonly CandidatoRepository _candidatoRepository;
         private readonly UsuarioRepository _usuarioRepository;
         private readonly UsuarioService _usuarioService;
@@ -22,90 +20,56 @@ namespace BLL
             _usuarioService = new UsuarioService();
         }
 
-
         public Response<Candidato> RegistrarCandidato(Candidato candidato)
         {
             try
             {
-                if (candidato == null)
-                {
-                    return new Response<Candidato>(false, "El candidato no puede ser nulo", null, null);
-                }
+                if (candidato == null) return new Response<Candidato>(false, "El candidato no puede ser nulo", null, null);
+                if (string.IsNullOrWhiteSpace(candidato.Nombre)) return new Response<Candidato>(false, "El nombre es obligatorio", null, null);
+                if (string.IsNullOrWhiteSpace(candidato.Correo)) return new Response<Candidato>(false, "El correo es obligatorio", null, null);
+                if (string.IsNullOrWhiteSpace(candidato.Contrasena)) return new Response<Candidato>(false, "La contraseña es obligatoria", null, null);
 
-
-                if (string.IsNullOrWhiteSpace(candidato.Nombre))
-                {
-                    return new Response<Candidato>(false, "El nombre es obligatorio", null, null);
-                }
-
-                if (string.IsNullOrWhiteSpace(candidato.Correo))
-                {
-                    return new Response<Candidato>(false, "El correo es obligatorio", null, null);
-                }
-
-                if (string.IsNullOrWhiteSpace(candidato.Contrasena))
-                {
-                    return new Response<Candidato>(false, "La contraseña es obligatoria", null, null);
-                }
-
-
-                Usuario nuevoUsuario = new Usuario
+                // 1) Crear usuario base con la FOTO
+                var nuevoUsuario = new Usuario
                 {
                     Nombre = candidato.Nombre,
                     Correo = candidato.Correo,
                     Contrasena = candidato.Contrasena,
-                    Estado = "Activo"
+                    Estado = "Activo",
+                    TipoUsuario = "Candidato",
+                    Foto = candidato.Foto // 🟢 ASIGNAMOS LA FOTO AQUÍ
                 };
 
                 var resultadoUsuario = _usuarioService.RegistrarUsuario(nuevoUsuario);
 
                 if (!resultadoUsuario.Estado)
                 {
-
                     return new Response<Candidato>(false, resultadoUsuario.Mensaje, null, null);
                 }
 
-
+                // 2) Crear perfil candidato
                 candidato.IdUsuario = resultadoUsuario.Entidad.IdUsuario;
-
-                // Valores por defecto si no vienen
-                if (string.IsNullOrWhiteSpace(candidato.Tipox))
-                {
-                    candidato.Tipox = "Empleado";
-                }
+                if (string.IsNullOrWhiteSpace(candidato.Tipox)) candidato.Tipox = "Empleado";
 
                 var resultadoCandidato = _candidatoRepository.Insertar(candidato);
 
                 if (!resultadoCandidato.Estado)
                 {
-
-                    return new Response<Candidato>(
-                        false,
-                        $"Usuario creado pero error al guardar datos de candidato: {resultadoCandidato.Mensaje}",
-                        null,
-                        null
-                    );
+                    return new Response<Candidato>(false, $"Usuario creado pero error en candidato: {resultadoCandidato.Mensaje}", null, null);
                 }
 
-                return new Response<Candidato>(
-                    true,
-                    "Candidato registrado exitosamente",
-                    candidato,
-                    null
-                );
+                return new Response<Candidato>(true, "Candidato registrado exitosamente", candidato, null);
             }
             catch (Exception ex)
             {
-                return new Response<Candidato>(
-                    false,
-                    $"Error al registrar candidato: {ex.Message}",
-                    null,
-                    null
-                );
+                return new Response<Candidato>(false, $"Error al registrar candidato: {ex.Message}", null, null);
             }
         }
+        
 
-
+        /// <summary>
+        /// Actualiza datos generales del perfil del candidato.
+        /// </summary>
         public Response<Candidato> ActualizarPerfil(Candidato candidato)
         {
             try
@@ -115,13 +79,13 @@ namespace BLL
                     return new Response<Candidato>(false, "Datos inválidos", null, null);
                 }
 
-
-                var candidatoExistente = _candidatoRepository.ObtenerPorId(candidato.IdUsuario);
+                var candidatoExistente = _candidatoRepository.ObtenerPorId(candidato.IdCandidato);
                 if (!candidatoExistente.Estado)
                 {
                     return new Response<Candidato>(false, "Candidato no encontrado", null, null);
                 }
 
+                // Validar nivel de formación (opcional)
                 if (!string.IsNullOrWhiteSpace(candidato.NivelFormacion))
                 {
                     var nivelesValidos = new List<string>
@@ -146,16 +110,22 @@ namespace BLL
                     }
                 }
 
-
                 return _candidatoRepository.Actualizar(candidato);
             }
             catch (Exception ex)
             {
-                return new Response<Candidato>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Candidato>(
+                    false,
+                    $"Error: {ex.Message}",
+                    null,
+                    null
+                );
             }
         }
 
-
+        /// <summary>
+        /// Actualiza la hoja de vida (archivo físico convertido a byte[]) de un candidato.
+        /// </summary>
         public Response<Candidato> ActualizarHojaDeVida(int idCandidato, string rutaHojaDeVida)
         {
             try
@@ -183,7 +153,7 @@ namespace BLL
 
                 var candidato = candidatoResponse.Entidad;
 
-                // 👉 Leer el archivo físico y convertirlo a byte[]
+                // Leer archivo físico a byte[]
                 byte[] contenidoHV;
                 try
                 {
@@ -199,17 +169,20 @@ namespace BLL
                     );
                 }
 
-                candidato.HojaDeVida = contenidoHV;   // ✅ ahora sí es byte[]
+                candidato.HojaDeVida = contenidoHV;
 
                 return _candidatoRepository.Actualizar(candidato);
             }
             catch (Exception ex)
             {
-                return new Response<Candidato>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Candidato>(
+                    false,
+                    $"Error: {ex.Message}",
+                    null,
+                    null
+                );
             }
         }
-
-
 
         public Response<Candidato> ObtenerCandidatoPorId(int idCandidato)
         {
@@ -224,7 +197,12 @@ namespace BLL
             }
             catch (Exception ex)
             {
-                return new Response<Candidato>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Candidato>(
+                    false,
+                    $"Error: {ex.Message}",
+                    null,
+                    null
+                );
             }
         }
 
@@ -236,10 +214,14 @@ namespace BLL
             }
             catch (Exception ex)
             {
-                return new Response<Candidato>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Candidato>(
+                    false,
+                    $"Error: {ex.Message}",
+                    null,
+                    null
+                );
             }
         }
-
 
         public Response<Candidato> ObtenerCandidatosActivos()
         {
@@ -252,7 +234,7 @@ namespace BLL
                     return todosCandidatos;
                 }
 
-                IList<Candidato> candidatosActivos = new List<Candidato>();
+                var candidatosActivos = new List<Candidato>();
                 foreach (var candidato in todosCandidatos.Lista)
                 {
                     if (candidato.Estado == "Activo")
@@ -270,10 +252,18 @@ namespace BLL
             }
             catch (Exception ex)
             {
-                return new Response<Candidato>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Candidato>(
+                    false,
+                    $"Error: {ex.Message}",
+                    null,
+                    null
+                );
             }
         }
 
+        /// <summary>
+        /// Verifica si el perfil del candidato está completo para poder postularse.
+        /// </summary>
         public Response<Candidato> ValidarPerfilCompleto(int idCandidato)
         {
             try
@@ -326,11 +316,18 @@ namespace BLL
             }
             catch (Exception ex)
             {
-                return new Response<Candidato>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Candidato>(
+                    false,
+                    $"Error: {ex.Message}",
+                    null,
+                    null
+                );
             }
         }
 
-
+        /// <summary>
+        /// “Desactivar” candidato (en tu repo lo manejas como Eliminar).
+        /// </summary>
         public Response<Candidato> DesactivarCandidato(int idCandidato)
         {
             try
@@ -346,14 +343,17 @@ namespace BLL
                     return new Response<Candidato>(false, "Candidato no encontrado", null, null);
                 }
 
-
                 return _candidatoRepository.Eliminar(idCandidato);
             }
             catch (Exception ex)
             {
-                return new Response<Candidato>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Candidato>(
+                    false,
+                    $"Error: {ex.Message}",
+                    null,
+                    null
+                );
             }
         }
     }
 }
-

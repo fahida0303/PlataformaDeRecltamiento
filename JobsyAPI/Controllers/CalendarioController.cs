@@ -73,8 +73,9 @@ namespace JobsyAPI.Controllers
             }
         }
 
+        // 🟢 MODIFICADO: Ahora acepta idReclutador para filtrar
         [HttpGet("proximas")]
-        public IActionResult ObtenerEntrevistasProximas([FromQuery] int dias = 7)
+        public IActionResult ObtenerEntrevistasProximas([FromQuery] int dias = 30, [FromQuery] int? idReclutador = null)
         {
             try
             {
@@ -84,6 +85,7 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
+                    // Base de la consulta
                     string query = @"
                         SELECT 
                             r.idReunion,
@@ -95,12 +97,24 @@ namespace JobsyAPI.Controllers
                         FROM Reunion r
                         INNER JOIN Usuario uc ON r.idCandidato = uc.idUsuario
                         INNER JOIN Usuario ur ON r.idReclutador = ur.idUsuario
-                        WHERE r.fecha BETWEEN GETDATE() AND DATEADD(DAY, @dias, GETDATE())
-                        ORDER BY r.fecha ASC";
+                        WHERE r.fecha BETWEEN GETDATE() AND DATEADD(DAY, @dias, GETDATE())";
+
+                    // 🟢 Si nos envían un ID de reclutador, filtramos por él
+                    if (idReclutador.HasValue && idReclutador.Value > 0)
+                    {
+                        query += " AND r.idReclutador = @idReclutador";
+                    }
+
+                    query += " ORDER BY r.fecha ASC";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@dias", dias);
+
+                        if (idReclutador.HasValue && idReclutador.Value > 0)
+                        {
+                            cmd.Parameters.AddWithValue("@idReclutador", idReclutador.Value);
+                        }
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {

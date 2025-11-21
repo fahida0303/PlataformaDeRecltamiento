@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
-    internal class UsuarioService
+    public class UsuarioService
     {
         private readonly UsuarioRepository _usuarioRepository;
 
@@ -196,9 +196,15 @@ namespace BLL
 
 
                 var usuarioResponse = ObtenerPorCorreo(correo);
-                if (!usuarioResponse.Estado || usuarioResponse.Entidad == null)
+                if (!usuarioResponse.Estado)
                 {
-                    return new Response<Usuario>(false, "Credenciales incorrectas", null, null);
+                    // 🔥 AHORA SÍ VEREMOS EL ERROR REAL DE SQL
+                    return new Response<Usuario>(false, usuarioResponse.Mensaje, null, null);
+                }
+
+                if (usuarioResponse.Entidad == null)
+                {
+                    return new Response<Usuario>(false, "Usuario no encontrado", null, null);
                 }
 
                 var usuario = usuarioResponse.Entidad;
@@ -224,7 +230,7 @@ namespace BLL
         }
 
 
-        private Response<Usuario> ObtenerPorCorreo(string correo)
+        public Response<Usuario> ObtenerPorCorreo(string correo)
         {
             try
             {

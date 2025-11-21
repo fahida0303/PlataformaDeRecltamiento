@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ENTITY
 {
@@ -13,11 +9,14 @@ namespace ENTITY
         public string EnlaceMeet { get; set; }
         public string EstadoConfirmacion { get; set; }
 
-        // ← AGREGAR ESTAS DOS LÍNEAS:
         public int IdCandidato { get; set; }
         public int IdReclutador { get; set; }
 
-        // Propiedades derivadas (para JOIN)
+        // Campos adicionales de la tabla
+        public string IdEventoCalendar { get; set; }   // nvarchar(510) NULL
+        public DateTime? FechaModificacion { get; set; } // datetime NULL (default GETDATE())
+
+        // Propiedades derivadas (para JOINs, no columnas directas)
         public string NombreCandidato { get; set; }
         public string CorreoCandidato { get; set; }
         public string NombreReclutador { get; set; }
@@ -25,8 +24,16 @@ namespace ENTITY
 
         public Reunion() { }
 
-        public Reunion(int idReunion, DateTime fecha, string enlaceMeet,
-                       string estadoConfirmacion, int idCandidato, int idReclutador)
+        public Reunion(
+            int idReunion,
+            DateTime fecha,
+            string enlaceMeet,
+            string estadoConfirmacion,
+            int idCandidato,
+            int idReclutador,
+            string idEventoCalendar = null,
+            DateTime? fechaModificacion = null
+        )
         {
             IdReunion = idReunion;
             Fecha = fecha;
@@ -34,9 +41,8 @@ namespace ENTITY
             EstadoConfirmacion = estadoConfirmacion;
             IdCandidato = idCandidato;
             IdReclutador = idReclutador;
+            IdEventoCalendar = idEventoCalendar;
+            FechaModificacion = fechaModificacion;
         }
     }
 }
-
-
-

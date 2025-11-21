@@ -24,7 +24,9 @@ builder.Services.AddSwaggerGen(c =>
 // HttpClient (para llamadas externas)
 builder.Services.AddHttpClient();
 
-// CORS (para frontend o n8n)
+// =====================================================
+// CORS (React + n8n + Telegram)
+// =====================================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -35,11 +37,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ✅ REGISTRAR TELEGRAM SERVICES
+// Servicios de Telegram
 builder.Services.AddSingleton<TelegramCommandHandler>();
 builder.Services.AddHostedService<TelegramBotService>();
 
-// Logging mejorado
+// Logging
 builder.Services.AddLogging(logging =>
 {
     logging.ClearProviders();
@@ -63,14 +65,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jobsy API v1");
-        c.RoutePrefix = "swagger"; // ← Ahora Swagger estará en /swagger
+        c.RoutePrefix = "swagger";
     });
 }
 
-// CORS
+// 🚨 CORS debe ir aquí — ANTES de authorization, controllers, telegram, TODO.
 app.UseCors("AllowAll");
 
-// HTTPS Redirection (comentado para desarrollo local)
+// Redirección HTTPS (desactivado por desarrollo)
 // app.UseHttpsRedirection();
 
 // Authorization
@@ -80,7 +82,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // =====================================================
-// HEALTH CHECK ENDPOINT
+// HEALTH CHECK
 // =====================================================
 app.MapGet("/health", () => new
 {
@@ -91,7 +93,7 @@ app.MapGet("/health", () => new
 });
 
 // =====================================================
-// INFO AL INICIAR
+// LOGS DE ARRANQUE
 // =====================================================
 app.Lifetime.ApplicationStarted.Register(() =>
 {

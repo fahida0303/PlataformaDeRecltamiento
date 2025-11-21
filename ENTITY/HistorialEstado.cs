@@ -1,26 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ENTITY
 {
     public class HistorialEstado
     {
-        public int IdHistorial { get; set; }
-        public int IdPostulacion { get; set; }
-        public string EstadoAnterior { get; set; }
-        public string EstadoNuevo { get; set; }
-        public DateTime FechaCambio { get; set; }
-        public string Comentario { get; set; }
-        public int? UsuarioCambio { get; set; }
+        public int IdHistorial { get; set; }      // PK
+        public int IdPostulacion { get; set; }    // FK Postulacion
+        public string EstadoAnterior { get; set; } // varchar(50)
+        public string EstadoNuevo { get; set; }    // varchar(50)
+        public DateTime FechaCambio { get; set; }  // datetime (default GETDATE())
+        public string Comentario { get; set; }     // text (puede ser null)
+        public int? UsuarioCambio { get; set; }    // int? (nullable)
 
         public HistorialEstado() { }
 
-        public HistorialEstado(int idHistorial, int idPostulacion, string estadoAnterior,
-                               string estadoNuevo, DateTime fechaCambio, string comentario,
-                               int? usuarioCambio)
+        public HistorialEstado(
+            int idHistorial,
+            int idPostulacion,
+            string estadoAnterior,
+            string estadoNuevo,
+            DateTime fechaCambio,
+            string comentario,
+            int? usuarioCambio
+        )
         {
             IdHistorial = idHistorial;
             IdPostulacion = idPostulacion;

@@ -1,31 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ENTITY
 {
-    public class Candidato : Usuario
+    public class Candidato
     {
-        public string Tipox { get; set; }          // Puedes usarlo luego si quieres
-        public string NivelFormacion { get; set; }
-        public string Experiencia { get; set; }
+        public int IdCandidato { get; set; }         // PK
+        public string Tipox { get; set; }            // varchar(50)
+        public string NivelFormacion { get; set; }   // varchar(100)
+        public string Experiencia { get; set; }      // varchar(255)
+        public byte[] HojaDeVida { get; set; }       // varbinary(MAX)
 
-        // 🔹 Ahora el CV se guarda como binario:
-        public byte[] HojaDeVida { get; set; }
+        // FK → Usuario (Datos vinculados)
+        public int IdUsuario { get; set; }
+        public string Nombre { get; set; }
+        public string Correo { get; set; }
+        public string Contrasena { get; set; }
+        public string Estado { get; set; }
 
-        public Candidato() { }
-
-        public Candidato(int idUsuario, string nombre, string correo, string contrasena,
-                         string estado, string tipox, string nivelFormacion,
-                         string experiencia, byte[] hojaDeVida)
-            : base(idUsuario, nombre, correo, contrasena, estado)
-        {
-            Tipox = tipox;
-            NivelFormacion = nivelFormacion;
-            Experiencia = experiencia;
-            HojaDeVida = hojaDeVida;
-        }
+        // 🟢 NUEVO: Propiedad para transportar la foto
+        public byte[] Foto { get; set; }
     }
 }

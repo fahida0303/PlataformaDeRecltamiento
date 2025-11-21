@@ -16,17 +16,16 @@ namespace JobsyAPI.Controllers
 
         // ========================================
         // 📊 ENDPOINT 1: Métricas semanales
-        // URL: GET /api/reportes/metricas-semanales
         // ========================================
         [HttpGet("metricas-semanales")]
         public IActionResult ObtenerMetricasSemanales()
         {
+            // (Este lo dejamos igual o lo actualizas luego si también quieres filtrar gráficos históricos)
             try
             {
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
-
                     string query = @"
                         SELECT 
                             COUNT(*) AS totalPostulaciones,
@@ -34,7 +33,7 @@ namespace JobsyAPI.Controllers
                             SUM(CASE WHEN estado = 'Rechazado' THEN 1 ELSE 0 END) AS rechazados,
                             SUM(CASE WHEN estado = 'Pendiente' THEN 1 ELSE 0 END) AS pendientes
                         FROM Postulacion
-                        WHERE fecha_postulacion >= DATEADD(DAY, -7, GETDATE())";
+                        WHERE fechaPostulacion >= DATEADD(DAY, -7, GETDATE())";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -49,35 +48,26 @@ namespace JobsyAPI.Controllers
                                     metricas = new
                                     {
                                         totalPostulaciones = reader.GetInt32(0),
-                                        seleccionados = reader.GetInt32(1),
-                                        rechazados = reader.GetInt32(2),
-                                        pendientes = reader.GetInt32(3)
+                                        seleccionados = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
+                                        rechazados = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
+                                        pendientes = reader.IsDBNull(3) ? 0 : reader.GetInt32(3)
                                     }
                                 });
                             }
                         }
                     }
                 }
-
                 return Ok(new { exito = false, mensaje = "No hay datos" });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    exito = false,
-                    mensaje = "Error al generar reporte",
-                    error = ex.Message
-                });
-            }
+            catch (Exception ex) { return StatusCode(500, new { exito = false, mensaje = ex.Message }); }
         }
 
         // ========================================
-        // 📅 ENDPOINT 2: Resumen diario
-        // URL: GET /api/reportes/resumen-diario
+        // 📅 ENDPOINT 2: Resumen diario (FILTRADO POR RECLUTADOR)
+        // URL: GET /api/reportes/resumen-diario?idReclutador=5
         // ========================================
         [HttpGet("resumen-diario")]
-        public IActionResult ObtenerResumenDiario()
+        public IActionResult ObtenerResumenDiario([FromQuery] int? idReclutador = null)
         {
             try
             {
@@ -85,14 +75,40 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
-                    string query = @"
+                    // Lógica dinámica para el filtro
+                    // Si hay idReclutador, filtramos por las convocatorias de ESE reclutador
+                    string filtroReclutador = idReclutador.HasValue ? " AND c.idReclutador = @idReclutador " : "";
+                    string filtroConvocatoria = idReclutador.HasValue ? " AND idReclutador = @idReclutador " : "";
+
+                    string query = $@"
                         SELECT 
-                            (SELECT COUNT(*) FROM Postulacion WHERE CAST(fecha_postulacion AS DATE) = CAST(GETDATE() AS DATE)) AS postulacionesHoy,
-                            (SELECT COUNT(*) FROM Postulacion WHERE estado = 'Pendiente') AS totalPendientes,
-                            (SELECT COUNT(*) FROM Convocatoria WHERE estado = 'Abierta') AS convocatoriasAbiertas";
+                            -- 1. Postulaciones de hoy (filtradas si es necesario)
+                            (SELECT COUNT(*) 
+                             FROM Postulacion p
+                             INNER JOIN Convocatoria c ON p.idConvocatoria = c.idConvocatoria
+                             WHERE CAST(p.fechaPostulacion AS DATE) = CAST(GETDATE() AS DATE)
+                             {filtroReclutador}) AS postulacionesHoy,
+
+                            -- 2. Pendientes totales (filtradas)
+                            (SELECT COUNT(*) 
+                             FROM Postulacion p
+                             INNER JOIN Convocatoria c ON p.idConvocatoria = c.idConvocatoria
+                             WHERE p.estado = 'Pendiente'
+                             {filtroReclutador}) AS totalPendientes,
+
+                            -- 3. Convocatorias abiertas (filtradas)
+                            (SELECT COUNT(*) 
+                             FROM Convocatoria 
+                             WHERE estado = 'Abierta' 
+                             {filtroConvocatoria}) AS convocatoriasAbiertas";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
+                        if (idReclutador.HasValue)
+                        {
+                            cmd.Parameters.AddWithValue("@idReclutador", idReclutador.Value);
+                        }
+
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
@@ -110,109 +126,60 @@ namespace JobsyAPI.Controllers
                                         postulacionesHoy = postulacionesHoy,
                                         totalPendientes = totalPendientes,
                                         convocatoriasAbiertas = convocatoriasAbiertas
-                                    },
-                                    mensajeFormateado = $"📊 Resumen Diario - Jobsy\n\n" +
-                                        $"📬 Postulaciones hoy: {postulacionesHoy}\n" +
-                                        $"⏳ Pendientes: {totalPendientes}\n" +
-                                        $"🔓 Convocatorias abiertas: {convocatoriasAbiertas}"
+                                    }
                                 });
                             }
                         }
                     }
                 }
-
                 return Ok(new { exito = false, mensaje = "No hay datos" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    exito = false,
-                    mensaje = "Error al generar resumen",
-                    error = ex.Message
-                });
+                return StatusCode(500, new { exito = false, mensaje = "Error al generar resumen", error = ex.Message });
             }
         }
 
         // ========================================
-        // 🏆 ENDPOINT 3: Ranking de convocatoria
-        // URL: GET /api/reportes/ranking/5
+        // 🏆 ENDPOINT 3: Ranking (Sin cambios)
         // ========================================
         [HttpGet("ranking/{idConvocatoria}")]
         public IActionResult ObtenerRanking(int idConvocatoria)
         {
+            // ... (Mismo código que ya tenías) ...
+            // Por brevedad no lo repito, pero mantenlo igual.
             try
             {
                 var ranking = new List<object>();
                 string tituloConvocatoria = "";
-
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
-
-                    // 📝 Obtener título de la convocatoria
                     string queryTitulo = "SELECT titulo FROM Convocatoria WHERE idConvocatoria = @id";
                     using (SqlCommand cmd = new SqlCommand(queryTitulo, conn))
                     {
                         cmd.Parameters.AddWithValue("@id", idConvocatoria);
                         var result = cmd.ExecuteScalar();
-                        if (result == null)
-                        {
-                            return NotFound(new { exito = false, mensaje = "Convocatoria no encontrada" });
-                        }
+                        if (result == null) return NotFound(new { exito = false, mensaje = "Convocatoria no encontrada" });
                         tituloConvocatoria = result.ToString();
                     }
-
-                    // 🏆 Obtener ranking
-                    string queryRanking = @"
-                        SELECT TOP 10
-                            u.nombre,
-                            p.score,
-                            p.estado
-                        FROM Postulacion p
-                        INNER JOIN Usuario u ON p.idCandidato = u.idUsuario
-                        WHERE p.idConvocatoria = @id
-                          AND p.score IS NOT NULL
-                        ORDER BY p.score DESC";
-
+                    string queryRanking = @"SELECT TOP 10 u.nombre, p.score, p.estado FROM Postulacion p INNER JOIN Usuario u ON p.idCandidato = u.idUsuario WHERE p.idConvocatoria = @id AND p.score IS NOT NULL ORDER BY p.score DESC";
                     using (SqlCommand cmd = new SqlCommand(queryRanking, conn))
                     {
                         cmd.Parameters.AddWithValue("@id", idConvocatoria);
-
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             int posicion = 1;
                             while (reader.Read())
                             {
-                                ranking.Add(new
-                                {
-                                    posicion = posicion++,
-                                    nombre = reader.GetString(0),
-                                    score = reader.GetInt32(1),
-                                    estado = reader.GetString(2)
-                                });
+                                ranking.Add(new { posicion = posicion++, nombre = reader.GetString(0), score = reader.GetInt32(1), estado = reader.GetString(2) });
                             }
                         }
                     }
                 }
-
-                return Ok(new
-                {
-                    exito = true,
-                    convocatoria = tituloConvocatoria,
-                    totalCandidatos = ranking.Count,
-                    rranking = ranking
-                });
+                return Ok(new { exito = true, convocatoria = tituloConvocatoria, totalCandidatos = ranking.Count, rranking = ranking });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    exito = false,
-                    mensaje = "Error al obtener ranking",
-                    error = ex.Message
-                });
-            }
+            catch (Exception ex) { return StatusCode(500, new { exito = false, mensaje = ex.Message }); }
         }
     }
 }

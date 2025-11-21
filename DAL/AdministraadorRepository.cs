@@ -16,28 +16,27 @@ namespace DAL
                     return new Response<Administrador>(false, "Los permisos son requeridos", null, null);
                 }
 
-                string sentencia = @"INSERT INTO [Administrador] ([permisos], [idUsuario]) 
-                                 VALUES (@permisos, @idUsuario)";
+                const string sentencia = @"
+                    INSERT INTO [Administrador] ([idUsuario], [permisos])
+                    VALUES (@idUsuario, @permisos);
+                    SELECT SCOPE_IDENTITY();";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@permisos", entidad.Permisos ?? "");
                     comando.Parameters.AddWithValue("@idUsuario", entidad.IdUsuario);
+                    comando.Parameters.AddWithValue("@permisos", entidad.Permisos ?? (object)DBNull.Value);
 
                     conexion.Open();
-                    comando.ExecuteNonQuery();
+                    var result = comando.ExecuteScalar();
+                    entidad.IdAdmin = Convert.ToInt32(result);
 
-                    return new Response<Administrador>(true, "Administrador insertado correctamente", entidad, null);
+                    return new Response<Administrador>(true, "Administrador creado correctamente", entidad, null);
                 }
-            }
-            catch (SqlException ex)
-            {
-                return new Response<Administrador>(false, $"Error en BD: {ex.Message}", null, null);
             }
             catch (Exception ex)
             {
-                return new Response<Administrador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Administrador>(false, $"Error al insertar administrador: {ex.Message}", null, null);
             }
         }
 
@@ -50,28 +49,29 @@ namespace DAL
                     return new Response<Administrador>(false, "Datos inválidos", null, null);
                 }
 
-                string sentencia = @"UPDATE [Administrador] SET [permisos] = @permisos 
-                                 WHERE [idAdmin] = @idAdmin";
+                const string sentencia = @"
+                    UPDATE [Administrador]
+                    SET [permisos] = @permisos
+                    WHERE [idAdmin] = @idAdmin;";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@permisos", entidad.Permisos ?? "");
+                    comando.Parameters.AddWithValue("@permisos", entidad.Permisos ?? (object)DBNull.Value);
                     comando.Parameters.AddWithValue("@idAdmin", entidad.IdAdmin);
 
                     conexion.Open();
-                    int filasAfectadas = comando.ExecuteNonQuery();
+                    int filas = comando.ExecuteNonQuery();
 
-                    if (filasAfectadas > 0)
-                    {
-                        return new Response<Administrador>(true, "Actualizado correctamente", entidad, null);
-                    }
-                    return new Response<Administrador>(false, "No se encontró", null, null);
+                    if (filas > 0)
+                        return new Response<Administrador>(true, "Administrador actualizado correctamente", entidad, null);
+
+                    return new Response<Administrador>(false, "No se encontró el administrador a actualizar", null, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Administrador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Administrador>(false, $"Error al actualizar: {ex.Message}", null, null);
             }
         }
 
@@ -80,25 +80,26 @@ namespace DAL
             try
             {
                 if (id <= 0)
-                    return new Response<Administrador>(false, "ID inválido", null, null);
+                    return new Response<Administrador>(false, "Id inválido", null, null);
 
-                string sentencia = "DELETE FROM [Administrador] WHERE [idAdmin] = @id";
+                const string sentencia = @"DELETE FROM [Administrador] WHERE [idAdmin] = @idAdmin;";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@id", id);
+                    comando.Parameters.AddWithValue("@idAdmin", id);
                     conexion.Open();
-                    int filasAfectadas = comando.ExecuteNonQuery();
 
-                    if (filasAfectadas > 0)
-                        return new Response<Administrador>(true, "Eliminado correctamente", null, null);
-                    return new Response<Administrador>(false, "No encontrado", null, null);
+                    int filas = comando.ExecuteNonQuery();
+                    if (filas > 0)
+                        return new Response<Administrador>(true, "Administrador eliminado correctamente", null, null);
+
+                    return new Response<Administrador>(false, "No se encontró el administrador a eliminar", null, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Administrador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Administrador>(false, $"Error al eliminar: {ex.Message}", null, null);
             }
         }
 
@@ -106,43 +107,42 @@ namespace DAL
         {
             try
             {
-                if (id <= 0)
-                    return new Response<Administrador>(false, "ID inválido", null, null);
+                const string sentencia = @"
+                    SELECT a.idAdmin, a.idUsuario, a.permisos,
+                           u.nombre, u.correo
+                    FROM Administrador a
+                    INNER JOIN Usuario u ON a.idUsuario = u.idUsuario
+                    WHERE a.idAdmin = @idAdmin;";
 
-                string sentencia = @"SELECT a.[idAdmin], a.[idUsuario], u.[nombre], u.[correo], u.[contraseña], u.[estado], a.[permisos]
-                                 FROM [Administrador] a
-                                 INNER JOIN [Usuario] u ON a.[idUsuario] = u.[idUsuario]
-                                 WHERE a.[idAdmin] = @id";
-
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@id", id);
+                    comando.Parameters.AddWithValue("@idAdmin", id);
                     conexion.Open();
 
-                    using (SqlDataReader reader = comando.ExecuteReader())
+                    using (var reader = comando.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            Administrador admin = new Administrador
+                            var admin = new Administrador
                             {
-                                IdAdmin = reader.GetInt32(0),      // ✅ CORRECCIÓN: Agregado
-                                IdUsuario = reader.GetInt32(1),
-                                Nombre = reader.GetString(2),
-                                Correo = reader.GetString(3),
-                                Contrasena = reader.GetString(4),
-                                Estado = reader.GetString(5),
-                                Permisos = reader.GetString(6)
+                                IdAdmin = reader.GetInt32(reader.GetOrdinal("idAdmin")),
+                                IdUsuario = reader.GetInt32(reader.GetOrdinal("idUsuario")),
+                                Permisos = reader["permisos"] as string,
+                                Nombre = reader["nombre"] as string,
+                                Correo = reader["correo"] as string
                             };
-                            return new Response<Administrador>(true, "Encontrado", admin, null);
+
+                            return new Response<Administrador>(true, "Administrador encontrado", admin, null);
                         }
-                        return new Response<Administrador>(false, "No encontrado", null, null);
                     }
                 }
+
+                return new Response<Administrador>(false, "No se encontró el administrador", null, null);
             }
             catch (Exception ex)
             {
-                return new Response<Administrador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Administrador>(false, $"Error al obtener por id: {ex.Message}", null, null);
             }
         }
 
@@ -150,41 +150,44 @@ namespace DAL
         {
             try
             {
-                IList<Administrador> lista = new List<Administrador>();
-                string sentencia = @"SELECT a.[idAdmin], a.[idUsuario], u.[nombre], u.[correo], u.[contraseña], u.[estado], a.[permisos]
-                                 FROM [Administrador] a
-                                 INNER JOIN [Usuario] u ON a.[idUsuario] = u.[idUsuario]
-                                 ORDER BY a.[idAdmin]";
+                var lista = new List<Administrador>();
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                const string sentencia = @"
+                    SELECT a.idAdmin, a.idUsuario, a.permisos,
+                           u.nombre, u.correo
+                    FROM Administrador a
+                    INNER JOIN Usuario u ON a.idUsuario = u.idUsuario;";
+
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
                     conexion.Open();
-                    using (SqlDataReader reader = comando.ExecuteReader())
+                    using (var reader = comando.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            lista.Add(new Administrador
+                            var admin = new Administrador
                             {
-                                IdAdmin = reader.GetInt32(0),    // ✅ CORRECCIÓN: Agregado
-                                IdUsuario = reader.GetInt32(1),
-                                Nombre = reader.GetString(2),
-                                Correo = reader.GetString(3),
-                                Contrasena = reader.GetString(4),
-                                Estado = reader.GetString(5),
-                                Permisos = reader.GetString(6)
-                            });
+                                IdAdmin = reader.GetInt32(reader.GetOrdinal("idAdmin")),
+                                IdUsuario = reader.GetInt32(reader.GetOrdinal("idUsuario")),
+                                Permisos = reader["permisos"] as string,
+                                Nombre = reader["nombre"] as string,
+                                Correo = reader["correo"] as string
+                            };
+
+                            lista.Add(admin);
                         }
                     }
                 }
 
                 if (lista.Count > 0)
-                    return new Response<Administrador>(true, $"Se encontraron {lista.Count}", null, lista);
-                return new Response<Administrador>(true, "Sin registros", null, lista);
+                    return new Response<Administrador>(true, $"Se encontraron {lista.Count} administradores", null, lista);
+
+                return new Response<Administrador>(true, "No hay administradores registrados", null, lista);
             }
             catch (Exception ex)
             {
-                return new Response<Administrador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Administrador>(false, $"Error al obtener todos: {ex.Message}", null, null);
             }
         }
     }

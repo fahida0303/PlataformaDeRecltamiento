@@ -4,23 +4,33 @@ namespace ENTITY
 {
     public class Postulacion
     {
+        // 🔹 Campos que SÍ existen en la tabla Postulacion
         public int IdPostulacion { get; set; }
         public int IdCandidato { get; set; }
         public int IdConvocatoria { get; set; }
         public DateTime FechaPostulacion { get; set; }
         public string Estado { get; set; }
-        public decimal? Score { get; set; } // ⚠️ Cambié de int? a decimal? para precisión
-        public string Justificacion { get; set; }
+        public decimal? Score { get; set; }        // score (decimal, puede ser NULL)
+        public string Justificacion { get; set; }  // justificacion (nvarchar, puede ser NULL)
 
-        // 🔹 Propiedades adicionales para la API (no se guardan en BD)
+
         public string NombreCandidato { get; set; }
-        public string Correo { get; set; }
-        public byte[] HojaDeVida { get; set; }
+        public string CorreoCandidato { get; set; }   // 👈 ESTA es la que faltaba
+        public string TelefonoCandidato { get; set; }
+        public string TituloConvocatoria { get; set; }
+        public string NombreEmpresa { get; set; }
+        public byte[] HojaDeVida { get; set; }        // varbinary de Candidato.hojaDeVida
 
-        public Postulacion() { }
+        public Postulacion()
+        {
+        }
 
-        public Postulacion(int idPostulacion, int idCandidato, int idConvocatoria,
-                           DateTime fechaPostulacion, string estado)
+        public Postulacion(
+            int idPostulacion,
+            int idCandidato,
+            int idConvocatoria,
+            DateTime fechaPostulacion,
+            string estado)
         {
             IdPostulacion = idPostulacion;
             IdCandidato = idCandidato;

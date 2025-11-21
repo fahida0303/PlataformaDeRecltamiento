@@ -1,87 +1,105 @@
-﻿using ENTITY;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ENTITY;
 
 namespace DAL
 {
     public class ReclutadorRepository : BaseRepository, IRepository<Reclutador>
     {
+        // ==========================
+        // INSERTAR
+        // ==========================
         public Response<Reclutador> Insertar(Reclutador entidad)
         {
             try
             {
-                if (entidad == null || string.IsNullOrWhiteSpace(entidad.Nombre))
+                // Validaciones básicas
+                if (entidad == null || entidad.IdUsuario <= 0)
                 {
-                    return new Response<Reclutador>(false, "El nombre es requerido", null, null);
+                    return new Response<Reclutador>(false, "Datos inválidos: Se requiere un IdUsuario previo.", null, null);
                 }
 
-                string sentencia = @"INSERT INTO [Reclutador] ([idReclutador], [cargo], [empresaAsociada]) 
-                                 VALUES (@idReclutador, @cargo, @empresaAsociada)";
+                // 🚨 CORRECCIÓN CLAVE: 
+                // 1. Usamos el nombre real de la columna FK: idEmpresa
+                // 2. Insertamos el ID explícitamente (idReclutador = idUsuario)
+                string sentencia = @"
+                    INSERT INTO [Reclutador] ([idReclutador], [cargo], [idEmpresa]) 
+                    VALUES (@id, @cargo, @idEmpresa);";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@idReclutador", entidad.IdUsuario);
-                    comando.Parameters.AddWithValue("@cargo", entidad.Cargo ?? "");
-                    comando.Parameters.AddWithValue("@empresaAsociada", entidad.IdEmpresa);
+                    comando.Parameters.AddWithValue("@id", entidad.IdUsuario);
+                    comando.Parameters.AddWithValue("@cargo", entidad.Cargo ?? "Reclutador");
+                    comando.Parameters.AddWithValue("@idEmpresa", entidad.IdEmpresa);
 
                     conexion.Open();
                     comando.ExecuteNonQuery();
 
-                    return new Response<Reclutador>(true, "Reclutador insertado correctamente", entidad, null);
+                    // Sincronizar IDs en el objeto
+                    entidad.IdReclutador = entidad.IdUsuario;
+
+                    return new Response<Reclutador>(true, "Reclutador creado correctamente", entidad, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Reclutador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Reclutador>(false, $"Error al insertar Reclutador: {ex.Message}", null, null);
             }
         }
 
+        // ==========================
+        // ACTUALIZAR
+        // ==========================
         public Response<Reclutador> Actualizar(Reclutador entidad)
         {
             try
             {
-                if (entidad == null || entidad.IdUsuario <= 0)
+                if (entidad == null || entidad.IdReclutador <= 0)
                 {
-                    return new Response<Reclutador>(false, "Datos inválidos", null, null);
+                    return new Response<Reclutador>(false, "Datos inválidos para actualizar", null, null);
                 }
 
-                string sentencia = @"UPDATE [Reclutador] SET [cargo] = @cargo, [empresaAsociada] = @empresaAsociada
-                                 WHERE [idReclutador] = @idReclutador";
+                // 🚨 CORRECCIÓN: idEmpresa en lugar de empresaAsociada
+                string sentencia = @"
+                    UPDATE [Reclutador] 
+                    SET [cargo] = @cargo, 
+                        [idEmpresa] = @idEmpresa
+                    WHERE [idReclutador] = @id;";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@cargo", entidad.Cargo ?? "");
-                    comando.Parameters.AddWithValue("@empresaAsociada", entidad.IdEmpresa);
-                    comando.Parameters.AddWithValue("@idReclutador", entidad.IdUsuario);
+                    comando.Parameters.AddWithValue("@idEmpresa", entidad.IdEmpresa);
+                    comando.Parameters.AddWithValue("@id", entidad.IdReclutador);
 
                     conexion.Open();
-                    int filasAfectadas = comando.ExecuteNonQuery();
+                    int filas = comando.ExecuteNonQuery();
 
-                    if (filasAfectadas > 0)
-                        return new Response<Reclutador>(true, "Actualizado", entidad, null);
-                    return new Response<Reclutador>(false, "No encontrado", null, null);
+                    if (filas > 0)
+                    {
+                        return new Response<Reclutador>(true, "Reclutador actualizado correctamente", entidad, null);
+                    }
+                    return new Response<Reclutador>(false, "No se encontró el reclutador", null, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Reclutador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Reclutador>(false, $"Error al actualizar: {ex.Message}", null, null);
             }
         }
 
+        // ==========================
+        // ELIMINAR (Desactivar Usuario)
+        // ==========================
         public Response<Reclutador> Eliminar(int id)
         {
             try
             {
-                if (id <= 0)
-                    return new Response<Reclutador>(false, "ID inválido", null, null);
-
-                // El trigger TR_Reclutador_DesactivarUsuario se encargará de poner estado = 'Inactivo' en Usuario
+                // En realidad deberíamos desactivar el Usuario, pero si la lógica es borrar de la tabla hija:
                 string sentencia = "DELETE FROM [Reclutador] WHERE [idReclutador] = @id";
 
                 using (SqlConnection conexion = CrearConexion())
@@ -89,31 +107,32 @@ namespace DAL
                 {
                     comando.Parameters.AddWithValue("@id", id);
                     conexion.Open();
-                    int filasAfectadas = comando.ExecuteNonQuery();
+                    int filas = comando.ExecuteNonQuery();
 
-                    if (filasAfectadas > 0)
-                        return new Response<Reclutador>(true, "Eliminado", null, null);
-                    return new Response<Reclutador>(false, "No encontrado", null, null);
+                    if (filas > 0) return new Response<Reclutador>(true, "Reclutador eliminado", null, null);
+                    return new Response<Reclutador>(false, "No se encontró el reclutador", null, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Reclutador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Reclutador>(false, $"Error al eliminar: {ex.Message}", null, null);
             }
         }
 
+        // ==========================
+        // OBTENER POR ID
+        // ==========================
         public Response<Reclutador> ObtenerPorId(int id)
         {
             try
             {
-                if (id <= 0)
-                    return new Response<Reclutador>(false, "ID inválido", null, null);
-
-                string sentencia = @"SELECT r.[idReclutador], u.[nombre], u.[correo], u.[contraseña], u.[estado], 
-                                 r.[cargo], r.[empresaAsociada]
-                                 FROM [Usuario] u
-                                 INNER JOIN [Reclutador] r ON u.[idUsuario] = r.[idReclutador]
-                                 WHERE r.[idReclutador] = @id";
+                // 🚨 CORRECCIÓN: Nombres de columnas (contrasena, idEmpresa)
+                string sentencia = @"
+                    SELECT r.idReclutador, u.nombre, u.correo, u.contrasena, u.estado, 
+                           r.cargo, r.idEmpresa
+                    FROM Usuario u
+                    INNER JOIN Reclutador r ON u.idUsuario = r.idReclutador
+                    WHERE r.idReclutador = @id";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -125,8 +144,9 @@ namespace DAL
                     {
                         if (reader.Read())
                         {
-                            Reclutador reclutador = new Reclutador
+                            var reclutador = new Reclutador
                             {
+                                IdReclutador = reader.GetInt32(0),
                                 IdUsuario = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Correo = reader.GetString(2),
@@ -135,28 +155,33 @@ namespace DAL
                                 Cargo = reader.GetString(5),
                                 IdEmpresa = reader.GetInt32(6)
                             };
-                            return new Response<Reclutador>(true, "Encontrado", reclutador, null);
+                            return new Response<Reclutador>(true, "Reclutador encontrado", reclutador, null);
                         }
-                        return new Response<Reclutador>(false, "No encontrado", null, null);
+                        return new Response<Reclutador>(false, "No se encontró el reclutador", null, null);
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Reclutador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Reclutador>(false, $"Error al consultar: {ex.Message}", null, null);
             }
         }
 
+        // ==========================
+        // OBTENER TODOS
+        // ==========================
         public Response<Reclutador> ObtenerTodos()
         {
             try
             {
-                IList<Reclutador> lista = new List<Reclutador>();
-                string sentencia = @"SELECT r.[idReclutador], u.[nombre], u.[correo], u.[contraseña], u.[estado],
-                                 r.[cargo], r.[empresaAsociada]
-                                 FROM [Usuario] u
-                                 INNER JOIN [Reclutador] r ON u.[idUsuario] = r.[idReclutador]
-                                 ORDER BY u.[nombre]";
+                var lista = new List<Reclutador>();
+                // 🚨 CORRECCIÓN: Nombres de columnas
+                string sentencia = @"
+                    SELECT r.idReclutador, u.nombre, u.correo, u.contrasena, u.estado, 
+                           r.cargo, r.idEmpresa
+                    FROM Usuario u
+                    INNER JOIN Reclutador r ON u.idUsuario = r.idReclutador
+                    ORDER BY u.nombre";
 
                 using (SqlConnection conexion = CrearConexion())
                 using (SqlCommand comando = new SqlCommand(sentencia, conexion))
@@ -168,6 +193,7 @@ namespace DAL
                         {
                             lista.Add(new Reclutador
                             {
+                                IdReclutador = reader.GetInt32(0),
                                 IdUsuario = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Correo = reader.GetString(2),
@@ -179,14 +205,11 @@ namespace DAL
                         }
                     }
                 }
-
-                if (lista.Count > 0)
-                    return new Response<Reclutador>(true, $"Se encontraron {lista.Count}", null, lista);
-                return new Response<Reclutador>(true, "Sin registros", null, lista);
+                return new Response<Reclutador>(true, $"Encontrados {lista.Count}", null, lista);
             }
             catch (Exception ex)
             {
-                return new Response<Reclutador>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Reclutador>(false, $"Error al obtener todos: {ex.Message}", null, null);
             }
         }
     }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ENTITY
 {
@@ -23,11 +19,11 @@ namespace ENTITY
         public string WhatsappNumber { get; set; }
         public DateTime? FechaUltimaInteraccionBot { get; set; }
 
-        // NUEVOS CAMPOS alineados con la BD
-        public string TipoUsuario { get; set; }      // "Candidato" / "Reclutador"
+        // Campos alineados con la BD
+        public string TipoUsuario { get; set; }      // "Candidato" / "Reclutador" / "Admin"
         public string Documento { get; set; }        // cédula / ID
         public DateTime? FechaNacimiento { get; set; }
-        public byte[] Foto { get; set; }             // foto en binario (VARBINARY)
+        public byte[] Foto { get; set; }             // VARBINARY(MAX)
 
         public Usuario() { }
 
@@ -42,4 +38,3 @@ namespace ENTITY
         }
     }
 }
-

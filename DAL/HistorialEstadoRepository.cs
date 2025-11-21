@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -15,33 +12,39 @@ namespace DAL
             try
             {
                 if (entidad == null || entidad.IdPostulacion <= 0)
-                {
-                    return new Response<HistorialEstado>(false, "Los datos son inválidos", null, null);
-                }
+                    return new Response<HistorialEstado>(false, "IdPostulacion inválido", null, null);
 
-                string sentencia = @"INSERT INTO [HistorialEstado] ([idPostulacion], [estadoAnterior], [estadoNuevo], 
-                                 [fechaCambio], [comentario], [usuarioCambio]) 
-                                 VALUES (@idPostulacion, @estadoAnterior, @estadoNuevo, @fechaCambio, @comentario, @usuarioCambio)";
+                const string sentencia = @"
+                    INSERT INTO [HistorialEstado]
+                        ([idPostulacion], [estadoAnterior], [estadoNuevo],
+                         [fechaCambio], [comentario], [usuarioCambio])
+                    VALUES
+                        (@idPostulacion, @estadoAnterior, @estadoNuevo,
+                         @fechaCambio, @comentario, @usuarioCambio);
+                    SELECT SCOPE_IDENTITY();";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@idPostulacion", entidad.IdPostulacion);
-                    comando.Parameters.AddWithValue("@estadoAnterior", entidad.EstadoAnterior);
-                    comando.Parameters.AddWithValue("@estadoNuevo", entidad.EstadoNuevo);
+                    comando.Parameters.AddWithValue("@estadoAnterior", (object)entidad.EstadoAnterior ?? DBNull.Value);
+                    comando.Parameters.AddWithValue("@estadoNuevo", (object)entidad.EstadoNuevo ?? DBNull.Value);
                     comando.Parameters.AddWithValue("@fechaCambio", entidad.FechaCambio);
-                    comando.Parameters.AddWithValue("@comentario", entidad.Comentario ?? (object)DBNull.Value);
-                    comando.Parameters.AddWithValue("@usuarioCambio", entidad.UsuarioCambio.HasValue ? (object)entidad.UsuarioCambio.Value : DBNull.Value);
+                    comando.Parameters.AddWithValue("@comentario", (object)entidad.Comentario ?? DBNull.Value);
+                    comando.Parameters.AddWithValue("@usuarioCambio", entidad.UsuarioCambio.HasValue
+                        ? (object)entidad.UsuarioCambio.Value
+                        : DBNull.Value);
 
                     conexion.Open();
-                    comando.ExecuteNonQuery();
+                    var result = comando.ExecuteScalar();
+                    entidad.IdHistorial = Convert.ToInt32(result);
 
-                    return new Response<HistorialEstado>(true, "Historial insertado correctamente", entidad, null);
+                    return new Response<HistorialEstado>(true, "Historial registrado correctamente", entidad, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<HistorialEstado>(false, $"Error: {ex.Message}", null, null);
+                return new Response<HistorialEstado>(false, $"Error al insertar historial: {ex.Message}", null, null);
             }
         }
 
@@ -50,37 +53,43 @@ namespace DAL
             try
             {
                 if (entidad == null || entidad.IdHistorial <= 0)
-                {
                     return new Response<HistorialEstado>(false, "Datos inválidos", null, null);
-                }
 
-                string sentencia = @"UPDATE [HistorialEstado] SET [idPostulacion] = @idPostulacion, 
-                                 [estadoAnterior] = @estadoAnterior, [estadoNuevo] = @estadoNuevo, 
-                                 [fechaCambio] = @fechaCambio, [comentario] = @comentario, [usuarioCambio] = @usuarioCambio 
-                                 WHERE [idHistorial] = @id";
+                const string sentencia = @"
+                    UPDATE [HistorialEstado]
+                    SET [idPostulacion] = @idPostulacion,
+                        [estadoAnterior] = @estadoAnterior,
+                        [estadoNuevo] = @estadoNuevo,
+                        [fechaCambio] = @fechaCambio,
+                        [comentario] = @comentario,
+                        [usuarioCambio] = @usuarioCambio
+                    WHERE [idHistorial] = @idHistorial;";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@idPostulacion", entidad.IdPostulacion);
-                    comando.Parameters.AddWithValue("@estadoAnterior", entidad.EstadoAnterior);
-                    comando.Parameters.AddWithValue("@estadoNuevo", entidad.EstadoNuevo);
+                    comando.Parameters.AddWithValue("@estadoAnterior", (object)entidad.EstadoAnterior ?? DBNull.Value);
+                    comando.Parameters.AddWithValue("@estadoNuevo", (object)entidad.EstadoNuevo ?? DBNull.Value);
                     comando.Parameters.AddWithValue("@fechaCambio", entidad.FechaCambio);
-                    comando.Parameters.AddWithValue("@comentario", entidad.Comentario ?? (object)DBNull.Value);
-                    comando.Parameters.AddWithValue("@usuarioCambio", entidad.UsuarioCambio.HasValue ? (object)entidad.UsuarioCambio.Value : DBNull.Value);
-                    comando.Parameters.AddWithValue("@id", entidad.IdHistorial);
+                    comando.Parameters.AddWithValue("@comentario", (object)entidad.Comentario ?? DBNull.Value);
+                    comando.Parameters.AddWithValue("@usuarioCambio", entidad.UsuarioCambio.HasValue
+                        ? (object)entidad.UsuarioCambio.Value
+                        : DBNull.Value);
+                    comando.Parameters.AddWithValue("@idHistorial", entidad.IdHistorial);
 
                     conexion.Open();
-                    int filasAfectadas = comando.ExecuteNonQuery();
+                    int filas = comando.ExecuteNonQuery();
 
-                    if (filasAfectadas > 0)
-                        return new Response<HistorialEstado>(true, "Actualizado correctamente", entidad, null);
-                    return new Response<HistorialEstado>(false, "No se encontró el registro", null, null);
+                    if (filas > 0)
+                        return new Response<HistorialEstado>(true, "Historial actualizado correctamente", entidad, null);
+
+                    return new Response<HistorialEstado>(false, "No se encontró el historial a actualizar", null, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<HistorialEstado>(false, $"Error: {ex.Message}", null, null);
+                return new Response<HistorialEstado>(false, $"Error al actualizar historial: {ex.Message}", null, null);
             }
         }
 
@@ -89,25 +98,26 @@ namespace DAL
             try
             {
                 if (id <= 0)
-                    return new Response<HistorialEstado>(false, "El ID debe ser mayor a cero", null, null);
+                    return new Response<HistorialEstado>(false, "Id inválido", null, null);
 
-                string sentencia = "DELETE FROM [HistorialEstado] WHERE [idHistorial] = @id";
+                const string sentencia = @"DELETE FROM [HistorialEstado] WHERE [idHistorial] = @idHistorial;";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@id", id);
+                    comando.Parameters.AddWithValue("@idHistorial", id);
                     conexion.Open();
-                    int filasAfectadas = comando.ExecuteNonQuery();
 
-                    if (filasAfectadas > 0)
-                        return new Response<HistorialEstado>(true, "Eliminado correctamente", null, null);
-                    return new Response<HistorialEstado>(false, "No se encontró el registro", null, null);
+                    int filas = comando.ExecuteNonQuery();
+                    if (filas > 0)
+                        return new Response<HistorialEstado>(true, "Historial eliminado correctamente", null, null);
+
+                    return new Response<HistorialEstado>(false, "No se encontró el historial a eliminar", null, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<HistorialEstado>(false, $"Error: {ex.Message}", null, null);
+                return new Response<HistorialEstado>(false, $"Error al eliminar historial: {ex.Message}", null, null);
             }
         }
 
@@ -115,42 +125,45 @@ namespace DAL
         {
             try
             {
-                if (id <= 0)
-                    return new Response<HistorialEstado>(false, "El ID debe ser mayor a cero", null, null);
+                const string sentencia = @"
+                    SELECT [idHistorial], [idPostulacion], [estadoAnterior],
+                           [estadoNuevo], [fechaCambio], [comentario], [usuarioCambio]
+                    FROM [HistorialEstado]
+                    WHERE [idHistorial] = @idHistorial;";
 
-                string sentencia = @"SELECT [idHistorial], [idPostulacion], [estadoAnterior], [estadoNuevo], 
-                                 [fechaCambio], [comentario], [usuarioCambio] 
-                                 FROM [HistorialEstado] WHERE [idHistorial] = @id";
-
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@id", id);
+                    comando.Parameters.AddWithValue("@idHistorial", id);
                     conexion.Open();
 
-                    using (SqlDataReader reader = comando.ExecuteReader())
+                    using (var reader = comando.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            HistorialEstado historial = new HistorialEstado
+                            var h = new HistorialEstado
                             {
-                                IdHistorial = reader.GetInt32(0),
-                                IdPostulacion = reader.GetInt32(1),
-                                EstadoAnterior = reader.GetString(2),
-                                EstadoNuevo = reader.GetString(3),
-                                FechaCambio = reader.GetDateTime(4),
-                                Comentario = reader.IsDBNull(5) ? null : reader.GetString(5),
-                                UsuarioCambio = reader.IsDBNull(6) ? (int?)null : reader.GetInt32(6)
+                                IdHistorial = reader.GetInt32(reader.GetOrdinal("idHistorial")),
+                                IdPostulacion = reader.GetInt32(reader.GetOrdinal("idPostulacion")),
+                                EstadoAnterior = reader["estadoAnterior"] as string,
+                                EstadoNuevo = reader["estadoNuevo"] as string,
+                                FechaCambio = reader.GetDateTime(reader.GetOrdinal("fechaCambio")),
+                                Comentario = reader["comentario"] as string,
+                                UsuarioCambio = reader["usuarioCambio"] == DBNull.Value
+                                    ? (int?)null
+                                    : Convert.ToInt32(reader["usuarioCambio"])
                             };
-                            return new Response<HistorialEstado>(true, "Encontrado", historial, null);
+
+                            return new Response<HistorialEstado>(true, "Historial encontrado", h, null);
                         }
-                        return new Response<HistorialEstado>(false, "No encontrado", null, null);
                     }
                 }
+
+                return new Response<HistorialEstado>(false, "No se encontró el historial", null, null);
             }
             catch (Exception ex)
             {
-                return new Response<HistorialEstado>(false, $"Error: {ex.Message}", null, null);
+                return new Response<HistorialEstado>(false, $"Error al obtener historial: {ex.Message}", null, null);
             }
         }
 
@@ -158,41 +171,44 @@ namespace DAL
         {
             try
             {
-                IList<HistorialEstado> lista = new List<HistorialEstado>();
-                string sentencia = @"SELECT [idHistorial], [idPostulacion], [estadoAnterior], [estadoNuevo], 
-                                 [fechaCambio], [comentario], [usuarioCambio] 
-                                 FROM [HistorialEstado] ORDER BY [fechaCambio] DESC";
+                var lista = new List<HistorialEstado>();
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                const string sentencia = @"
+                    SELECT [idHistorial], [idPostulacion], [estadoAnterior],
+                           [estadoNuevo], [fechaCambio], [comentario], [usuarioCambio]
+                    FROM [HistorialEstado];";
+
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
                     conexion.Open();
-
-                    using (SqlDataReader reader = comando.ExecuteReader())
+                    using (var reader = comando.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            lista.Add(new HistorialEstado
+                            var h = new HistorialEstado
                             {
-                                IdHistorial = reader.GetInt32(0),
-                                IdPostulacion = reader.GetInt32(1),
-                                EstadoAnterior = reader.GetString(2),
-                                EstadoNuevo = reader.GetString(3),
-                                FechaCambio = reader.GetDateTime(4),
-                                Comentario = reader.IsDBNull(5) ? null : reader.GetString(5),
-                                UsuarioCambio = reader.IsDBNull(6) ? (int?)null : reader.GetInt32(6)
-                            });
+                                IdHistorial = reader.GetInt32(reader.GetOrdinal("idHistorial")),
+                                IdPostulacion = reader.GetInt32(reader.GetOrdinal("idPostulacion")),
+                                EstadoAnterior = reader["estadoAnterior"] as string,
+                                EstadoNuevo = reader["estadoNuevo"] as string,
+                                FechaCambio = reader.GetDateTime(reader.GetOrdinal("fechaCambio")),
+                                Comentario = reader["comentario"] as string,
+                                UsuarioCambio = reader["usuarioCambio"] == DBNull.Value
+                                    ? (int?)null
+                                    : Convert.ToInt32(reader["usuarioCambio"])
+                            };
+
+                            lista.Add(h);
                         }
                     }
                 }
 
-                if (lista.Count > 0)
-                    return new Response<HistorialEstado>(true, $"Se encontraron {lista.Count}", null, lista);
-                return new Response<HistorialEstado>(true, "Sin registros", null, lista);
+                return new Response<HistorialEstado>(true, $"Se encontraron {lista.Count} historiales", null, lista);
             }
             catch (Exception ex)
             {
-                return new Response<HistorialEstado>(false, $"Error: {ex.Message}", null, null);
+                return new Response<HistorialEstado>(false, $"Error al obtener historiales: {ex.Message}", null, null);
             }
         }
     }

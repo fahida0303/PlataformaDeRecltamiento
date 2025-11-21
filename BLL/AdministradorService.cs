@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
-    internal class AdministradorService
+    public class AdministradorService
     {
         private readonly AdministradorRepository _administradorRepository;
         private readonly UsuarioRepository _usuarioRepository;

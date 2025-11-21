@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -15,28 +12,29 @@ namespace DAL
             try
             {
                 if (entidad == null || string.IsNullOrWhiteSpace(entidad.Nombre))
-                {
-                    return new Response<Habilidad>(false, "El nombre de la habilidad es requerido", null, null);
-                }
+                    return new Response<Habilidad>(false, "El nombre de la habilidad es obligatorio", null, null);
 
-                string sentencia = @"INSERT INTO [Habilidad] ([nombre], [categoria]) 
-                                 VALUES (@nombre, @categoria)";
+                const string sentencia = @"
+                    INSERT INTO [Habilidad] ([nombre], [categoria])
+                    VALUES (@nombre, @categoria);
+                    SELECT SCOPE_IDENTITY();";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@nombre", entidad.Nombre);
-                    comando.Parameters.AddWithValue("@categoria", entidad.Categoria ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@categoria", (object)entidad.Categoria ?? DBNull.Value);
 
                     conexion.Open();
-                    comando.ExecuteNonQuery();
+                    var result = comando.ExecuteScalar();
+                    entidad.IdHabilidad = Convert.ToInt32(result);
 
-                    return new Response<Habilidad>(true, "Habilidad insertada correctamente", entidad, null);
+                    return new Response<Habilidad>(true, "Habilidad creada correctamente", entidad, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Habilidad>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Habilidad>(false, $"Error al insertar habilidad: {ex.Message}", null, null);
             }
         }
 
@@ -45,31 +43,33 @@ namespace DAL
             try
             {
                 if (entidad == null || entidad.IdHabilidad <= 0)
-                {
-                    return new Response<Habilidad>(false, "Datos inválidos para actualizar", null, null);
-                }
+                    return new Response<Habilidad>(false, "Datos inválidos", null, null);
 
-                string sentencia = @"UPDATE [Habilidad] SET [nombre] = @nombre, [categoria] = @categoria 
-                                 WHERE [idHabilidad] = @id";
+                const string sentencia = @"
+                    UPDATE [Habilidad]
+                    SET [nombre] = @nombre,
+                        [categoria] = @categoria
+                    WHERE [idHabilidad] = @idHabilidad;";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
                     comando.Parameters.AddWithValue("@nombre", entidad.Nombre);
-                    comando.Parameters.AddWithValue("@categoria", entidad.Categoria ?? (object)DBNull.Value);
-                    comando.Parameters.AddWithValue("@id", entidad.IdHabilidad);
+                    comando.Parameters.AddWithValue("@categoria", (object)entidad.Categoria ?? DBNull.Value);
+                    comando.Parameters.AddWithValue("@idHabilidad", entidad.IdHabilidad);
 
                     conexion.Open();
-                    int filasAfectadas = comando.ExecuteNonQuery();
+                    int filas = comando.ExecuteNonQuery();
 
-                    if (filasAfectadas > 0)
+                    if (filas > 0)
                         return new Response<Habilidad>(true, "Habilidad actualizada correctamente", entidad, null);
-                    return new Response<Habilidad>(false, "No se encontró la habilidad para actualizar", null, null);
+
+                    return new Response<Habilidad>(false, "No se encontró la habilidad a actualizar", null, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Habilidad>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Habilidad>(false, $"Error al actualizar habilidad: {ex.Message}", null, null);
             }
         }
 
@@ -78,25 +78,26 @@ namespace DAL
             try
             {
                 if (id <= 0)
-                    return new Response<Habilidad>(false, "El ID debe ser mayor a cero", null, null);
+                    return new Response<Habilidad>(false, "Id inválido", null, null);
 
-                string sentencia = "DELETE FROM [Habilidad] WHERE [idHabilidad] = @id";
+                const string sentencia = @"DELETE FROM [Habilidad] WHERE [idHabilidad] = @idHabilidad;";
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@id", id);
+                    comando.Parameters.AddWithValue("@idHabilidad", id);
                     conexion.Open();
-                    int filasAfectadas = comando.ExecuteNonQuery();
 
-                    if (filasAfectadas > 0)
+                    int filas = comando.ExecuteNonQuery();
+                    if (filas > 0)
                         return new Response<Habilidad>(true, "Habilidad eliminada correctamente", null, null);
-                    return new Response<Habilidad>(false, "No se encontró la habilidad", null, null);
+
+                    return new Response<Habilidad>(false, "No se encontró la habilidad a eliminar", null, null);
                 }
             }
             catch (Exception ex)
             {
-                return new Response<Habilidad>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Habilidad>(false, $"Error al eliminar habilidad: {ex.Message}", null, null);
             }
         }
 
@@ -104,37 +105,38 @@ namespace DAL
         {
             try
             {
-                if (id <= 0)
-                    return new Response<Habilidad>(false, "El ID debe ser mayor a cero", null, null);
+                const string sentencia = @"
+                    SELECT [idHabilidad], [nombre], [categoria]
+                    FROM [Habilidad]
+                    WHERE [idHabilidad] = @idHabilidad;";
 
-                string sentencia = @"SELECT [idHabilidad], [nombre], [categoria] 
-                                 FROM [Habilidad] WHERE [idHabilidad] = @id";
-
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    comando.Parameters.AddWithValue("@id", id);
+                    comando.Parameters.AddWithValue("@idHabilidad", id);
                     conexion.Open();
 
-                    using (SqlDataReader reader = comando.ExecuteReader())
+                    using (var reader = comando.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            Habilidad habilidad = new Habilidad
+                            var hab = new Habilidad
                             {
-                                IdHabilidad = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                Categoria = reader.IsDBNull(2) ? null : reader.GetString(2)
+                                IdHabilidad = reader.GetInt32(reader.GetOrdinal("idHabilidad")),
+                                Nombre = reader["nombre"] as string,
+                                Categoria = reader["categoria"] as string
                             };
-                            return new Response<Habilidad>(true, "Habilidad encontrada", habilidad, null);
+
+                            return new Response<Habilidad>(true, "Habilidad encontrada", hab, null);
                         }
-                        return new Response<Habilidad>(false, "No se encontró la habilidad", null, null);
                     }
                 }
+
+                return new Response<Habilidad>(false, "No se encontró la habilidad", null, null);
             }
             catch (Exception ex)
             {
-                return new Response<Habilidad>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Habilidad>(false, $"Error al obtener habilidad: {ex.Message}", null, null);
             }
         }
 
@@ -142,36 +144,36 @@ namespace DAL
         {
             try
             {
-                IList<Habilidad> lista = new List<Habilidad>();
-                string sentencia = @"SELECT [idHabilidad], [nombre], [categoria] 
-                                 FROM [Habilidad] ORDER BY [nombre]";
+                var lista = new List<Habilidad>();
 
-                using (SqlConnection conexion = CrearConexion())
-                using (SqlCommand comando = new SqlCommand(sentencia, conexion))
+                const string sentencia = @"
+                    SELECT [idHabilidad], [nombre], [categoria]
+                    FROM [Habilidad];";
+
+                using (var conexion = CrearConexion())
+                using (var comando = new SqlCommand(sentencia, conexion))
                 {
                     conexion.Open();
-
-                    using (SqlDataReader reader = comando.ExecuteReader())
+                    using (var reader = comando.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            lista.Add(new Habilidad
+                            var hab = new Habilidad
                             {
-                                IdHabilidad = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                Categoria = reader.IsDBNull(2) ? null : reader.GetString(2)
-                            });
+                                IdHabilidad = reader.GetInt32(reader.GetOrdinal("idHabilidad")),
+                                Nombre = reader["nombre"] as string,
+                                Categoria = reader["categoria"] as string
+                            };
+                            lista.Add(hab);
                         }
                     }
                 }
 
-                if (lista.Count > 0)
-                    return new Response<Habilidad>(true, $"Se encontraron {lista.Count}", null, lista);
-                return new Response<Habilidad>(true, "No hay habilidades registradas", null, lista);
+                return new Response<Habilidad>(true, $"Se encontraron {lista.Count} habilidades", null, lista);
             }
             catch (Exception ex)
             {
-                return new Response<Habilidad>(false, $"Error: {ex.Message}", null, null);
+                return new Response<Habilidad>(false, $"Error al obtener habilidades: {ex.Message}", null, null);
             }
         }
     }
