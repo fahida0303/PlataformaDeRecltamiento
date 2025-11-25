@@ -17,7 +17,7 @@ namespace JobsyAPI.Controllers
         }
 
         /// <summary>
-        /// 📧 ENDPOINT PRINCIPAL PARA N8N
+        /// 📧 ENDPOINT PRINCIPAL PARA N8N - CORREGIDO
         /// Obtiene datos del candidato y postulación para enviar notificación
         /// URL: POST /api/Notificaciones/enviar-resultado
         /// Body: { "idCandidato": 5, "idPostulacion": 10 }
@@ -45,25 +45,29 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
-                    // 🔍 Query optimizada con JOIN para obtener todos los datos necesarios
+                    // 🔍 Query con CAST para evitar errores de conversión Decimal -> Int
                     string query = @"
                         SELECT 
                             u.nombre,
                             u.correo,
+                            ISNULL(u.whatsappNumber, '') as whatsappNumber,
                             c.titulo AS cargo,
                             p.estado,
-                            p.score,
-                            c.descripcion
+                            CAST(ISNULL(p.score, 0) AS INT) as score,
+                            ISNULL(c.descripcion, '') as descripcion,
+                            CAST(p.idPostulacion AS INT) as idPostulacion,
+                            CAST(p.idCandidato AS INT) as idCandidato
                         FROM Postulacion p
                         INNER JOIN Usuario u ON p.idCandidato = u.idUsuario
                         INNER JOIN Convocatoria c ON p.idConvocatoria = c.idConvocatoria
-                        WHERE p.idPostulacion = @idPostulacion 
-                          AND p.idCandidato = @idCandidato";
+                        WHERE CAST(p.idPostulacion AS INT) = @idPostulacion 
+                          AND CAST(p.idCandidato AS INT) = @idCandidato";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@idPostulacion", datos.IdPostulacion);
-                        cmd.Parameters.AddWithValue("@idCandidato", datos.IdCandidato);
+                        // ✅ Conversión explícita a INT
+                        cmd.Parameters.AddWithValue("@idPostulacion", Convert.ToInt32(datos.IdPostulacion));
+                        cmd.Parameters.AddWithValue("@idCandidato", Convert.ToInt32(datos.IdCandidato));
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -71,35 +75,37 @@ namespace JobsyAPI.Controllers
                             {
                                 string nombre = reader.GetString(0);
                                 string correo = reader.GetString(1);
-                                string cargo = reader.GetString(2);
-                                string estado = reader.GetString(3);
-                                int? score = reader.IsDBNull(4) ? null : (int?)reader.GetInt32(4);
-                                string descripcion = reader.IsDBNull(5) ? "" : reader.GetString(5);
+                                string whatsapp = reader.GetString(2);
+                                string cargo = reader.GetString(3);
+                                string estado = reader.GetString(4);
+                                int score = reader.GetInt32(5);
+                                string descripcion = reader.GetString(6);
+                                int idPostulacion = reader.GetInt32(7);
+                                int idCandidato = reader.GetInt32(8);
 
-                                _logger.LogInformation("✓ Datos obtenidos - Candidato: {Nombre}, Estado: {Estado}",
-                                    nombre, estado);
+                                _logger.LogInformation("✅ Datos obtenidos - Candidato: {Nombre}, Estado: {Estado}", nombre, estado);
 
                                 // 📊 Registrar notificación en BD
                                 reader.Close();
-                                RegistrarNotificacion(conn, datos.IdCandidato, estado, cargo);
+                                RegistrarNotificacion(conn, idCandidato, estado, cargo);
 
                                 // 📧 Preparar datos para n8n
                                 return Ok(new
                                 {
                                     exito = true,
-                                    datosParaEmail = new
-                                    {
-                                        para = correo,
-                                        nombre = nombre,
-                                        cargo = cargo,
-                                        estado = estado,
-                                        score = score,
-                                        descripcion = descripcion,
-                                        asunto = estado == "Seleccionado"
-                                            ? $"¡Felicidades! Has sido seleccionado para {cargo}"
-                                            : $"Actualización de tu postulación a {cargo}"
-                                    },
-                                    mensaje = "Datos preparados para envío de email"
+                                    idCandidato = idCandidato,
+                                    idPostulacion = idPostulacion,
+                                    nombre = nombre,
+                                    correo = correo,
+                                    whatsappNumber = whatsapp,
+                                    tituloConvocatoria = cargo,
+                                    estado = estado,
+                                    score = score,
+                                    descripcion = descripcion,
+                                    asunto = estado == "Seleccionado"
+                                        ? $"¡Felicidades! Has sido seleccionado para {cargo}"
+                                        : $"Actualización de tu postulación a {cargo}",
+                                    mensaje = "Datos preparados para envío de notificación"
                                 });
                             }
                             else
@@ -122,7 +128,8 @@ namespace JobsyAPI.Controllers
                 {
                     exito = false,
                     mensaje = "Error de base de datos al preparar notificación",
-                    error = sqlEx.Message
+                    error = sqlEx.Message,
+                    detalles = sqlEx.StackTrace
                 });
             }
             catch (Exception ex)
@@ -132,7 +139,8 @@ namespace JobsyAPI.Controllers
                 {
                     exito = false,
                     mensaje = "Error inesperado al preparar notificación",
-                    error = ex.Message
+                    error = ex.Message,
+                    detalles = ex.StackTrace
                 });
             }
         }

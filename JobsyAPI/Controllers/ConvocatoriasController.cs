@@ -1,6 +1,7 @@
 ﻿using BLL; // Necesario para PdfService
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Text.Json;
 
 namespace JobsyAPI.Controllers
 {
@@ -16,6 +17,7 @@ namespace JobsyAPI.Controllers
         }
 
         // 🔹 1. OBTENER CONVOCATORIAS VENCIDAS (Para n8n)
+        // 🔹 1. OBTENER CONVOCATORIAS VENCIDAS (Para n8n) - MODIFICADO
         [HttpGet("vencidas")]
         public IActionResult ObtenerConvocatoriasVencidas()
         {
@@ -25,11 +27,21 @@ namespace JobsyAPI.Controllers
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
+
+                    // 🟢 QUERY MODIFICADO: Ahora incluye datos del reclutador
                     string query = @"
-                        SELECT idConvocatoria, titulo, descripcion, fechaLimite
-                        FROM Convocatoria
-                        WHERE fechaLimite <= CAST(GETDATE() AS DATE)
-                          AND estado = 'Abierta'";
+                SELECT 
+                    c.idConvocatoria, 
+                    c.titulo, 
+                    c.descripcion, 
+                    c.fechaLimite,
+                    u.correo as correoReclutador,
+                    u.nombre as nombreReclutador,
+                    c.idReclutador
+                FROM Convocatoria c
+                INNER JOIN Usuario u ON c.idReclutador = u.idUsuario
+                WHERE c.fechaLimite <= CAST(GETDATE() AS DATE)
+                  AND c.estado = 'Abierta'";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -42,7 +54,10 @@ namespace JobsyAPI.Controllers
                                     idConvocatoria = reader.GetInt32(0),
                                     titulo = reader.GetString(1),
                                     descripcion = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                                    fechaLimite = reader.GetDateTime(3).ToString("yyyy-MM-dd")
+                                    fechaLimite = reader.GetDateTime(3).ToString("yyyy-MM-dd"),
+                                    correoReclutador = reader.GetString(4),      // 🟢 NUEVO
+                                    nombreReclutador = reader.GetString(5),      // 🟢 NUEVO
+                                    idReclutador = reader.GetInt32(6)            // 🟢 NUEVO
                                 });
                             }
                         }
@@ -50,8 +65,68 @@ namespace JobsyAPI.Controllers
                 }
                 return Ok(new { exito = true, total = convocatorias.Count, convocatorias = convocatorias });
             }
-            catch (Exception ex) { return StatusCode(500, new { exito = false, mensaje = "Error", error = ex.Message }); }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { exito = false, mensaje = "Error", error = ex.Message });
+            }
         }
+
+        // 🔹 0. CREAR CONVOCATORIA (USADO POR EL FRONTEND)
+        [HttpPost("crear")]
+        public IActionResult CrearConvocatoria([FromBody] JsonElement data)
+        {
+            try
+            {
+                string titulo = data.GetProperty("Titulo").GetString();
+                string descripcion = data.GetProperty("Descripcion").GetString();
+                DateTime fechaPublicacion = DateTime.Parse(data.GetProperty("FechaPublicacion").GetString());
+                DateTime fechaLimite = DateTime.Parse(data.GetProperty("FechaLimite").GetString());
+                string estado = data.GetProperty("Estado").GetString();
+                int idEmpresa = data.GetProperty("IdEmpresa").GetInt32();
+                int idReclutador = data.GetProperty("IdReclutador").GetInt32();
+
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                INSERT INTO Convocatoria (titulo, descripcion, fechaPublicacion, fechaLimite, estado, idEmpresa, idReclutador)
+                OUTPUT INSERTED.idConvocatoria
+                VALUES (@titulo, @descripcion, @fechaPublicacion, @fechaLimite, @estado, @idEmpresa, @idReclutador)
+            ";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@titulo", titulo);
+                        cmd.Parameters.AddWithValue("@descripcion", descripcion);
+                        cmd.Parameters.AddWithValue("@fechaPublicacion", fechaPublicacion);
+                        cmd.Parameters.AddWithValue("@fechaLimite", fechaLimite);
+                        cmd.Parameters.AddWithValue("@estado", estado);
+                        cmd.Parameters.AddWithValue("@idEmpresa", idEmpresa);
+                        cmd.Parameters.AddWithValue("@idReclutador", idReclutador);
+
+                        int idInsertado = (int)cmd.ExecuteScalar();
+
+                        return Ok(new
+                        {
+                            exito = true,
+                            mensaje = "Convocatoria creada correctamente",
+                            idConvocatoria = idInsertado
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    exito = false,
+                    mensaje = "Error al crear convocatoria",
+                    error = ex.Message
+                });
+            }
+        }
+
 
         // 🔹 2. OBTENER CANDIDATOS DE UNA CONVOCATORIA (CORREGIDO)
         // URL: GET /api/convocatorias/5/candidatos

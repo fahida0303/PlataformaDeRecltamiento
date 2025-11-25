@@ -8,7 +8,7 @@ namespace DAL
 {
     public class CandidatoRepository : BaseRepository, IRepository<Candidato>
     {
-        // ================= INSERTAR (CORREGIDO) =================
+        // ================= INSERTAR (CORREGIDO + FOTO) =================
         public Response<Candidato> Insertar(Candidato entidad)
         {
             try
@@ -16,35 +16,37 @@ namespace DAL
                 if (entidad == null || entidad.IdUsuario <= 0)
                     return new Response<Candidato>(false, "La entidad Candidato requiere un IdUsuario válido", null, null);
 
-                // 🚨 CAMBIO CRÍTICO:
-                // 1. Agregamos 'idCandidato' a la lista de columnas.
-                // 2. Quitamos 'SELECT SCOPE_IDENTITY()' porque el ID ya lo tenemos (es el IdUsuario).
                 const string sentencia = @"
-                    INSERT INTO Candidato (idCandidato, tipox, nivelFormacion, experiencia, hojaDeVida)
-                    VALUES (@idCandidato, @tipox, @nivelFormacion, @experiencia, @hojaDeVida);";
+                    INSERT INTO Candidato 
+                    (idCandidato, tipox, nivelFormacion, experiencia, hojaDeVida, foto)
+                    VALUES 
+                    (@idCandidato, @tipox, @nivelFormacion, @experiencia, @hojaDeVida, @foto);";
 
                 using (var conexion = CrearConexion())
                 using (var comando = new SqlCommand(sentencia, conexion))
                 {
-                    // 🚨 ASIGNAMOS EL ID EXPLÍCITAMENTE
-                    // Usamos entidad.IdUsuario porque en la relación 1 a 1, son el mismo número.
                     comando.Parameters.AddWithValue("@idCandidato", entidad.IdUsuario);
-
                     comando.Parameters.AddWithValue("@tipox", (object)entidad.Tipox ?? DBNull.Value);
                     comando.Parameters.AddWithValue("@nivelFormacion", (object)entidad.NivelFormacion ?? DBNull.Value);
                     comando.Parameters.AddWithValue("@experiencia", (object)entidad.Experiencia ?? DBNull.Value);
 
-                    // Manejo de binario para PDF
+                    // PDF
                     var pHoja = new SqlParameter("@hojaDeVida", SqlDbType.VarBinary)
                     {
                         Value = (object)entidad.HojaDeVida ?? DBNull.Value
                     };
                     comando.Parameters.Add(pHoja);
 
-                    conexion.Open();
-                    comando.ExecuteNonQuery(); // Ya no necesitamos leer el ID de vuelta
+                    // FOTO
+                    var pFoto = new SqlParameter("@foto", SqlDbType.VarBinary)
+                    {
+                        Value = (object)entidad.Foto ?? DBNull.Value
+                    };
+                    comando.Parameters.Add(pFoto);
 
-                    // Sincronizamos el IdCandidato en el objeto por si acaso
+                    conexion.Open();
+                    comando.ExecuteNonQuery();
+
                     entidad.IdCandidato = entidad.IdUsuario;
 
                     return new Response<Candidato>(true, "Candidato insertado correctamente", entidad, null);
@@ -56,7 +58,7 @@ namespace DAL
             }
         }
 
-        // ================= ACTUALIZAR =================
+        // ================= ACTUALIZAR (CORREGIDO + FOTO) =================
         public Response<Candidato> Actualizar(Candidato entidad)
         {
             try
@@ -66,11 +68,13 @@ namespace DAL
 
                 const string sentencia = @"
                     UPDATE Candidato
-                    SET tipox          = @tipox,
+                    SET 
+                        tipox          = @tipox,
                         nivelFormacion = @nivelFormacion,
                         experiencia    = @experiencia,
-                        hojaDeVida     = @hojaDeVida
-                    WHERE idCandidato  = @idCandidato;";
+                        hojaDeVida     = @hojaDeVida,
+                        foto           = @foto
+                    WHERE idCandidato = @idCandidato;";
 
                 using (var conexion = CrearConexion())
                 using (var comando = new SqlCommand(sentencia, conexion))
@@ -84,6 +88,12 @@ namespace DAL
                         Value = (object)entidad.HojaDeVida ?? DBNull.Value
                     };
                     comando.Parameters.Add(pHoja);
+
+                    var pFoto = new SqlParameter("@foto", SqlDbType.VarBinary)
+                    {
+                        Value = (object)entidad.Foto ?? DBNull.Value
+                    };
+                    comando.Parameters.Add(pFoto);
 
                     comando.Parameters.AddWithValue("@idCandidato", entidad.IdCandidato);
 
@@ -131,7 +141,7 @@ namespace DAL
             }
         }
 
-        // ================= OBTENER POR ID =================
+        // ================= OBTENER POR ID (CORREGIDO + FOTO) =================
         public Response<Candidato> ObtenerPorId(int id)
         {
             try
@@ -142,7 +152,8 @@ namespace DAL
                         tipox,
                         nivelFormacion,
                         experiencia,
-                        hojaDeVida
+                        hojaDeVida,
+                        foto
                     FROM Candidato
                     WHERE idCandidato = @idCandidato;";
 
@@ -162,10 +173,9 @@ namespace DAL
                                 Tipox          = reader["tipox"] as string,
                                 NivelFormacion = reader["nivelFormacion"] as string,
                                 Experiencia    = reader["experiencia"] as string,
-                                HojaDeVida     = reader["hojaDeVida"] == DBNull.Value
-                                                    ? null
-                                                    : (byte[])reader["hojaDeVida"],
-                                IdUsuario      = reader.GetInt32(reader.GetOrdinal("idCandidato")) // Mapeo implícito
+                                HojaDeVida     = reader["hojaDeVida"] == DBNull.Value ? null : (byte[])reader["hojaDeVida"],
+                                Foto           = reader["foto"] == DBNull.Value ? null : (byte[])reader["foto"],
+                                IdUsuario      = reader.GetInt32(reader.GetOrdinal("idCandidato"))
                             };
 
                             return new Response<Candidato>(true, "Candidato encontrado", cand, null);
@@ -181,7 +191,7 @@ namespace DAL
             }
         }
 
-        // ================= OBTENER TODOS =================
+        // ================= OBTENER TODOS (CORREGIDO + FOTO) =================
         public Response<Candidato> ObtenerTodos()
         {
             try
@@ -194,7 +204,8 @@ namespace DAL
                         tipox,
                         nivelFormacion,
                         experiencia,
-                        hojaDeVida
+                        hojaDeVida,
+                        foto
                     FROM Candidato;";
 
                 using (var conexion = CrearConexion())
@@ -211,9 +222,8 @@ namespace DAL
                                 Tipox          = reader["tipox"] as string,
                                 NivelFormacion = reader["nivelFormacion"] as string,
                                 Experiencia    = reader["experiencia"] as string,
-                                HojaDeVida     = reader["hojaDeVida"] == DBNull.Value
-                                                    ? null
-                                                    : (byte[])reader["hojaDeVida"],
+                                HojaDeVida     = reader["hojaDeVida"] == DBNull.Value ? null : (byte[])reader["hojaDeVida"],
+                                Foto           = reader["foto"] == DBNull.Value ? null : (byte[])reader["foto"],
                                 IdUsuario      = reader.GetInt32(reader.GetOrdinal("idCandidato"))
                             };
 

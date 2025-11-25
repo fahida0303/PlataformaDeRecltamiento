@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
 
 namespace JobsyAPI.Controllers
 {
@@ -20,10 +22,12 @@ namespace JobsyAPI.Controllers
     {
         private readonly string _connectionString;
         private readonly ILogger<CandidatosController> _logger;
+        private readonly string _n8nWebhookUrl;
 
         public CandidatosController(IConfiguration configuration, ILogger<CandidatosController> logger)
         {
             _connectionString = configuration.GetConnectionString("JobsyDB");
+            _n8nWebhookUrl = configuration["N8N:NotificacionesWebhook"];
             _logger = logger;
         }
 
@@ -75,7 +79,7 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // 2. 🟢 NUEVO: OBTENER SOLO LAS DEL RECLUTADOR
+        // 2. OBTENER SOLO LAS DEL RECLUTADOR
         [HttpGet("reclutador/{idReclutador}/convocatorias")]
         public IActionResult ObtenerConvocatoriasPorReclutador(int idReclutador)
         {
@@ -86,7 +90,7 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
-                    // 🔍 Query filtrada por idReclutador
+                    // Query filtrada por idReclutador
                     string query = @"
                         SELECT 
                             c.idConvocatoria, c.titulo, c.descripcion, 
@@ -177,16 +181,46 @@ namespace JobsyAPI.Controllers
             catch (Exception ex) { return StatusCode(500, new { mensaje = "Error", error = ex.Message }); }
         }
 
+        
         [HttpGet("{idConvocatoria}/top-candidatos")]
         public IActionResult ObtenerTopCandidatos(int idConvocatoria)
         {
             try
             {
                 List<dynamic> candidatos = new List<dynamic>();
+                string emailReclutador = "";
+
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
-                    string query = "SELECT TOP 3 u.nombre, u.correo, p.score FROM Postulacion p INNER JOIN Candidato c ON p.idCandidato = c.idCandidato INNER JOIN Usuario u ON c.idCandidato = u.idUsuario WHERE p.idConvocatoria = @id AND p.score IS NOT NULL ORDER BY p.score DESC";
+
+                    // 🟢 PRIMERO: Obtener email del reclutador
+                    string queryReclutador = @"
+                SELECT u.correo 
+                FROM Convocatoria c
+                INNER JOIN Usuario u ON c.idReclutador = u.idUsuario
+                WHERE c.idConvocatoria = @id";
+
+                    using (SqlCommand cmdRec = new SqlCommand(queryReclutador, conn))
+                    {
+                        cmdRec.Parameters.AddWithValue("@id", idConvocatoria);
+                        var result = cmdRec.ExecuteScalar();
+                        emailReclutador = result?.ToString() ?? "jobsyapp1@gmail.com"; // Fallback
+                    }
+
+                    // SEGUNDO: Obtener top 3 candidatos
+                    string query = @"
+                SELECT TOP 3 
+                    u.nombre, 
+                    u.correo, 
+                    p.score 
+                FROM Postulacion p 
+                INNER JOIN Candidato c ON p.idCandidato = c.idCandidato 
+                INNER JOIN Usuario u ON c.idCandidato = u.idUsuario 
+                WHERE p.idConvocatoria = @id 
+                  AND p.score IS NOT NULL 
+                ORDER BY p.score DESC";
+
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@id", idConvocatoria);
@@ -194,14 +228,27 @@ namespace JobsyAPI.Controllers
                         {
                             while (reader.Read())
                             {
-                                candidatos.Add(new { nombre = reader.GetString(0), correo = reader.GetString(1), score = Math.Round(reader.GetDecimal(2), 1) });
+                                candidatos.Add(new
+                                {
+                                    nombre = reader.GetString(0),
+                                    correo = reader.GetString(1),
+                                    score = Math.Round(reader.GetDecimal(2), 1)
+                                });
                             }
                         }
                     }
                 }
-                return Ok(new { candidatos = candidatos });
+
+                return Ok(new
+                {
+                    candidatos = candidatos,
+                    emailReclutador = emailReclutador 
+                });
             }
-            catch (Exception ex) { return StatusCode(500, new { mensaje = "Error", error = ex.Message }); }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error", error = ex.Message });
+            }
         }
 
         #endregion
@@ -271,14 +318,14 @@ namespace JobsyAPI.Controllers
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
-                    // 🟢 CAMBIO: Agregamos p.idCandidato a la selección
+                    // Agregamos p.idCandidato y otros datos necesarios para el frontend/n8n
                     string query = @"
                 SELECT p.idPostulacion, p.idCandidato, u.nombre, u.correo, c.hojaDeVida, p.score, p.estado
                 FROM Postulacion p
                 INNER JOIN Candidato c ON p.idCandidato = c.idCandidato
                 INNER JOIN Usuario u ON c.idCandidato = u.idUsuario
                 WHERE p.idConvocatoria = @id
-                ORDER BY p.score DESC"; // Ordenamos por mejor puntuación
+                ORDER BY p.score DESC";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -297,7 +344,7 @@ namespace JobsyAPI.Controllers
                                 candidatos.Add(new
                                 {
                                     idPostulacion = reader.GetInt32(0),
-                                    idCandidato = reader.GetInt32(1), // 🟢 Ahora sí lo tenemos
+                                    idCandidato = reader.GetInt32(1),
                                     nombre = reader.GetString(2),
                                     correo = reader.GetString(3),
                                     hojaDeVida = textoCV,
@@ -324,15 +371,43 @@ namespace JobsyAPI.Controllers
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
-                    string queryUsuario = "SELECT u.idUsuario, u.nombre, u.correo, c.nivelFormacion, c.experiencia, u.whatsappNumber, u.documento, u.fechaNacimiento, u.foto FROM Usuario u INNER JOIN Candidato c ON u.idUsuario = c.idCandidato WHERE u.telegramId = @id OR CAST(u.idUsuario AS VARCHAR) = @id";
+
+                    string queryUsuario = @"
+                SELECT 
+                    u.idUsuario,
+                    u.nombre,
+                    u.correo,
+                    c.nivelFormacion,
+                    c.experiencia,
+                    u.whatsappNumber,
+                    u.documento,
+                    u.fechaNacimiento,
+                    u.foto,
+                    c.hojaDeVida
+                FROM Usuario u
+                INNER JOIN Candidato c ON u.idUsuario = c.idCandidato
+                WHERE u.telegramId = @id OR CAST(u.idUsuario AS VARCHAR) = @id";
+
                     using (SqlCommand cmd = new SqlCommand(queryUsuario, conn))
                     {
                         cmd.Parameters.AddWithValue("@id", identificador);
+
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            if (!reader.Read()) return NotFound(new { encontrado = false });
+                            if (!reader.Read())
+                                return NotFound(new { encontrado = false });
+
+                            // FOTO USUARIO
                             byte[] fotoBytes = reader.IsDBNull(8) ? null : (byte[])reader["foto"];
-                            string fotoBase64 = fotoBytes != null ? "data:image/jpeg;base64," + Convert.ToBase64String(fotoBytes) : null;
+                            string fotoBase64 = fotoBytes != null
+                                ? "data:image/jpeg;base64," + Convert.ToBase64String(fotoBytes)
+                                : null;
+
+                            // CV
+                            byte[] cvBytes = reader.IsDBNull(9) ? null : (byte[])reader["hojaDeVida"];
+                            string cvBase64 = cvBytes != null
+                                ? "data:application/pdf;base64," + Convert.ToBase64String(cvBytes)
+                                : null;
 
                             var candidato = new
                             {
@@ -341,29 +416,66 @@ namespace JobsyAPI.Controllers
                                 correo = reader.GetString(2),
                                 nivelFormacion = reader.IsDBNull(3) ? "" : reader.GetString(3),
                                 experiencia = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                                telefono = reader.IsDBNull(5) ? "" : reader.GetString(5),
                                 documento = reader.IsDBNull(6) ? "" : reader.GetString(6),
-                                foto = fotoBase64
+                                fechaNacimiento = reader.IsDBNull(7) ? null : reader.GetDateTime(7).ToString("yyyy-MM-dd"),
+                                foto = fotoBase64,
+                                hojaDeVida = cvBase64
                             };
+
                             reader.Close();
 
-                            // Postulaciones
+                            // =======================
+                            //  POSTULACIONES
+                            // =======================
                             List<dynamic> postulaciones = new List<dynamic>();
-                            string queryPost = "SELECT p.idPostulacion, p.fechaPostulacion, p.estado, c.titulo FROM Postulacion p INNER JOIN Convocatoria c ON p.idConvocatoria = c.idConvocatoria WHERE p.idCandidato = @idUsuario ORDER BY p.fechaPostulacion DESC";
+                            string queryPost = @"
+                        SELECT 
+                            p.idPostulacion,
+                            p.fechaPostulacion,
+                            p.estado,
+                            c.titulo
+                        FROM Postulacion p
+                        INNER JOIN Convocatoria c ON p.idConvocatoria = c.idConvocatoria
+                        WHERE p.idCandidato = @idUsuario
+                        ORDER BY p.fechaPostulacion DESC";
+
                             using (SqlCommand cmdPost = new SqlCommand(queryPost, conn))
                             {
                                 cmdPost.Parameters.AddWithValue("@idUsuario", candidato.id);
+
                                 using (SqlDataReader r2 = cmdPost.ExecuteReader())
                                 {
-                                    while (r2.Read()) postulaciones.Add(new { id = r2.GetInt32(0), fecha = r2.GetDateTime(1).ToString("yyyy-MM-dd"), estado = r2.GetString(2), convocatoria = r2.GetString(3) });
+                                    while (r2.Read())
+                                    {
+                                        postulaciones.Add(new
+                                        {
+                                            id = r2.GetInt32(0),
+                                            fecha = r2.GetDateTime(1).ToString("yyyy-MM-dd"),
+                                            estado = r2.GetString(2),
+                                            convocatoria = r2.GetString(3)
+                                        });
+                                    }
                                 }
                             }
-                            return Ok(new { encontrado = true, candidato, postulaciones, totalPostulaciones = postulaciones.Count });
+
+                            return Ok(new
+                            {
+                                encontrado = true,
+                                candidato,
+                                postulaciones,
+                                totalPostulaciones = postulaciones.Count
+                            });
                         }
                     }
                 }
             }
-            catch (Exception ex) { return StatusCode(500, new { exito = false, mensaje = "Error", error = ex.Message }); }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { exito = false, mensaje = "Error", error = ex.Message });
+            }
         }
+
 
         [HttpPut("perfil/{id}")]
         public IActionResult ActualizarPerfil(int id, [FromBody] ActualizarPerfilDTO dto)
@@ -422,7 +534,7 @@ namespace JobsyAPI.Controllers
                     else if (!string.IsNullOrWhiteSpace(dto.TelegramId))
                     {
                         string q = "SELECT idUsuario FROM Usuario WHERE telegramId = @tid";
-                        using (SqlCommand cmd = new SqlCommand(q, conn)) { cmd.Parameters.AddWithValue("@tid", dto.TelegramId); var r = cmd.ExecuteScalar(); if (r==null) return NotFound(new { exito = false }); idUsuario = Convert.ToInt32(r); }
+                        using (SqlCommand cmd = new SqlCommand(q, conn)) { cmd.Parameters.AddWithValue("@tid", dto.TelegramId); var r = cmd.ExecuteScalar(); if (r == null) return NotFound(new { exito = false }); idUsuario = Convert.ToInt32(r); }
                     }
                     else return BadRequest(new { exito = false, mensaje = "Falta ID" });
 
@@ -436,16 +548,285 @@ namespace JobsyAPI.Controllers
             catch (Exception ex) { return StatusCode(500, new { exito = false, mensaje = "Error", error = ex.Message }); }
         }
 
+        // Endpoint llamado desde n8n para actualizar el estado final (Seleccionado/Rechazado)
+        [HttpPut("postulacion/{id}/estado")]
+        public IActionResult ActualizarEstadoPostulacion(int id, [FromBody] ActualizarEstadoDTO dto)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                        UPDATE Postulacion 
+                        SET estado = @estado,
+                            fechaModificacion = GETDATE()
+                        WHERE idPostulacion = @id";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@estado", dto.Estado);
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        int filas = cmd.ExecuteNonQuery();
+
+                        if (filas > 0)
+                        {
+                            return Ok(new
+                            {
+                                exito = true,
+                                mensaje = $"Estado actualizado a: {dto.Estado}"
+                            });
+                        }
+
+                        return NotFound(new
+                        {
+                            exito = false,
+                            mensaje = "Postulación no encontrada"
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    exito = false,
+                    mensaje = "Error al actualizar estado",
+                    error = ex.Message
+                });
+            }
+        }
+
+        // 🟢 CORREGIDO: Actualiza el score del candidato en la postulación
         [HttpPut("{id}/score")]
-        public IActionResult ActualizarScore(int id, [FromBody] ScoreDTO datos) { return Ok(new { exito = true }); }
+        public IActionResult ActualizarScore(int id, [FromBody] ScoreDTO datos)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE Postulacion SET score = @score, fechaModificacion = GETDATE() WHERE idPostulacion = @id";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        // Asegúrate de que el DTO 'ScoreDTO' tiene la propiedad 'Score' (es decir, 'datos.Score')
+                        cmd.Parameters.AddWithValue("@score", datos.Score);
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        int filas = cmd.ExecuteNonQuery();
+
+                        if (filas > 0)
+                        {
+                            return Ok(new { exito = true, mensaje = $"Score actualizado a: {datos.Score}" });
+                        }
+                        return NotFound(new { exito = false, mensaje = "Postulación no encontrada o no actualizada." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar score de postulación {Id}", id);
+                return StatusCode(500, new { exito = false, mensaje = "Error al actualizar score", error = ex.Message });
+            }
+        }
 
         #endregion
 
-        #region 📦 DTOs
+        [HttpPost("notificar-decision")]
+        public async Task<IActionResult> NotificarDecision([FromBody] DecisionDTO datos)
+        {
+            try
+            {
+                _logger.LogInformation($"📧 Procesando decisión: {datos.Decision}");
+
+
+                string nuevoEstado = datos.Decision == "aceptar" ? "Seleccionado" : "Rechazado";
+
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    string queryUpdate = @"
+                UPDATE Postulacion 
+                SET estado = @estado, 
+                    fechaModificacion = GETDATE()
+                WHERE idPostulacion = @idPostulacion";
+
+                    using (SqlCommand cmd = new SqlCommand(queryUpdate, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@estado", nuevoEstado);
+                        cmd.Parameters.AddWithValue("@idPostulacion", datos.IdPostulacion);
+
+                        int filasAfectadas = cmd.ExecuteNonQuery();
+
+                        if (filasAfectadas == 0)
+                        {
+                            return NotFound(new { exito = false, mensaje = "Postulación no encontrada" });
+                        }
+
+                        _logger.LogInformation($"✅ Estado actualizado a: {nuevoEstado}");
+                    }
+                }
+
+
+                string n8nUrl = _n8nWebhookUrl;
+
+                using (var httpClient = new HttpClient())
+                {
+                    var payload = new
+                    {
+                        idCandidato = datos.IdCandidato,
+                        idPostulacion = datos.IdPostulacion,
+                        decision = datos.Decision
+                    };
+
+                    var jsonContent = new StringContent(
+                        System.Text.Json.JsonSerializer.Serialize(payload),
+                        System.Text.Encoding.UTF8,
+                        "application/json"
+                    );
+
+                    var response = await httpClient.PostAsync(n8nUrl, jsonContent);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var resultContent = await response.Content.ReadAsStringAsync();
+                        _logger.LogInformation("✅ n8n respondió correctamente");
+
+                        return Ok(new
+                        {
+                            exito = true,
+                            mensaje = "Decisión procesada y notificación enviada",
+                            respuestaN8n = resultContent
+                        });
+                    }
+                    else
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        _logger.LogWarning($"n8n respondió con error: {response.StatusCode}");
+
+                        return StatusCode((int)response.StatusCode, new
+                        {
+                            exito = false,
+                            mensaje = "Error al comunicarse con n8n",
+                            detalles = errorContent
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, " Error al notificar decisión");
+                return StatusCode(500, new
+                {
+                    exito = false,
+                    mensaje = "Error interno al procesar notificación",
+                    error = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("obtener-datos-notificacion")]
+        public IActionResult ObtenerDatosParaNotificacion([FromBody] DatosNotificacionRequestDTO datos)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                SELECT 
+                    CAST(u.idUsuario AS INT) as idCandidato,
+                    u.nombre,
+                    u.correo,
+                    u.whatsappNumber,
+                    CAST(p.idPostulacion AS INT) as idPostulacion,
+                    c.titulo as tituloConvocatoria
+                FROM Usuario u
+                INNER JOIN Candidato cand ON u.idUsuario = cand.idCandidato
+                INNER JOIN Postulacion p ON cand.idCandidato = p.idCandidato
+                INNER JOIN Convocatoria c ON p.idConvocatoria = c.idConvocatoria
+                WHERE u.idUsuario = @idCandidato 
+                  AND p.idPostulacion = @idPostulacion";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@idCandidato", datos.IdCandidato);
+                        cmd.Parameters.AddWithValue("@idPostulacion", datos.IdPostulacion);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                var resultado = new
+                                {
+                                    idCandidato = reader.GetInt32(0),
+                                    nombre = reader.GetString(1),
+                                    correo = reader.GetString(2),
+                                    whatsappNumber = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                    idPostulacion = reader.GetInt32(4),
+                                    tituloConvocatoria = reader.GetString(5)
+                                };
+
+                                return Ok(resultado);
+                            }
+
+                            return NotFound(new
+                            {
+                                exito = false,
+                                mensaje = "No se encontró el candidato o postulación"
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener datos para notificación");
+                return StatusCode(500, new
+                {
+                    exito = false,
+                    mensaje = "Error inesperado al preparar notificación",
+                    error = ex.Message
+                });
+            }
+        }
+
+    
+
+
+      
+
+       
+
+
+        #region 📦 DTOs (Data Transfer Objects)
+
+        // Definidos dentro del controlador o en archivos separados (mejor práctica)
         public class ScoreDTO { public int Score { get; set; } }
         public class RegistroCandidatoDTO { public string Nombre { get; set; } public string Correo { get; set; } public string TelegramId { get; set; } public string TelegramUsername { get; set; } public string WhatsappNumber { get; set; } }
         public class PostulacionDTO { public string TelegramId { get; set; } public int IdConvocatoria { get; set; } public int? IdCandidato { get; set; } }
         public class ActualizarPerfilDTO { public string Nombre { get; set; } public string Telefono { get; set; } public string NivelFormacion { get; set; } public string Experiencia { get; set; } public string Documento { get; set; } public DateTime? FechaNacimiento { get; set; } }
+        public class ActualizarEstadoDTO { public string Estado { get; set; } }
+
+       
+        public class DecisionDTO
+        {
+            public int IdCandidato { get; set; }
+            public int IdPostulacion { get; set; }
+            public string Decision { get; set; } 
+        }
+
+        public class DatosNotificacionRequestDTO
+        {
+            public int IdCandidato { get; set; }
+            public int IdPostulacion { get; set; }
+        }
+
         #endregion
     }
 }

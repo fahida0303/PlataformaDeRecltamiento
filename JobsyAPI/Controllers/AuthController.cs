@@ -15,13 +15,19 @@ namespace JobsyAPI.Controllers
         private readonly UsuarioService _usuarioService;
         private readonly CandidatoService _candidatoService;
         private readonly ReclutadorService _reclutadorService;
+        private readonly EmpresaService _empresaService;
 
         public AuthController()
         {
             _usuarioService = new UsuarioService();
             _candidatoService = new CandidatoService();
             _reclutadorService = new ReclutadorService();
+            _empresaService = new EmpresaService();
         }
+
+        // ===================================================
+        //                     MODELOS
+        // ===================================================
 
         public class LoginRequest
         {
@@ -37,8 +43,9 @@ namespace JobsyAPI.Controllers
             public string Tipox { get; set; }
             public string NivelFormacion { get; set; }
             public string Experiencia { get; set; }
+
             public IFormFile HojaDeVida { get; set; }
-            public IFormFile Foto { get; set; } // 🟢 NUEVO
+            public IFormFile Foto { get; set; }
         }
 
         public class RegistroReclutadorRequest
@@ -47,30 +54,29 @@ namespace JobsyAPI.Controllers
             public string Correo { get; set; }
             public string Contrasena { get; set; }
             public string Cargo { get; set; }
-            public int? IdEmpresa { get; set; }
+            public string NombreEmpresa { get; set; }
         }
 
-        // 🔐 LOGIN (Actualizado para devolver foto)
+        // ===================================================
+        //                        LOGIN
+        // ===================================================
+
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
-            if (request == null || string.IsNullOrWhiteSpace(request.Correo) || string.IsNullOrWhiteSpace(request.Contrasena))
-                return BadRequest(new { exito = false, mensaje = "Datos incompletos." });
+            if (request == null)
+                return BadRequest(new { exito = false, mensaje = "Datos inválidos." });
 
             var respuesta = _usuarioService.ValidarCredenciales(request.Correo, request.Contrasena);
 
-            if (!respuesta.Estado || respuesta.Entidad == null)
-                return Unauthorized(new { exito = false, mensaje = respuesta.Mensaje ?? "Credenciales inválidas." });
+            if (!respuesta.Estado)
+                return Unauthorized(new { exito = false, mensaje = respuesta.Mensaje });
 
             var usuario = respuesta.Entidad;
-            var rol = string.IsNullOrWhiteSpace(usuario.TipoUsuario) ? "candidato" : usuario.TipoUsuario.ToLower();
 
-            // 🟢 Convertir foto a Base64
-            string fotoBase64 = null;
-            if (usuario.Foto != null && usuario.Foto.Length > 0)
-            {
-                fotoBase64 = "data:image/jpeg;base64," + Convert.ToBase64String(usuario.Foto);
-            }
+            string fotoBase64 = usuario.Foto != null
+                ? "data:image/jpeg;base64," + Convert.ToBase64String(usuario.Foto)
+                : null;
 
             return Ok(new
             {
@@ -81,32 +87,40 @@ namespace JobsyAPI.Controllers
                     idUsuario = usuario.IdUsuario,
                     nombre = usuario.Nombre,
                     correo = usuario.Correo,
-                    role = rol,
                     tipoUsuario = usuario.TipoUsuario,
+                    role = usuario.TipoUsuario?.ToLower(),
                     telegramId = usuario.TelegramId,
-                    foto = fotoBase64 // 🟢 Enviamos foto
+                    foto = fotoBase64
                 }
             });
         }
 
-        // 🧑‍💼 REGISTRO CANDIDATO (Con Foto y PDF)
+        // ===================================================
+        //                REGISTRO DE CANDIDATO
+        // ===================================================
+
         [HttpPost("registro-candidato")]
         public async Task<IActionResult> RegistrarCandidato([FromForm] RegistroCandidatoRequest request)
         {
-            if (request == null) return BadRequest(new { exito = false, mensaje = "Datos inválidos." });
+            if (request == null)
+                return BadRequest(new { exito = false, mensaje = "Datos inválidos." });
 
-            // Procesar PDF
+            // PDF
             byte[] cvBytes = null;
-            if (request.HojaDeVida != null && request.HojaDeVida.Length > 0)
+            if (request.HojaDeVida != null)
             {
-                using (var ms = new MemoryStream()) { await request.HojaDeVida.CopyToAsync(ms); cvBytes = ms.ToArray(); }
+                using var ms = new MemoryStream();
+                await request.HojaDeVida.CopyToAsync(ms);
+                cvBytes = ms.ToArray();
             }
 
-            // 🟢 Procesar FOTO
+            // FOTO
             byte[] fotoBytes = null;
-            if (request.Foto != null && request.Foto.Length > 0)
+            if (request.Foto != null)
             {
-                using (var ms = new MemoryStream()) { await request.Foto.CopyToAsync(ms); fotoBytes = ms.ToArray(); }
+                using var ms = new MemoryStream();
+                await request.Foto.CopyToAsync(ms);
+                fotoBytes = ms.ToArray();
             }
 
             var candidato = new Candidato
@@ -114,59 +128,102 @@ namespace JobsyAPI.Controllers
                 Nombre = request.Nombre,
                 Correo = request.Correo,
                 Contrasena = request.Contrasena,
-                Tipox = request.Tipox ?? "Externo",
+                Tipox = request.Tipox,
                 NivelFormacion = request.NivelFormacion,
                 Experiencia = request.Experiencia,
                 HojaDeVida = cvBytes,
-                Foto = fotoBytes // 🟢
+                Foto = fotoBytes
             };
 
             var respuesta = _candidatoService.RegistrarCandidato(candidato);
 
-            if (!respuesta.Estado) return BadRequest(new { exito = false, mensaje = respuesta.Mensaje });
+            if (!respuesta.Estado)
+                return BadRequest(new { exito = false, mensaje = respuesta.Mensaje });
 
-            var cand = respuesta.Entidad;
-
-            // 🟢 Convertir foto a Base64 para respuesta inmediata
-            string fotoBase64 = fotoBytes != null ? "data:image/jpeg;base64," + Convert.ToBase64String(fotoBytes) : null;
+            string fotoBase64 = fotoBytes != null
+                ? "data:image/jpeg;base64," + Convert.ToBase64String(fotoBytes)
+                : null;
 
             return Ok(new
             {
                 exito = true,
-                mensaje = respuesta.Mensaje,
                 usuario = new
                 {
-                    idUsuario = cand.IdUsuario,
-                    nombre = cand.Nombre,
-                    correo = cand.Correo,
-                    role = "candidato",
+                    idUsuario = respuesta.Entidad.IdUsuario,
+                    nombre = respuesta.Entidad.Nombre,
+                    correo = respuesta.Entidad.Correo,
                     tipoUsuario = "Candidato",
-                    foto = fotoBase64 // 🟢
+                    role = "candidato",
+                    foto = fotoBase64
                 }
             });
         }
 
-        // 🏢 REGISTRO RECLUTADOR
+        // ===================================================
+        //              REGISTRO DE RECLUTADOR
+        // ===================================================
+
         [HttpPost("registro-reclutador")]
         public IActionResult RegistrarReclutador([FromBody] RegistroReclutadorRequest request)
         {
-            // (Misma lógica que tenías antes, sin cambios necesarios aquí por ahora)
-            if (request == null) return BadRequest(new { exito = false, mensaje = "Datos inválidos." });
+            if (request == null)
+                return BadRequest(new { exito = false, mensaje = "Datos inválidos." });
 
-            var reclutador = new Reclutador
+            // 1️⃣ Crear empresa
+            var empresa = new Empresa
+            {
+                Nombre = request.NombreEmpresa,
+                Sector = "",
+                Direccion = "",
+                CorreoContacto = request.Correo
+            };
+
+            var respEmpresa = _empresaService.RegistrarEmpresa(empresa);
+            if (!respEmpresa.Estado)
+                return BadRequest(new { exito = false, mensaje = respEmpresa.Mensaje });
+
+            int idEmpresa = respEmpresa.Entidad.IdEmpresa;
+
+            // 2️⃣ Crear usuario
+            var usuario = new Usuario
             {
                 Nombre = request.Nombre,
                 Correo = request.Correo,
                 Contrasena = request.Contrasena,
-                Cargo = request.Cargo,
-                IdEmpresa = request.IdEmpresa ?? 0
+                Estado = "Activo",
+                TipoUsuario = "Reclutador"
             };
 
-            var respuesta = _reclutadorService.RegistrarReclutador(reclutador);
+            var respUsuario = _usuarioService.RegistrarUsuario(usuario);
+            if (!respUsuario.Estado)
+                return BadRequest(new { exito = false, mensaje = respUsuario.Mensaje });
 
-            if (!respuesta.Estado) return BadRequest(new { exito = false, mensaje = respuesta.Mensaje });
+            // 3️⃣ Crear reclutador vinculado al usuario y empresa
+            var reclutador = new Reclutador
+            {
+                IdUsuario = respUsuario.Entidad.IdUsuario,
+                Cargo = request.Cargo,
+                IdEmpresa = idEmpresa
+            };
 
-            return Ok(new { exito = true, mensaje = "Registro exitoso", usuario = respuesta.Entidad });
+            var respReclutador = _reclutadorService.RegistrarReclutador(reclutador);
+            if (!respReclutador.Estado)
+                return BadRequest(new { exito = false, mensaje = respReclutador.Mensaje });
+
+            return Ok(new
+            {
+                exito = true,
+                mensaje = "Reclutador registrado con éxito",
+                usuario = new
+                {
+                    idUsuario = respUsuario.Entidad.IdUsuario,
+                    nombre = request.Nombre,
+                    correo = request.Correo,
+                    tipoUsuario = "Reclutador",
+                    cargo = request.Cargo
+                },
+                idEmpresa
+            });
         }
     }
 }
