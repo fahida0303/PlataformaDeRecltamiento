@@ -46,6 +46,9 @@ namespace JobsyAPI.Controllers
 
             public IFormFile HojaDeVida { get; set; }
             public IFormFile Foto { get; set; }
+            public string Documento { get; set; }    
+            public DateTime? FechaNacimiento { get; set; }
+            public string Telefono { get; set; }
         }
 
         public class RegistroReclutadorRequest
@@ -132,7 +135,10 @@ namespace JobsyAPI.Controllers
                 NivelFormacion = request.NivelFormacion,
                 Experiencia = request.Experiencia,
                 HojaDeVida = cvBytes,
-                Foto = fotoBytes
+                Foto = fotoBytes,
+                Documento = request.Documento,
+                FechaNacimiento = request.FechaNacimiento,
+                WhatsappNumber = request.Telefono
             };
 
             var respuesta = _candidatoService.RegistrarCandidato(candidato);
@@ -159,9 +165,7 @@ namespace JobsyAPI.Controllers
             });
         }
 
-        // ===================================================
-        //              REGISTRO DE RECLUTADOR
-        // ===================================================
+        
 
         [HttpPost("registro-reclutador")]
         public IActionResult RegistrarReclutador([FromBody] RegistroReclutadorRequest request)

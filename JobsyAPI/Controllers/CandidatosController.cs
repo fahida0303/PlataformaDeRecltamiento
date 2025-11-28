@@ -30,7 +30,7 @@ namespace JobsyAPI.Controllers
 
         #region 🔹 CONSULTAS DE CONVOCATORIAS
 
-        // 1. OBTENER TODAS LAS CONVOCATORIAS
+        
         [HttpGet("convocatorias")]
         public IActionResult ObtenerConvocatorias([FromQuery] string estado = "Abierta")
         {
@@ -78,7 +78,7 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // 2. OBTENER CONVOCATORIAS POR RECLUTADOR
+        
         [HttpGet("reclutador/{idReclutador}/convocatorias")]
         public IActionResult ObtenerConvocatoriasPorReclutador(int idReclutador)
         {
@@ -135,7 +135,7 @@ namespace JobsyAPI.Controllers
 
         #region 🔹 PROCESOS AUTOMÁTICOS
 
-        // CONVOCATORIAS VENCIDAS
+        
         [HttpGet("vencidas")]
         public IActionResult ObtenerConvocatoriasVencidas()
         {
@@ -178,7 +178,7 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // CERRAR CONVOCATORIA
+        
         [HttpPut("{idConvocatoria}/cerrar")]
         public IActionResult CerrarConvocatoria(int idConvocatoria)
         {
@@ -209,7 +209,7 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // OBTENER TOP 3 CANDIDATOS
+       
         [HttpGet("{idConvocatoria}/top-candidatos")]
         public IActionResult ObtenerTopCandidatos(int idConvocatoria)
         {
@@ -274,6 +274,50 @@ namespace JobsyAPI.Controllers
         #endregion
 
         #region 📄 GESTIÓN DE CVs & PERFIL
+
+        // ACTUALIZAR FOTO DE PERFIL
+        [HttpPost("{idUsuario}/foto")]
+        public async Task<IActionResult> ActualizarFoto(int idUsuario, IFormFile archivoFoto)
+        {
+            try
+            {
+                if (archivoFoto == null || archivoFoto.Length == 0)
+                    return BadRequest(new { exito = false, mensaje = "No se recibió ninguna imagen" });
+
+                byte[] fotoBytes;
+                using (var ms = new MemoryStream())
+                {
+                    await archivoFoto.CopyToAsync(ms);
+                    fotoBytes = ms.ToArray();
+                }
+
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    // Actualizamos la tabla USUARIO, ya que ahí está el campo foto
+                    string query = "UPDATE Usuario SET foto = @foto WHERE idUsuario = @id";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", idUsuario);
+                        // Especificamos que es VarBinary
+                        var param = new SqlParameter("@foto", System.Data.SqlDbType.VarBinary);
+                        param.Value = fotoBytes;
+                        cmd.Parameters.Add(param);
+
+                        int filas = cmd.ExecuteNonQuery();
+                        if (filas > 0)
+                            return Ok(new { exito = true, mensaje = "Foto actualizada" });
+
+                        return NotFound(new { exito = false, mensaje = "Usuario no encontrado" });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error interno", error = ex.Message });
+            }
+        }
 
         // SUBIR PDF CV
         [HttpPost("{idCandidato}/subir-cv")]
@@ -428,7 +472,8 @@ namespace JobsyAPI.Controllers
             }
         }
 
-        // OBTENER ESTADO DE UN CANDIDATO
+        // 🔥 METODO CORREGIDO 🔥
+        // OBTENER ESTADO DE UN CANDIDATO (O RECLUTADOR)
         [HttpGet("estado/{identificador}")]
         public IActionResult ObtenerEstadoCandidato(string identificador)
         {
@@ -438,13 +483,14 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
+                    // 1. OBTENER INFO DE USUARIO (USANDO LEFT JOIN PARA QUE FUNCIONE CON RECLUTADORES)
                     string queryUsuario = @"
                         SELECT u.idUsuario, u.nombre, u.correo,
                                c.nivelFormacion, c.experiencia,
                                u.whatsappNumber, u.documento,
                                u.fechaNacimiento, u.foto
                         FROM Usuario u
-                        INNER JOIN Candidato c ON u.idUsuario = c.idCandidato
+                        LEFT JOIN Candidato c ON u.idUsuario = c.idCandidato 
                         WHERE u.telegramId = @id OR CAST(u.idUsuario AS VARCHAR) = @id";
 
                     using (SqlCommand cmd = new SqlCommand(queryUsuario, conn))
@@ -462,19 +508,27 @@ namespace JobsyAPI.Controllers
                                 ? "data:image/jpeg;base64," + Convert.ToBase64String(fotoBytes)
                                 : null;
 
+                            // 🔥 OBJETO CORREGIDO PARA COINCIDIR CON REACT
                             var candidato = new
                             {
                                 id = reader.GetInt32(0),
                                 nombre = reader.GetString(1),
                                 correo = reader.GetString(2),
+                                // Usamos IsDBNull para manejar el caso de Reclutadores (que no tienen estos campos)
                                 nivelFormacion = reader.IsDBNull(3) ? "" : reader.GetString(3),
                                 experiencia = reader.IsDBNull(4) ? "" : reader.GetString(4),
+
+                                // 🔥 CAMBIO CLAVE: 'telefono' en vez de 'whatsappNumber' para que React lo lea
+                                telefono = reader.IsDBNull(5) ? "" : reader.GetString(5),
+
                                 documento = reader.IsDBNull(6) ? "" : reader.GetString(6),
+                                fechaNacimiento = reader.IsDBNull(7) ? (DateTime?)null : reader.GetDateTime(7),
                                 foto = fotoBase64
                             };
 
                             reader.Close();
 
+                            // 2. OBTENER POSTULACIONES
                             List<dynamic> postulaciones = new List<dynamic>();
 
                             string queryPost = @"
@@ -530,6 +584,7 @@ namespace JobsyAPI.Controllers
                 {
                     conn.Open();
 
+                    // 1. Actualizar tabla Usuario (Datos comunes)
                     string qUser = @"
                         UPDATE Usuario 
                         SET nombre = @nombre, whatsappNumber = @tel, 
@@ -546,6 +601,8 @@ namespace JobsyAPI.Controllers
                         cmd.ExecuteNonQuery();
                     }
 
+                    // 2. Actualizar tabla Candidato (Datos específicos)
+                    // OJO: Si es reclutador, esto no actualizará nada (0 filas), lo cual es correcto
                     string qCand = @"
                         UPDATE Candidato 
                         SET nivelFormacion = @form, experiencia = @exp 

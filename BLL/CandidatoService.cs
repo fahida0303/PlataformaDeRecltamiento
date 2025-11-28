@@ -37,7 +37,10 @@ namespace BLL
                     Contrasena = candidato.Contrasena,
                     Estado = "Activo",
                     TipoUsuario = "Candidato",
-                    Foto = candidato.Foto // 🟢 ASIGNAMOS LA FOTO AQUÍ
+                    Foto = candidato.Foto,
+                    Documento = candidato.Documento,
+                    FechaNacimiento = candidato.FechaNacimiento,
+                    WhatsappNumber = candidato.WhatsappNumber// 🟢 ASIGNAMOS LA FOTO AQUÍ
                 };
 
                 var resultadoUsuario = _usuarioService.RegistrarUsuario(nuevoUsuario);
